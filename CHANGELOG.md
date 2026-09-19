@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/Mearman/bangor-cs-thesis-template/compare/v1.1.0...v1.1.1) (2026-09-19)
+
+
+### Bug Fixes
+
+* subtree bump pulls from main, avoiding unrelated histories on the release tag ([7877563](https://github.com/Mearman/bangor-cs-thesis-template/commit/78775635bb164b515063c95767bc3687b1526bfd))
+
 # [1.1.0](https://github.com/Mearman/bangor-cs-thesis-template/compare/v1.0.0...v1.1.0) (2026-09-19)
 
 
