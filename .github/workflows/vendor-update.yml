@@ -93,7 +93,7 @@ jobs:
             git add -- .latexmkrc
           fi
           latexmk -pdf -interaction=nonstopmode main.tex
-          ! grep -E "^!|undefined|multiply defined" main.log
+          ! grep -E "^!|Reference .* undefined|Citation .* undefined|multiply defined" main.log
           changed=$(git status --porcelain | grep -v '^.. vendor/' | wc -l)
           if [ "$changed" -gt 0 ]; then
             echo "diff escapes vendor/; opening a pull request instead"

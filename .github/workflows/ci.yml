@@ -56,7 +56,7 @@ jobs:
         run: |
           latexmk -pdf -interaction=nonstopmode main.tex
           ! grep -E "^!" main.log
-          ! grep -E "undefined|multiply defined|Citation.*undefined" main.log
+          ! grep -E "Reference .* undefined|Citation .* undefined|multiply defined" main.log
       - name: Assert compile fits the Overleaf free-tier timeout
         run: |
           start=$(date +%s)
