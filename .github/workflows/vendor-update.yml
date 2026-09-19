@@ -90,7 +90,7 @@ jobs:
           else
             git rm -r vendor
             sed -i.bak '/vendor/d' .latexmkrc && rm -f .latexmkrc.bak
-            git add -- .latexmkrc
+            git add .latexmkrc
           fi
           latexmk -pdf -interaction=nonstopmode main.tex
           ! grep -E "^!|Reference .* undefined|Citation .* undefined|multiply defined" main.log
