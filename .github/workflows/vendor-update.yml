@@ -47,7 +47,7 @@ jobs:
             fi
           fi
           echo "skip=${skip}" >> "$GITHUB_OUTPUT"
-      - uses: Mearman/actions/.github/actions/setup-texlive@ci/v1
+      - uses: Mearman/actions/.github/actions/setup-texlive@v1
         if: steps.gate.outputs.skip != 'true'
         with:
           extra: texlive-science

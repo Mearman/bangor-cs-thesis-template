@@ -21,7 +21,7 @@ jobs:
         with:
           path: ~/.npm
           key: npm-semantic-release-v1
-      - uses: Mearman/actions/.github/actions/setup-texlive@ci/v1
+      - uses: Mearman/actions/.github/actions/setup-texlive@v1
         with:
           extra: texlive-science
       - uses: actions/setup-node@v4
