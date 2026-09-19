@@ -54,7 +54,7 @@ jobs:
             texlive-latex-extra texlive-fonts-recommended \
             texlive-bibtex-extra texlive-extra-utils biber latexmk texlive-science
           sudo chown -R $USER: /home/runner/apt-archives
-          sudo chown -R $USER: /home/runner/apt-archives
+      - name: Compile
         run: |
           latexmk -pdf -interaction=nonstopmode main.tex
           ! grep -E "^!" main.log
