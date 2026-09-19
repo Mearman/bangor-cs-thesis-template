@@ -1,0 +1,53 @@
+% !TeX program = pdflatex
+%%% Bangor University computer science thesis and dissertation
+%%% template. The natural successor to the department's bangorcsthesis
+%%% class: same purpose, light compile, Overleaf-safe.
+\documentclass[bsc,citations=ieee,12pt,a4paper]{bangorthesis}
+
+\bibliographySetup
+\addbibresource{references.bib}
+
+% Document facts. School and college are free text: use the names your
+% school publishes today. The school was renamed during the 2026
+% restructure, which is exactly why the class never enumerates them.
+\title{Your Computer Science Project Title}
+\author{Your Name}
+\degreeScheme{Bachelor of Science in Computer Science}
+\school{School of Computer Science and Engineering}
+\college{College of Science and Engineering}
+\supervisor{Dr First Supervisor}
+\submissiondate{September 2026}
+\wordcount{9930}
+
+% Computer science conventions live in this preamble, not in the
+% package: code listings, algorithm floats, and verbatim setup.
+\input{preamble-cs}
+
+% Release builds stamp the template version here. Leave this line as
+% it is; the file appears only in tagged releases.
+\InputIfFileExists{version.tex}{}{}
+
+\begin{document}
+
+\maketitle
+\statementspage
+
+\input{content/preliminaries/acknowledgements}
+\begin{abstract}
+Replace this text with your abstract. State the problem, the method,
+the results, and the conclusion. The class caps the abstract at 600
+words and checks the cap.
+\end{abstract}
+
+\tables
+
+\input{content/chapters/introduction}
+\input{content/chapters/background}
+\input{content/chapters/design}
+\input{content/chapters/implementation}
+\input{content/chapters/evaluation}
+\input{content/chapters/conclusions}
+
+\printbibliography
+
+\end{document}

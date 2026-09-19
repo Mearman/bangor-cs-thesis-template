@@ -1,0 +1,22 @@
+%%% preamble-cs.tex — computer science conventions for this template.
+%%% Code listings, algorithm floats, and verbatim setup. Template-local
+%%% on purpose: school conventions are a template concern, not brand or
+%%% university regulation.
+\usepackage{listings}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+% Code listings: a calm default style with the brand red reserved for
+% keywords. Adjust to taste; this file is yours.
+\lstset{
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{bangorred}\bfseries,
+  commentstyle=\itshape,
+  stringstyle=\color{bangorsun!60!black},
+  showstringspaces=false,
+  breaklines=true,
+  frame=single,
+  numbers=left,
+  numberstyle=\tiny,
+  language=Python,
+}
