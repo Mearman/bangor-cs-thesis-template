@@ -1,4 +1,4 @@
-# latexindent settings shared by the git hooks, CI, and local runs. Two-space indentation inside environments; no alignment hunting, which keeps diffs small and the formatter fast.
+# latexindent settings shared by the git hooks, CI, and local runs.
+# Kept to the single setting that every latexindent version honours
+# identically: two-space indentation inside environments.
 defaultIndent: '  '
-lookForAlignDelims: false
-maximumIndentation: ' '

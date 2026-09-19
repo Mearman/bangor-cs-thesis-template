@@ -32,7 +32,7 @@ jobs:
           sudo apt-get install -y \
             texlive-latex-base texlive-latex-recommended \
             texlive-latex-extra texlive-fonts-recommended \
-            texlive-bibtex-extra texlive-extra-utils biber latexmk
+            texlive-bibtex-extra texlive-extra-utils biber latexmk texlive-science
       - uses: actions/setup-node@v4
         with:
           node-version: 22
