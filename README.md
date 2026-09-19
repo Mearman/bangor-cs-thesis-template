@@ -1,7 +1,7 @@
 # Bangor University computer science thesis and dissertation template
 [![Open in Overleaf](https://img.shields.io/badge/Open_in_Overleaf-44A141?style=for-the-badge&logo=overleaf&logoColor=white)](https://www.overleaf.com/docs?snip_uri=https://github.com/Mearman/bangor-cs-thesis-template/archive/refs/heads/main.zip)
-[![Use this template](https://img.shields.io/badge/Use_this_template-FDB913?style=for-the-badge&logo=github&logoColor=231F20&labelColor=231F20)](https://github.com/Mearman/bangor-cs-thesis-template/generate)
-[![Download ZIP](https://img.shields.io/badge/Download_ZIP-ED0000?style=for-the-badge&logo=github&logoColor=FDB913&labelColor=231F20)](https://github.com/Mearman/bangor-cs-thesis-template/archive/refs/heads/main.zip)
+[![Use this template](https://img.shields.io/badge/Use_this_template-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Mearman/bangor-cs-thesis-template/generate)
+[![Download ZIP](https://img.shields.io/badge/Download_ZIP-ED0000?style=for-the-badge&labelColor=231F20&logo=data:image/svg%2Bxml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNiAxNiIgd2lkdGg9IjE2IiBoZWlnaHQ9IjE2Ij48cmVjdCB4PSI3LjMiIHk9IjEiIHdpZHRoPSIxLjQiIGhlaWdodD0iNS41IiBmaWxsPSJ3aGl0ZSIvPjxwYXRoIGQ9Ik04IDEwLjUgNC43IDYuOGg2LjZaIiBmaWxsPSJ3aGl0ZSIvPjxwYXRoIGQ9Ik0yIDExLjV2MS44YTEuMiAxLjIgMCAwIDAgMS4yIDEuMmg5LjZhMS4yIDEuMiAwIDAgMCAxLjItMS4ydi0xLjhoLTEuNXYxLjVIMy41di0xLjVaIiBmaWxsPSJ3aGl0ZSIvPjwvc3ZnPg==)](https://github.com/Mearman/bangor-cs-thesis-template/archive/refs/heads/main.zip)
 
 A LaTeX template for computer science projects at Bangor University, and the natural successor to the department's `bangorcsthesis` class. It compiles on Overleaf with no install step: the package modules it needs sit in `vendor/`. This README uses controlled English. It is written in British English.
 
