@@ -19,7 +19,7 @@ jobs:
       - name: Cache apt archives
         uses: actions/cache@v4
         with:
-          path: /var/cache/apt/archives
+          path: ~/apt-archives
           key: apt-${{ runner.os }}-texlive-v1
       - name: Cache npm
         uses: actions/cache@v4
@@ -28,8 +28,9 @@ jobs:
           key: npm-semantic-release-v1
       - name: Install TeX Live packaging tools
         run: |
+          mkdir -p /home/runner/apt-archives
           sudo apt-get update
-          sudo apt-get install -y \
+          sudo apt-get install -y -o Dir::Cache::archives=/home/runner/apt-archives \
             texlive-latex-base texlive-latex-recommended \
             texlive-latex-extra texlive-fonts-recommended \
             texlive-bibtex-extra texlive-extra-utils biber latexmk texlive-science
