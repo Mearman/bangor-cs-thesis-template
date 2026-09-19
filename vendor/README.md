@@ -1,0 +1,104 @@
+# bangor
+
+LaTeX modules for Bangor University documents: the brand, the document identity, the regulation layout, the statutory declarations, a headed letter style, and a thesis and dissertation class. This README uses controlled English. It is written in British English.
+
+This package replaces the department's `bangorcsthesis` class, which times out on Overleaf. The cause was a heavy design: a large inline drawing of the crest, a fixed citation style, and a large package stack. This package keeps the compile light. The crest ships as a pre-rendered PDF. The citation style is an option. The package stack is small.
+
+## The layers
+
+The family has three layers. A module must only use modules in a lower layer.
+
+1. `bangor` holds the brand facts: the colours, the crest, the wordmark, and the version stamp.
+2. `bangoridentity`, `bangorlayout`, and `bangordeclarations` are reusable document modules. Use each one with any base class.
+3. `bangorletter` and the `bangorthesis` class are consumers. They use the lower layers and add their own document type.
+
+Full interface documentation is in `doc/bangor.pdf`.
+
+## Install
+
+TeX Live and MiKTeX users can install the package from CTAN once it is published. Until then, copy the `.sty` files, the `.cls` file, and `bangor-crest-colour.pdf` into your project directory.
+
+## Use
+
+Start a thesis or dissertation like this:
+
+```latex
+\documentclass[phd,12pt,a4paper]{bangorthesis}
+```
+
+Set the document facts in the preamble, then build the front matter:
+
+```latex
+\school{School of Computer Science and Engineering}
+\college{College of Science and Engineering}
+\degreeScheme{Doctor of Philosophy}
+\supervisor{Dr A. Supervisor}
+\bibliographySetup
+\addbibresource{references.bib}
+
+\begin{document}
+\maketitle
+\statementspage
+\begin{acknowledgements}...\end{acknowledgements}
+\begin{abstract}...\end{abstract}
+\tables
+```
+
+The GitHub template repositories give you a working document in one step:
+
+- `bangor-thesis-template` — the general thesis and dissertation template.
+- `bangor-cs-thesis-template` — the computer science variant, with code listings and algorithm floats.
+- `bangor-letter-template` — the headed letter template.
+
+Use the green *Use this template* button, then import your copy into Overleaf. The templates carry a vendored copy of this package in `vendor/`, so they compile with no install step.
+
+## Regulation checks
+
+The layout module checks the rules from Regulation 03, 2025 Version 01, section 6.3: the font family and size floors, the binding and side margins, the 1.5 line spacing, and the 600-word cap on the abstract. Strict mode is on by default. A violation fails the build. Set `strict=false` to turn each failure into a warning.
+
+The checks govern settings made through this package. They cannot see changes made around it.
+
+Citation style is a class option, not a school lookup: `citations=ieee` is the default, and any biblatex style name is valid. Ask your supervisor which style your school requires.
+
+## Contribute
+
+Make changes in this repository. Never edit the vendored copies inside the template repositories: they are snapshots of this repository, and a fix made there is lost at the next update. Each template repository pulls its `vendor/` directory from a tagged release here.
+
+Commit messages follow the conventional commit format. The git hooks and CI check it. Set up the hooks once per clone:
+
+```sh
+git config core.hooksPath .githooks
+```
+
+`l3build` is the build entry point: `l3build doc` compiles the documentation, `l3build ctan` builds the distribution archive. `latexmk -pdf tests/smoke/<name>.tex` runs one smoke test.
+
+## Licence
+
+Released under the LaTeX Project Public License, version 1.3c or later. See `LICENSE`. Derived in part from the `bangorcsthesis` class by Cameron Gray, Bangor University.
+
+## Roadmap
+
+Done:
+
+- Brand layer: palette, crest, wordmark, version stamp.
+- Identity, layout with strict regulation checks, and statutory declarations modules.
+- Headed letter style and the thesis and dissertation class.
+- Regulation-derived settings: font choice, print or digital, Welsh declaration, word count statement.
+- Smoke tests, CI, git hooks, and automatic releases with changelogs.
+
+Next:
+
+- Official crest masters from the university brand library, plus the monochrome and horizontal variants.
+- CTAN upload of the first stable release.
+- Brand typeface option for engines that support system fonts.
+- CI word-count enforcement for the thesis word limits by degree.
+
+Later:
+
+- Further consumer modules and templates as demand appears.
+- Full Welsh localisation of the interface strings.
+
+At the CTAN switchover:
+
+- The template repositories stop vendoring and resolve against the installed package.
+- Each template is duplicated under a `-vendored` suffix, for people who want to tweak the module sources directly. Both variants stay available.

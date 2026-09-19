@@ -1,0 +1,14 @@
+% !TeX program = pdflatex
+%%% Standalone-module smoke test: the declarations package with a plain
+%%% article document and no thesis class, proving the layer-2 modules
+%%% are class-agnostic. Also exercises the welsh option.
+\documentclass[a4paper,12pt]{article}
+\usepackage[welsh]{bangordeclarations}
+\title{Declarations Standalone Smoke Test}
+\author{C. Student}
+\date{September 2026}
+
+\begin{document}
+\maketitle
+\statementspage
+\end{document}

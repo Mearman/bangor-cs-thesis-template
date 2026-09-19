@@ -1,0 +1,22 @@
+{
+  "branches": ["main"],
+  "plugins": [
+    "@semantic-release/commit-analyzer",
+    "@semantic-release/release-notes-generator",
+    ["@semantic-release/changelog", { "changelogFile": "CHANGELOG.md" }],
+    [
+      "@semantic-release/exec",
+      {
+        "prepareCmd": "./scripts/stamp-version.sh ${nextRelease.version} && l3build ctan && latexmk -pdf -interaction=nonstopmode doc/bangor.tex"
+      }
+    ],
+    [
+      "@semantic-release/git",
+      { "assets": ["CHANGELOG.md", "*.sty", "*.cls"] }
+    ],
+    [
+      "@semantic-release/github",
+      { "assets": ["doc/bangor.pdf", "bangor-ctan.zip", "bangor.tds.zip"] }
+    ]
+  ]
+}

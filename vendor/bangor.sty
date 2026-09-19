@@ -1,0 +1,38 @@
+%%% bangor.sty — Bangor University brand layer
+% Brand primitives only: the palette, the crest, the wordmark, and the
+% version stamp. This file holds no document-type logic. Consumers
+% (classes and styles built on top of it) must define layout themselves
+% and must never redefine a brand fact.
+%
+% Derived in part from the bangorcsthesis class by Cameron Gray,
+% Bangor University. Released under the LaTeX Project Public License,
+% version 1.3c or later (see LICENSE).
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{bangor}[2026/09/19 v0.1.0 Bangor University brand layer]
+
+\RequirePackage{graphicx}
+\RequirePackage{xcolor}
+
+% Primary palette from the Bangor University brand hub.
+\definecolor{bangorred}{HTML}{ED0000}
+\definecolor{bangorsun}{HTML}{FDB913}
+
+% The crest ships as a pre-rendered vector PDF installed beside this
+% file. The extensionless reference lets the graphics package select
+% the best available format for the engine in use.
+\newcommand{\bangorcrest}[1][3cm]{\includegraphics[width=#1]{bangor-crest-colour}}
+
+% The wordmark is the institution name in the brand colour and weight.
+\newcommand{\bangorwordmark}{{\color{bangorred}\bfseries Bangor University}}
+
+% Version stamping. Each module built on this layer appends its own
+% identity to the stamp immediately after its \ProvidesPackage line, so
+% the stamp always lists exactly the modules the document loaded. The
+% \csname lookups expand at use time, when every version register
+% exists. Consumers feed the stamp into the PDF metadata and may print
+% it in a colophon.
+\newcommand{\bangorversionstamp}{bangor \csname ver@bangor.sty\endcsname}
+\newcommand{\bangorstamppart}[2]{%
+  \g@addto@macro\bangorversionstamp{; #1 \csname ver@#2\endcsname}}
+
+\endinput

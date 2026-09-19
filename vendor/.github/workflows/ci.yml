@@ -1,0 +1,153 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  commitlint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Cache npm
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: npm-commitlint-v1
+      - name: Check commit messages
+        run: |
+          RANGE="${{ github.event.before }}..HEAD"
+          if [ "$RANGE" = "0000000000000000000000000000000000000000..HEAD" ]; then
+            RANGE="HEAD"
+          fi
+          npx --yes @commitlint/cli@19 --from "$(git rev-list --max-parents=0 HEAD | tail -1)" --to HEAD
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Cache apt archives
+        uses: actions/cache@v4
+        with:
+          path: /var/cache/apt/archives
+          key: apt-${{ runner.os }}-lint-v1
+      - name: Install tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y texlive-extra-utils chktex yamllint
+      - name: Format check
+        run: |
+          status=0
+          for f in *.sty *.cls doc/*.tex tests/smoke/*.tex; do
+            latexindent -check -l .latexindent.yaml -s "$f" || status=1
+          done
+          exit $status
+      - name: Lint
+        run: |
+          status=0
+          for f in *.sty *.cls doc/*.tex; do
+            chktex -q "$f"
+            rc=$?
+            [ "$rc" -ge 2 ] && status=1
+          done
+          exit $status
+      - name: Lint workflow YAML
+        run: yamllint .github/workflows/
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Cache apt archives
+        uses: actions/cache@v4
+        with:
+          path: /var/cache/apt/archives
+          key: apt-${{ runner.os }}-texlive-v1
+      - name: Cache LaTeX build state
+        uses: actions/cache@v4
+        with:
+          path: |
+            *.aux
+            *.fdb_latexmk
+            *.fls
+            *.bcf
+            *.bbl
+          key: latex-build-${{ hashFiles('**/*.tex', '**/*.sty', '**/*.cls', 'tests/smoke/*.bib') }}
+          restore-keys: |
+            latex-build-
+      - name: Install TeX Live and biber
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            texlive-latex-base texlive-latex-recommended \
+            texlive-latex-extra texlive-fonts-recommended \
+            texlive-bibtex-extra texlive-extra-utils biber
+      - name: Compile documentation
+        run: |
+          latexmk -pdf -interaction=nonstopmode doc/bangor.tex
+          ! grep -E "^!" doc/bangor.log
+          ! grep -E "undefined|multiply defined|Citation.*undefined" doc/bangor.log
+      - name: Compile positive smoke tests
+        run: |
+          status=0
+          for f in research-thesis taught-dissertation letter declarations-article; do
+            latexmk -pdf -interaction=nonstopmode "tests/smoke/$f.tex" || status=1
+            log="tests/smoke/$f.log"
+            grep -E "^!" "$log" && status=1
+            grep -E "undefined|multiply defined|Citation.*undefined" "$log" && status=1
+          done
+          exit $status
+      - name: Assert strict-mode failure
+        run: |
+          cd tests/smoke
+          if latexmk -pdf -interaction=nonstopmode strict-fail.tex >/dev/null 2>&1; then
+            echo "strict-fail compiled in strict mode; the check is broken"
+            exit 1
+          fi
+          grep -q "Serif body text must be at least" strict-fail.log
+          latexmk -C strict-fail.tex >/dev/null 2>&1
+          sed 's/\[phd,font=termes,10pt/[phd,font=termes,strict=false,10pt/' \
+            strict-fail.tex > /tmp/strict-warn.tex
+          cp /tmp/strict-warn.tex strict-warn.tex
+          latexmk -pdf -interaction=nonstopmode strict-warn.tex
+          grep -q "Warning: Serif body text" strict-warn.log
+      - name: Assert abstract length check
+        run: |
+          python3 - << 'EOF'
+          body = "word " * 620
+          doc = ("\\documentclass[phd,12pt,a4paper]{bangorthesis}\n"
+                 "\\title{Long Abstract Test}\n\\author{E. Student}\n"
+                 "\\degreeScheme{Doctor of Philosophy}\n\\begin{document}\n"
+                 "\\begin{abstract}\n" + body + "\n\\end{abstract}\n"
+                 "\\end{document}\n")
+          with open("tests/smoke/long-abstract.tex", "w") as fh:
+              fh.write(doc)
+          EOF
+          cd tests/smoke
+          if latexmk -pdf -interaction=nonstopmode long-abstract.tex >/dev/null 2>&1; then
+            echo "long-abstract compiled in strict mode; the check is broken"
+            exit 1
+          fi
+          grep -q "abstract is approximately" long-abstract.log
+          grep -q "caps the abstract at 600 words" long-abstract.log
+
+  packaging:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install TeX Live packaging tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y texlive-extra-utils
+      - name: Build CTAN archive
+        run: l3build ctan
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ctan-archive
+          path: bangor-ctan.zip
