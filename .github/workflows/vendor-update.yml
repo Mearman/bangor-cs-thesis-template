@@ -1,0 +1,112 @@
+name: Vendor update
+
+# Keeps the vendored package modules current while vendoring is in use. Workflows travel with a template copy, so a repository created from this template runs the same automation for itself. When the installed TeX Live provides the package at or above the vendored version, the automation migrates instead of bumping: it removes vendor/ and the TEXINPUTS line. Scheduled workflows are disabled by GitHub after 60 days of repository inactivity.
+on:
+  schedule:
+    - cron: '23 4 * * 1'
+  workflow_dispatch:
+    inputs:
+      dry-run:
+        description: Report without changing anything
+        default: true
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+env:
+  PACKAGE_REPO: Mearman/bangor
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Cache apt archives
+        uses: actions/cache@v4
+        with:
+          path: /var/cache/apt/archives
+          key: apt-${{ runner.os }}-texlive-v1
+      - name: Install TeX Live
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            texlive-latex-base texlive-latex-recommended \
+            texlive-latex-extra texlive-fonts-recommended \
+            texlive-bibtex-extra texlive-extra-utils biber
+      - name: Compare versions
+        id: compare
+        run: |
+          current=$(cat vendor/VERSION 2>/dev/null || echo none)
+          latest=$(gh api "repos/${PACKAGE_REPO}/releases/latest" \
+            --jq .tag_name || echo none)
+          echo "current=${current}" >> "$GITHUB_OUTPUT"
+          echo "latest=${latest}" >> "$GITHUB_OUTPUT"
+          echo "current vendored: ${current}, latest package release: ${latest}"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Decide action
+        id: decide
+        run: |
+          current="${{ steps.compare.outputs.current }}"
+          if kpsewhich bangor.sty >/dev/null 2>&1; then
+            installed=$(grep -m1 -o 'v[0-9][0-9.]*' \
+              "$(kpsewhich bangor.sty)" || true)
+            current_num=$(printf '%s' "$current" | sed 's/^v//')
+            installed_num=$(printf '%s' "$installed" | sed 's/^v//')
+            newer=$(printf '%s\n%s\n' "$current_num" "$installed_num" \
+              | sort -V | tail -1)
+            if [ "$newer" = "$installed_num" ] && [ -n "$installed_num" ]; then
+              echo "action=migrate" >> "$GITHUB_OUTPUT"
+            else
+              echo "action=none" >> "$GITHUB_OUTPUT"
+            fi
+          elif [ "${{ steps.compare.outputs.latest }}" != "none" ] \
+            && [ "${{ steps.compare.outputs.latest }}" != "$current" ]; then
+            echo "action=bump" >> "$GITHUB_OUTPUT"
+          else
+            echo "action=none" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Report only
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          echo "dry run: action=${{ steps.decide.outputs.action }}"
+          exit 0
+      - name: Apply update
+        if: github.event_name == 'schedule' && steps.decide.outputs.action != 'none'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git remote add bangor "https://github.com/${PACKAGE_REPO}.git"
+          if [ "${{ steps.decide.outputs.action }}" = "bump" ]; then
+            git subtree pull --prefix=vendor bangor \
+              "${{ steps.compare.outputs.latest }}" -m \
+              "chore(vendor): bump bangor to ${{ steps.compare.outputs.latest }}"
+            echo "${{ steps.compare.outputs.latest }}" > vendor/VERSION
+            git add vendor/VERSION
+          else
+            git rm -r vendor
+            sed -i.bak '/vendor/d' .latexmkrc && rm -f .latexmkrc.bak
+            git add -- .latexmkrc
+          fi
+          latexmk -pdf -interaction=nonstopmode main.tex
+          ! grep -E "^!|undefined|multiply defined" main.log
+          changed=$(git status --porcelain | grep -v '^.. vendor/' | wc -l)
+          if [ "$changed" -gt 0 ]; then
+            echo "diff escapes vendor/; opening a pull request instead"
+            gh pr create --title "vendor update needs review" \
+              --body "The automatic update touched files outside vendor/. Review by hand." \
+              || true
+            git reset --hard
+            exit 0
+          fi
+          git commit --allow-empty \
+            -m "chore(vendor): land ${{ steps.decide.outputs.action }} ${{ steps.compare.outputs.latest }}" \
+            || true
+          git push "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD:main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

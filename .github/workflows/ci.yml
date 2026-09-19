@@ -1,0 +1,66 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  commitlint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Cache npm
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: npm-commitlint-v1
+      - name: Check commit messages
+        run: |
+          npx --yes @commitlint/cli@19 --from "$(git rev-list --max-parents=0 HEAD | tail -1)" --to HEAD
+
+  compile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Cache apt archives
+        uses: actions/cache@v4
+        with:
+          path: /var/cache/apt/archives
+          key: apt-${{ runner.os }}-texlive-v1
+      - name: Cache LaTeX build state
+        uses: actions/cache@v4
+        with:
+          path: |
+            *.aux
+            *.fdb_latexmk
+            *.fls
+            *.bcf
+            *.bbl
+          key: latex-build-${{ hashFiles('**/*.tex', 'vendor/*') }}
+          restore-keys: |
+            latex-build-
+      - name: Install TeX Live and biber
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            texlive-latex-base texlive-latex-recommended \
+            texlive-latex-extra texlive-fonts-recommended \
+            texlive-bibtex-extra texlive-extra-utils biber
+      - name: Compile
+        run: |
+          latexmk -pdf -interaction=nonstopmode main.tex
+          ! grep -E "^!" main.log
+          ! grep -E "undefined|multiply defined|Citation.*undefined" main.log
+      - name: Assert compile fits the Overleaf free-tier timeout
+        run: |
+          start=$(date +%s)
+          latexmk -pdf -g -interaction=nonstopmode main.tex >/dev/null 2>&1
+          elapsed=$(($(date +%s) - start))
+          echo "cold recompile took ${elapsed}s"
+          [ "$elapsed" -lt 15 ]

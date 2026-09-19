@@ -1,0 +1,15 @@
+#!/bin/sh
+# Conventional commit format check, dependency-free. The full
+# commitlint rules run in CI; this hook catches the common case
+# without requiring any toolchain.
+msg=$(head -1 "$1")
+
+pattern='^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\([^)]+\))?!?: .+'
+
+if ! printf '%s\n' "$msg" | grep -qE "$pattern"; then
+  echo "commit message does not follow the conventional commit format:"
+  echo "  $msg"
+  echo "expected: type(scope)?: subject"
+  echo "types: feat fix docs style refactor perf test build ci chore revert"
+  exit 1
+fi

@@ -1,0 +1,34 @@
+#!/bin/sh
+# Auto-format staged LaTeX sources with latexindent, then gate on
+# chktex errors. Both tools ship with TeX Live. If a tool is missing,
+# say so and let the commit continue: CI is the authoritative gate.
+set -u
+
+staged=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.(sty|cls|tex)$' || true)
+[ -z "$staged" ] && exit 0
+
+if command -v latexindent >/dev/null 2>&1; then
+  for f in $staged; do
+    latexindent -silent -l .latexindent.yaml -w "$f" 2>/dev/null || true
+    git add "$f"
+  done
+else
+  echo "note: latexindent not found; install TeX Live for local formatting"
+fi
+
+status=0
+if command -v chktex >/dev/null 2>&1; then
+  for f in $staged; do
+    chktex -q "$f" 2>/dev/null
+    rc=$?
+    # chktex exit 2 means errors; 1 means warnings only.
+    if [ "$rc" -ge 2 ]; then
+      echo "chktex errors in $f"
+      status=1
+    fi
+  done
+else
+  echo "note: chktex not found; install TeX Live for local linting"
+fi
+
+exit $status
