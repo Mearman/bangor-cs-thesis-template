@@ -32,10 +32,12 @@ jobs:
           sudo apt-get install -y \
             texlive-latex-base texlive-latex-recommended \
             texlive-latex-extra texlive-fonts-recommended \
-            texlive-bibtex-extra texlive-extra-utils biber
+            texlive-bibtex-extra texlive-extra-utils biber latexmk
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      - name: Install release plugins
+        run: npm install --no-save --no-package-lock @semantic-release/changelog@6 @semantic-release/exec@7 @semantic-release/git@10
       - name: Release
         run: |
           git config user.name "github-actions[bot]"
