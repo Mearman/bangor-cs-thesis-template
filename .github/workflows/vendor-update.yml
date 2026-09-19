@@ -94,8 +94,7 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git remote add bangor "https://github.com/${PACKAGE_REPO}.git"
           if [ "${{ steps.decide.outputs.action }}" = "bump" ]; then
-            git subtree pull --prefix=vendor bangor \
-              "${{ steps.compare.outputs.latest }}" -m \
+            git subtree pull --prefix=vendor bangor main -m \
               "chore(vendor): bump bangor to ${{ steps.compare.outputs.latest }}"
             echo "${{ steps.compare.outputs.latest }}" > vendor/VERSION
             git add vendor/VERSION
