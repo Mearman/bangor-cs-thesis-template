@@ -1,0 +1,9 @@
+# yamllint settings for GitHub Actions workflows: their run commands
+# and URLs run long by nature, so the line limit is generous, and the
+# on: trigger keys are legitimate truthy keys.
+extends: default
+rules:
+  line-length:
+    max: 120
+  truthy:
+    check-keys: false

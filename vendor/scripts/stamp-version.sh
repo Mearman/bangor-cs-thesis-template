@@ -7,10 +7,21 @@ date="$(date +%Y/%m/%d)"
 
 for f in bangor.sty bangoridentity.sty bangorlayout.sty \
          bangordeclarations.sty bangorletter.sty bangorthesis.cls; do
-  sed -i.bak -E \
-    "s|^((\\\\Provides(Package|Class))\\{[^}]+\\}\\[)[0-9]{4}/[0-9]{2}/[0-9]{2} v[0-9]+\\.[0-9]+\\.[0-9]+|\\1${date} v${version}|" \
-    "$f"
-  rm -f "$f.bak"
+  python3 - "$f" "$date" "$version" << 'EOF'
+import re
+import sys
+
+path, date, version = sys.argv[1:4]
+src = open(path).read()
+pattern = re.compile(
+    r"(\\(?:ProvidesPackage|ProvidesClass)\{[^}]+\}\[)"
+    r"\d{4}/\d{2}/\d{2} v[\d.]+")
+new, count = pattern.subn(
+    r"\g<1>" + date + " v" + version, src, count=1)
+if count != 1:
+    sys.exit("no version header found in " + path)
+open(path, "w").write(new)
+EOF
 done
 
 grep -h "v${version}" bangor.sty bangorthesis.cls >/dev/null

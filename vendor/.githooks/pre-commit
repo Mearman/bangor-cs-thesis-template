@@ -9,7 +9,7 @@ staged=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.(sty|cls|t
 
 if command -v latexindent >/dev/null 2>&1; then
   for f in $staged; do
-    latexindent -silent -l .latexindent.yaml -w "$f" 2>/dev/null || true
+    latexindent -silent -l .latexindent.yaml -w "$f" 2>/dev/null && rm -f "$f.bak0" || true
     git add "$f"
   done
 else
@@ -19,11 +19,12 @@ fi
 status=0
 if command -v chktex >/dev/null 2>&1; then
   for f in $staged; do
-    chktex -q "$f" 2>/dev/null
-    rc=$?
-    # chktex exit 2 means errors; 1 means warnings only.
-    if [ "$rc" -ge 2 ]; then
+    out=$(chktex -q "$f" 2>&1 || true)
+    # chktex exit codes conflate warnings with errors, so gate on the
+    # diagnostics themselves: only Error lines fail the commit.
+    if printf '%s\n' "$out" | grep -q "Error"; then
       echo "chktex errors in $f"
+      printf '%s\n' "$out" | grep "Error"
       status=1
     fi
   done

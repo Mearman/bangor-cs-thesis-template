@@ -1,0 +1,45 @@
+name: Format
+
+# One-click source formatting for contributors without a local
+# TeX Live: runs latexindent with the committed settings over every
+# LaTeX source and lands the result as a single conventional commit.
+# The CI lint job then sees a formatted tree.
+on: workflow_dispatch
+
+permissions:
+  contents: write
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Cache apt archives
+        uses: actions/cache@v4
+        with:
+          path: /var/cache/apt/archives
+          key: apt-${{ runner.os }}-lint-v1
+      - name: Install tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y texlive-extra-utils
+      - name: Format
+        run: |
+          for f in *.sty *.cls doc/*.tex tests/smoke/*.tex; do
+            latexindent -l .latexindent.yaml -s -w "$f" && rm -f "$f.bak0"
+          done
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if [ -n "$(git status --porcelain)" ]; then
+            git add -- '*.sty' '*.cls' doc tests/smoke
+            git commit -m "style: run latexindent over the sources"
+            git push "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD:main
+          else
+            echo "already formatted"
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -29,13 +29,13 @@ The family has three layers. A module must only use modules in a lower
 layer. Do not make a cycle between modules.
 
 \begin{enumerate}
-\item \textsf{bangor} holds the brand facts: the colours, the crest,
-and the wordmark. It holds no document logic.
-\item \textsf{bangoridentity}, \textsf{bangorlayout}, and
-\textsf{bangordeclarations} are reusable document modules. You can use
-each one with any base class.
-\item \textsf{bangorletter} and the \textsf{bangorthesis} class are
-consumers. They use the lower layers and add their own document type.
+  \item \textsf{bangor} holds the brand facts: the colours, the crest,
+        and the wordmark. It holds no document logic.
+  \item \textsf{bangoridentity}, \textsf{bangorlayout}, and
+        \textsf{bangordeclarations} are reusable document modules. You can use
+        each one with any base class.
+  \item \textsf{bangorletter} and the \textsf{bangorthesis} class are
+        consumers. They use the lower layers and add their own document type.
 \end{enumerate}
 
 \section{The brand layer: bangor}
@@ -43,12 +43,12 @@ Load the package with \verb|\usepackage{bangor}|. It gives you three
 things.
 
 \begin{itemize}
-\item The colours \verb|bangorred| and \verb|bangorsun|, from the
-university brand hub.
-\item The crest: \verb|\bangorcrest[3cm]|. The optional argument sets
-the width. The default width is 3cm.
-\item The wordmark: \verb|\bangorwordmark|. This prints the university
-name in the brand colour and weight.
+  \item The colours \verb|bangorred| and \verb|bangorsun|, from the
+        university brand hub.
+  \item The crest: \verb|\bangorcrest[3cm]|. The optional argument sets
+        the width. The default width is 3cm.
+  \item The wordmark: \verb|\bangorwordmark|. This prints the university
+        name in bold, in black by default. Pass a colour name for an accent.
 \end{itemize}
 
 The version stamp macro \verb|\bangorversionstamp| lists every loaded
@@ -60,14 +60,14 @@ Set the document facts in the preamble. School and college are free
 text, because the university renames its schools and colleges.
 
 \begin{itemize}
-\item \verb|\school{School of Computer Science and Engineering}|
-\item \verb|\college{College of Science and Engineering}|
-\item \verb|\degreeScheme{Doctor of Philosophy}|
-\item \verb|\supervisor{Dr A. Supervisor}| --- call this command once
-for each supervisor.
-\item \verb|\submissiondate{September 2026}|
-\item \verb|\wordcount{9930}| --- for taught work that must state the
-word count.
+  \item \verb|\school{School of Computer Science and Engineering}|
+  \item \verb|\college{College of Science and Engineering}|
+  \item \verb|\degreeScheme{Doctor of Philosophy}|
+  \item \verb|\supervisor{Dr A. Supervisor}| --- call this command once
+        for each supervisor.
+  \item \verb|\submissiondate{September 2026}|
+  \item \verb|\wordcount{9930}| --- for taught work that must state the
+        word count.
 \end{itemize}
 
 The command \verb|\bangoridentityblock| renders the crest, the
@@ -80,14 +80,14 @@ This module applies the rules from Regulation 03, 2025 Version 01,
 section 6.3, and checks them.
 
 \begin{itemize}
-\item Fonts: \verb|font=termes| (Times-Roman equivalent, the default),
-\verb|font=bonum| (Bookman equivalent), or \verb|font=heros| (Arial
-and Helvetica equivalent, sans-serif). Serif body text must be at least
-12pt. Sans-serif body text must be at least 10pt.
-\item Margins: 2.5cm at the binding edge, 2cm on the other sides.
-\item Line spacing: 1.5 in the main text. Set the abstract, indented
-quotations, and footnotes single spaced if you want; the regulation
-permits this.
+  \item Fonts: \verb|font=termes| (Times-Roman equivalent, the default),
+        \verb|font=bonum| (Bookman equivalent), or \verb|font=heros| (Arial
+        and Helvetica equivalent, sans-serif). Serif body text must be at least
+        12pt. Sans-serif body text must be at least 10pt.
+  \item Margins: 2.5cm at the binding edge, 2cm on the other sides.
+  \item Line spacing: 1.5 in the main text. Set the abstract, indented
+        quotations, and footnotes single spaced if you want; the regulation
+        permits this.
 \end{itemize}
 
 Strict mode is on by default. A rule that the module does not meet
@@ -105,7 +105,7 @@ The generative AI statement is a fill-in template. Replace it with your
 own statement:
 
 \begin{quote}
-\verb|\aistatement{Your statement about your use of AI tools.}|
+  \verb|\aistatement{Your statement about your use of AI tools.}|
 \end{quote}
 
 You can use this package with any base class that provides
@@ -123,22 +123,22 @@ Start with \verb|\documentclass[phd,12pt,a4paper]{bangorthesis}|.
 
 \subsection{Class options}
 \begin{itemize}
-\item Degree keywords: \verb|phd|, \verb|mphil|, \verb|mres|,
-\verb|mscres|, \verb|engd|, and \verb|profdoc| set the wording
-``thesis''. The taught keywords, for example \verb|msc|, \verb|bsc|,
-and \verb|beng|, set the wording ``dissertation''. The options
-\verb|thesis| and \verb|dissertation| override the wording directly.
-\item \verb|citations=style| selects the biblatex style. The default
-is \verb|ieee|. Any biblatex style name is valid. Ask your supervisor
-which style your school requires.
-\item \verb|font=termes|, \verb|strict|, and \verb|strict=false| pass
-through to the layout module.
-\item \verb|print| adds a blank page before the title page, for duplex
-printing. \verb|digital| is the default and prints no blank page.
-\item \verb|markdraft| prints DRAFT in the running header.
-\item \verb|welsh| prints the statutory declaration in Welsh and loads
-babel with Welsh.
-\item All other options pass to the \textsf{report} class.
+  \item Degree keywords: \verb|phd|, \verb|mphil|, \verb|mres|,
+        \verb|mscres|, \verb|engd|, and \verb|profdoc| set the wording
+        ``thesis''. The taught keywords, for example \verb|msc|, \verb|bsc|,
+        and \verb|beng|, set the wording ``dissertation''. The options
+        \verb|thesis| and \verb|dissertation| override the wording directly.
+  \item \verb|citations=style| selects the biblatex style. The default
+        is \verb|ieee|. Any biblatex style name is valid. Ask your supervisor
+        which style your school requires.
+  \item \verb|font=termes|, \verb|strict|, and \verb|strict=false| pass
+        through to the layout module.
+  \item \verb|print| adds a blank page before the title page, for duplex
+        printing. \verb|digital| is the default and prints no blank page.
+  \item \verb|markdraft| prints DRAFT in the running header.
+  \item \verb|welsh| prints the statutory declaration in Welsh and loads
+        babel with Welsh.
+  \item All other options pass to the \textsf{report} class.
 \end{itemize}
 
 \subsection{Commands}
@@ -147,10 +147,10 @@ call \verb|\bibliographySetup| once, add your resources with
 \verb|\addbibresource|, and build the front matter:
 
 \begin{quote}
-\verb|\maketitle| \quad \verb|\statementspage| \quad
-\verb|\begin{acknowledgements}| \verb|...| \verb|\end{acknowledgements}|
-\quad \verb|\begin{abstract}| \verb|...| \verb|\end{abstract}| \quad
-\verb|\tables|
+  \verb|\maketitle| \quad \verb|\statementspage| \quad
+  \verb|\begin{acknowledgements}| \verb|...| \verb|\end{acknowledgements}|
+  \quad \verb|\begin{abstract}| \verb|...| \verb|\end{abstract}| \quad
+  \verb|\tables|
 \end{quote}
 
 The abstract is single spaced. The regulation caps it at 600 words.

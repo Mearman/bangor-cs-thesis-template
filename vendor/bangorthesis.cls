@@ -6,7 +6,7 @@
 % bangorcsthesis class by Cameron Gray, Bangor University. Released
 % under the LaTeX Project Public License, version 1.3c or later.
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{bangorthesis}[2026/09/19 v0.1.0 Bangor University thesis and dissertation class]
+\ProvidesClass{bangorthesis}[2026/09/19 v1.0.0 Bangor University thesis and dissertation class]
 
 \RequirePackage{kvoptions}
 \SetupKeyvalOptions{family=bts,prefix=bts@}
@@ -93,7 +93,7 @@
 % Bake the version stamp into the PDF metadata.
 \AtBeginDocument{%
   \hypersetup{pdfsubject={\bangorversionstamp},
-    pdfkeywords={Bangor University; \bangorversionstamp}}}
+  pdfkeywords={Bangor University; \bangorversionstamp}}}
 
 % Template version hook: a release-stamped version.tex may call this in
 % the preamble so the template version is baked in alongside the
@@ -119,7 +119,7 @@
     {\LARGE\bfseries \@title \par}
     \vfill
     {A \bts@submission{} submitted to Bangor University\par
-     for the degree of \bgi@degree\par}
+      for the degree of \bgi@degree\par}
     \vfill
     {\large \@author \par}
     \ifx\bgi@supervisors\@empty\else
@@ -146,16 +146,16 @@
 \tl_new:N \l_bts_abstract_body_tl
 \seq_new:N \l_bts_abstract_words_seq
 \cs_new_protected:Npn \btsabstractcheck #1
+{
+  \tl_set:No \l_bts_abstract_body_tl {#1}
+  \seq_set_split:NnV \l_bts_abstract_words_seq { ~ } \l_bts_abstract_body_tl
+  \int_compare:nNnT { \seq_count:N \l_bts_abstract_words_seq }
+  > \c_bts_abstract_max_int
   {
-    \tl_set:No \l_bts_abstract_body_tl {#1}
-    \seq_set_split:NnV \l_bts_abstract_words_seq { ~ } \l_bts_abstract_body_tl
-    \int_compare:nNnT { \seq_count:N \l_bts_abstract_words_seq }
-      > \c_bts_abstract_max_int
-      {
-        \exp_args:Nee \use:c { bts@reportabstract }
-          { \seq_count:N \l_bts_abstract_words_seq }
-      }
+    \exp_args:Nee \use:c { bts@reportabstract }
+    { \seq_count:N \l_bts_abstract_words_seq }
   }
+}
 \ExplSyntaxOff
 \newcommand{\bts@reportabstract}[1]{%
   \bangorregulationviolation{The abstract is approximately
@@ -164,17 +164,17 @@
 \RenewEnviron{abstract}{%
   \btsabstractcheck{\BODY}%
   \begin{singlespace}
-  \chapter*{Abstract}
-  \addcontentsline{toc}{chapter}{Abstract}
-  \BODY
-  \par\end{singlespace}}
+    \chapter*{Abstract}
+    \addcontentsline{toc}{chapter}{Abstract}
+    \BODY
+    \par\end{singlespace}}
 
 \newenvironment{acknowledgements}{%
   \begin{singlespace}
-  \chapter*{Acknowledgements}
-  \addcontentsline{toc}{chapter}{Acknowledgements}
-}{%
-  \par\end{singlespace}}
+    \chapter*{Acknowledgements}
+    \addcontentsline{toc}{chapter}{Acknowledgements}
+    }{%
+    \par\end{singlespace}}
 
 \newcommand{\tables}{%
   \tableofcontents

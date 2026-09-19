@@ -7,7 +7,7 @@
     [
       "@semantic-release/exec",
       {
-        "prepareCmd": "./scripts/stamp-version.sh ${nextRelease.version} && l3build ctan && latexmk -pdf -interaction=nonstopmode doc/bangor.tex"
+        "prepareCmd": "./scripts/stamp-version.sh ${nextRelease.version} && texlua l3build/l3build.lua ctan && latexmk -pdf -interaction=nonstopmode doc/bangor.tex"
       }
     ],
     [
@@ -16,7 +16,7 @@
     ],
     [
       "@semantic-release/github",
-      { "assets": ["doc/bangor.pdf", "bangor-ctan.zip", "bangor.tds.zip"] }
+      { "assets": ["bangor.pdf", "bangor-ctan.zip"] }
     ]
   ]
 }

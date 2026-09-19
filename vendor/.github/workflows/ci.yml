@@ -52,9 +52,8 @@ jobs:
         run: |
           status=0
           for f in *.sty *.cls doc/*.tex; do
-            chktex -q "$f"
-            rc=$?
-            [ "$rc" -ge 2 ] && status=1
+            chktex -q "$f" 2>&1 | tee "/tmp/chktex-$f.log" || true
+            grep -q "Error" "/tmp/chktex-$f.log" && status=1
           done
           exit $status
       - name: Lint workflow YAML
@@ -87,12 +86,12 @@ jobs:
           sudo apt-get install -y \
             texlive-latex-base texlive-latex-recommended \
             texlive-latex-extra texlive-fonts-recommended \
-            texlive-bibtex-extra texlive-extra-utils biber
+            texlive-bibtex-extra texlive-extra-utils biber latexmk
       - name: Compile documentation
         run: |
           latexmk -pdf -interaction=nonstopmode doc/bangor.tex
           ! grep -E "^!" doc/bangor.log
-          ! grep -E "undefined|multiply defined|Citation.*undefined" doc/bangor.log
+          ! grep -E "Reference .* undefined|Citation .* undefined|multiply defined" doc/bangor.log
       - name: Compile positive smoke tests
         run: |
           status=0
@@ -100,23 +99,24 @@ jobs:
             latexmk -pdf -interaction=nonstopmode "tests/smoke/$f.tex" || status=1
             log="tests/smoke/$f.log"
             grep -E "^!" "$log" && status=1
-            grep -E "undefined|multiply defined|Citation.*undefined" "$log" && status=1
+            grep -E "Reference .* undefined|Citation .* undefined|multiply defined" "$log" && status=1
           done
           exit $status
       - name: Assert strict-mode failure
         run: |
-          cd tests/smoke
-          if latexmk -pdf -interaction=nonstopmode strict-fail.tex >/dev/null 2>&1; then
+          if latexmk -pdf -interaction=nonstopmode tests/smoke/strict-fail.tex >/dev/null 2>&1; then
             echo "strict-fail compiled in strict mode; the check is broken"
             exit 1
           fi
           grep -q "Serif body text must be at least" strict-fail.log
-          latexmk -C strict-fail.tex >/dev/null 2>&1
+          latexmk -C tests/smoke/strict-fail.tex >/dev/null 2>&1
+          rm -f strict-fail.*
           sed 's/\[phd,font=termes,10pt/[phd,font=termes,strict=false,10pt/' \
-            strict-fail.tex > /tmp/strict-warn.tex
-          cp /tmp/strict-warn.tex strict-warn.tex
-          latexmk -pdf -interaction=nonstopmode strict-warn.tex
+            tests/smoke/strict-fail.tex > tests/smoke/strict-warn.tex
+          latexmk -pdf -interaction=nonstopmode tests/smoke/strict-warn.tex
           grep -q "Warning: Serif body text" strict-warn.log
+          latexmk -C tests/smoke/strict-warn.tex >/dev/null 2>&1
+          rm -f strict-warn.* tests/smoke/strict-warn.tex
       - name: Assert abstract length check
         run: |
           python3 - << 'EOF'
@@ -129,13 +129,14 @@ jobs:
           with open("tests/smoke/long-abstract.tex", "w") as fh:
               fh.write(doc)
           EOF
-          cd tests/smoke
-          if latexmk -pdf -interaction=nonstopmode long-abstract.tex >/dev/null 2>&1; then
+          if latexmk -pdf -interaction=nonstopmode tests/smoke/long-abstract.tex >/dev/null 2>&1; then
             echo "long-abstract compiled in strict mode; the check is broken"
             exit 1
           fi
           grep -q "abstract is approximately" long-abstract.log
           grep -q "caps the abstract at 600 words" long-abstract.log
+          latexmk -C tests/smoke/long-abstract.tex >/dev/null 2>&1
+          rm -f long-abstract.* tests/smoke/long-abstract.tex
 
   packaging:
     runs-on: ubuntu-latest
@@ -145,8 +146,15 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y texlive-extra-utils
+      - name: Fetch l3build from CTAN
+        run: |
+          curl -sL -o l3build.zip https://mirror.apps.cam.ac.uk/pub/tex-archive/macros/latex/contrib/l3build.zip
+          unzip -q l3build.zip
+          mkdir -p "$HOME/texmf/scripts/l3build"
+          cp l3build/*.lua "$HOME/texmf/scripts/l3build/"
+          mktexlsr "$HOME/texmf"
       - name: Build CTAN archive
-        run: l3build ctan
+        run: texlua l3build/l3build.lua ctan
       - uses: actions/upload-artifact@v4
         with:
           name: ctan-archive

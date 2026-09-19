@@ -8,7 +8,7 @@
 % Bangor University. Released under the LaTeX Project Public License,
 % version 1.3c or later (see LICENSE).
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{bangor}[2026/09/19 v0.1.0 Bangor University brand layer]
+\ProvidesPackage{bangor}[2026/09/19 v1.0.0 Bangor University brand layer]
 
 \RequirePackage{graphicx}
 \RequirePackage{xcolor}
@@ -22,8 +22,13 @@
 % the best available format for the engine in use.
 \newcommand{\bangorcrest}[1][3cm]{\includegraphics[width=#1]{bangor-crest-colour}}
 
-% The wordmark is the institution name in the brand colour and weight.
-\newcommand{\bangorwordmark}{{\color{bangorred}\bfseries Bangor University}}
+% The wordmark is the institution name in bold. Black by default,
+% following the brand guidance that colours should not be overused;
+% formal documents such as thesis title pages expect black. Pass a
+% colour name for surfaces that want the accent, for example the
+% letterhead, whose rule already carries the brand red.
+\newcommand{\bangorwordmark}[1][black]{%
+  {\color{#1}\bfseries Bangor University}}
 
 % Version stamping. Each module built on this layer appends its own
 % identity to the stamp immediately after its \ProvidesPackage line, so

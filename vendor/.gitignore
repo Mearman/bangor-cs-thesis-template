@@ -32,3 +32,6 @@ build/
 
 # semantic-release working files
 node_modules/
+
+# latexindent backup files
+*.bak*

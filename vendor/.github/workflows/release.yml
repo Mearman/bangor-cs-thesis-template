@@ -32,10 +32,22 @@ jobs:
           sudo apt-get install -y \
             texlive-latex-base texlive-latex-recommended \
             texlive-latex-extra texlive-fonts-recommended \
-            texlive-bibtex-extra texlive-extra-utils biber
+            texlive-bibtex-extra texlive-extra-utils biber latexmk
+      - name: Fetch l3build from CTAN
+        run: |
+          curl -sL -o l3build.zip https://mirror.apps.cam.ac.uk/pub/tex-archive/macros/latex/contrib/l3build.zip
+          unzip -q l3build.zip
+          mkdir -p "$HOME/texmf/scripts/l3build"
+          cp l3build/*.lua "$HOME/texmf/scripts/l3build/"
+          mktexlsr "$HOME/texmf"
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      - name: Install release plugins
+        run: >-
+          npm install --no-save --no-package-lock
+          @semantic-release/changelog@6 @semantic-release/exec@7
+          @semantic-release/git@10
       - name: Release
         run: |
           git config user.name "github-actions[bot]"
