@@ -1,12 +1,14 @@
 # Bangor University computer science thesis and dissertation template
+[![Open in Overleaf](https://img.shields.io/badge/Open_in_Overleaf-ED0000?style=for-the-badge&logo=overleaf&logoColor=FDB913&labelColor=231F20)](https://www.overleaf.com/docs?snip_uri=https://github.com/Mearman/bangor-cs-thesis-template/archive/refs/heads/main.zip)
+[![Use this template](https://img.shields.io/badge/Use_this_template-FDB913?style=for-the-badge&logo=github&logoColor=231F20&labelColor=231F20)](https://github.com/Mearman/bangor-cs-thesis-template/generate)
+[![Download ZIP](https://img.shields.io/badge/Download_ZIP-ED0000?style=for-the-badge&logo=github&logoColor=FDB913&labelColor=231F20)](https://github.com/Mearman/bangor-cs-thesis-template/archive/refs/heads/main.zip)
 
 A LaTeX template for computer science projects at Bangor University, and the natural successor to the department's `bangorcsthesis` class. It compiles on Overleaf with no install step: the package modules it needs sit in `vendor/`. This README uses controlled English. It is written in British English.
 
 ## Start on Overleaf
 
-1. Press the green *Use this template* button on this repository. You get your own copy.
-2. Open Overleaf and select *New Project*, then *Import from GitHub*.
-3. Select your copy. Overleaf compiles it with pdfLaTeX at once.
+1. Press the *Open in Overleaf* badge above. Overleaf creates a project from this template and compiles it with pdfLaTeX at once. This path needs no GitHub account.
+2. If you want your own git repository, press the *Use this template* badge or the green button instead, then import your copy into Overleaf from *New Project* and *Import from GitHub*.
 
 If you use git on your own machine, clone your copy instead and run `latexmk -pdf main.tex`.
 
