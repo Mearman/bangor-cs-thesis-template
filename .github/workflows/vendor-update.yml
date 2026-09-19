@@ -1,6 +1,11 @@
 name: Vendor update
 
-# Keeps the vendored package modules current while vendoring is in use. The version comparison runs first with no dependencies, so the common no-op pass costs seconds; TeX Live is installed only when there is something to build. Workflows travel with a template copy, so a repository created from this template runs the same automation for itself. When the installed TeX Live provides the package at or above the vendored version, the automation migrates instead of bumping: it removes vendor/ and the TEXINPUTS line. Scheduled workflows are disabled by GitHub after 60 days of repository inactivity.
+# Keeps the vendored package modules current while vendoring is in use. The version comparison runs first with
+# no dependencies, so the common no-op pass costs seconds; TeX Live is installed only when there is something to
+# build. Workflows travel with a template copy, so a repository created from this template runs the same
+# automation for itself. When the installed TeX Live provides the package at or above the vendored version, the
+# automation migrates instead of bumping: it removes vendor/ and the TEXINPUTS line. Scheduled workflows are
+# disabled by GitHub after 60 days of repository inactivity.
 on:
   schedule:
     - cron: '41 3 * * *'
@@ -80,7 +85,10 @@ jobs:
           echo "dry run: action=${{ steps.decide.outputs.action }}"
           exit 0
       - name: Apply update
-        if: github.event_name == 'schedule' && steps.gate.outputs.skip != 'true' && steps.decide.outputs.action != 'none'
+        if: >-
+          github.event_name == 'schedule' &&
+          steps.gate.outputs.skip != 'true' &&
+          steps.decide.outputs.action != 'none'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -97,8 +105,11 @@ jobs:
             git add .latexmkrc
           fi
           latexmk -pdf -interaction=nonstopmode main.tex
-          ! grep -E "^!|Reference .* undefined|Citation .* undefined|multiply defined" main.log
-          changed=$(git status --porcelain | grep -v '^.. vendor/' | wc -l)
+          if grep -E "^!|Reference .* undefined|Citation .* undefined|multiply defined" main.log; then
+            echo "assertion failed: main.log matches"
+            exit 1
+          fi
+          changed=$(git status --porcelain | grep -cv '^.. vendor/')
           if [ "$changed" -gt 0 ]; then
             echo "diff escapes vendor/; opening a pull request instead"
             gh pr create --title "vendor update needs review" \

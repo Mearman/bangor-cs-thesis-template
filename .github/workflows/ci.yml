@@ -17,6 +17,22 @@ jobs:
           fetch-depth: 0
       - uses: Mearman/actions/.github/actions/commitlint@commitlint-v1
 
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y shellcheck yamllint
+          curl -sL -o actionlint.tar.gz \
+            https://github.com/rhysd/actionlint/releases/download/v1.7.7/actionlint_1.7.7_linux_amd64.tar.gz
+          tar -xzf actionlint.tar.gz actionlint
+      - name: Lint workflows
+        run: ./actionlint -color
+      - name: Lint workflow YAML
+        run: yamllint .github/workflows/
   compile:
     runs-on: ubuntu-latest
     steps:
@@ -39,8 +55,14 @@ jobs:
       - name: Compile
         run: |
           latexmk -pdf -interaction=nonstopmode main.tex
-          ! grep -E "^!" main.log
-          ! grep -E "Reference .* undefined|Citation .* undefined|multiply defined" main.log
+          if grep -E "^!" main.log; then
+            echo "assertion failed: main.log matches"
+            exit 1
+          fi
+          if grep -E "Reference .* undefined|Citation .* undefined|multiply defined" main.log; then
+            echo "assertion failed: main.log matches"
+            exit 1
+          fi
       - name: Assert compile fits the Overleaf free-tier timeout
         run: |
           start=$(date +%s)

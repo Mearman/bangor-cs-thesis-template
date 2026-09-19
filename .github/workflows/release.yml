@@ -28,7 +28,10 @@ jobs:
         with:
           node-version: 22
       - name: Install release plugins
-        run: npm install --no-save --no-package-lock @semantic-release/changelog@6 @semantic-release/exec@7 @semantic-release/git@10
+        run: >-
+          npm install --no-save --no-package-lock
+          @semantic-release/changelog@6 @semantic-release/exec@7
+          @semantic-release/git@10
       - name: Release
         run: |
           git config user.name "github-actions[bot]"
