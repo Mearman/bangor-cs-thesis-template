@@ -1,5 +1,5 @@
 # Bangor University computer science thesis and dissertation template
-[![Open in Overleaf](https://img.shields.io/badge/Open_in_Overleaf-ED0000?style=for-the-badge&logo=overleaf&logoColor=FDB913&labelColor=231F20)](https://www.overleaf.com/docs?snip_uri=https://github.com/Mearman/bangor-cs-thesis-template/archive/refs/heads/main.zip)
+[![Open in Overleaf](https://img.shields.io/badge/Open_in_Overleaf-44A141?style=for-the-badge&logo=overleaf&logoColor=white)](https://www.overleaf.com/docs?snip_uri=https://github.com/Mearman/bangor-cs-thesis-template/archive/refs/heads/main.zip)
 [![Use this template](https://img.shields.io/badge/Use_this_template-FDB913?style=for-the-badge&logo=github&logoColor=231F20&labelColor=231F20)](https://github.com/Mearman/bangor-cs-thesis-template/generate)
 [![Download ZIP](https://img.shields.io/badge/Download_ZIP-ED0000?style=for-the-badge&logo=github&logoColor=FDB913&labelColor=231F20)](https://github.com/Mearman/bangor-cs-thesis-template/archive/refs/heads/main.zip)
 
