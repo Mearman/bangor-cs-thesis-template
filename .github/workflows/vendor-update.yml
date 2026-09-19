@@ -47,22 +47,10 @@ jobs:
             fi
           fi
           echo "skip=${skip}" >> "$GITHUB_OUTPUT"
-      - name: Cache apt archives
+      - uses: Mearman/actions/.github/actions/setup-texlive@ci/v1
         if: steps.gate.outputs.skip != 'true'
-        uses: actions/cache@v4
         with:
-          path: ~/apt-archives
-          key: apt-${{ runner.os }}-texlive-v1
-      - name: Install TeX Live
-        if: steps.gate.outputs.skip != 'true'
-        run: |
-          mkdir -p /home/runner/apt-archives
-          sudo apt-get update
-          sudo apt-get install -y -o Dir::Cache::archives=/home/runner/apt-archives \
-            texlive-latex-base texlive-latex-recommended \
-            texlive-latex-extra texlive-fonts-recommended \
-            texlive-bibtex-extra texlive-extra-utils biber latexmk texlive-science
-          sudo chown -R $USER: /home/runner/apt-archives
+          extra: texlive-science
       - name: Decide action
         if: steps.gate.outputs.skip != 'true'
         id: decide

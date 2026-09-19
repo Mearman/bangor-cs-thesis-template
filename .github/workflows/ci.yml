@@ -15,24 +15,12 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Cache npm
-        uses: actions/cache@v4
-        with:
-          path: ~/.npm
-          key: npm-commitlint-v1
-      - name: Check commit messages
-        run: |
-          npx --yes @commitlint/cli@19 --from "$(git rev-list --max-parents=0 HEAD | tail -1)" --to HEAD
+      - uses: Mearman/actions/.github/actions/commitlint@ci/v1
 
   compile:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Cache apt archives
-        uses: actions/cache@v4
-        with:
-          path: ~/apt-archives
-          key: apt-${{ runner.os }}-texlive-v1
       - name: Cache LaTeX build state
         uses: actions/cache@v4
         with:
@@ -45,15 +33,9 @@ jobs:
           key: latex-build-${{ hashFiles('**/*.tex', 'vendor/*') }}
           restore-keys: |
             latex-build-
-      - name: Install TeX Live and biber
-        run: |
-          mkdir -p /home/runner/apt-archives
-          sudo apt-get update
-          sudo apt-get install -y -o Dir::Cache::archives=/home/runner/apt-archives \
-            texlive-latex-base texlive-latex-recommended \
-            texlive-latex-extra texlive-fonts-recommended \
-            texlive-bibtex-extra texlive-extra-utils biber latexmk texlive-science
-          sudo chown -R $USER: /home/runner/apt-archives
+      - uses: Mearman/actions/.github/actions/setup-texlive@ci/v1
+        with:
+          extra: texlive-science
       - name: Compile
         run: |
           latexmk -pdf -interaction=nonstopmode main.tex
