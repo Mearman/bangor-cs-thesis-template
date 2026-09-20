@@ -137,7 +137,13 @@ package, so it adds almost no compile time.
         short form after that.
   \item \verb|\Useabbrev{ML}| does the same with a capital letter on the
         first word. Use it at the start of a sentence.
-  \item \verb|\printabbrevs| prints the abbreviations in alphabetical order.
+  \item \verb|\printabbrevs| prints an unnumbered chapter, entered in the
+        contents, that lists the abbreviations in alphabetical order. Each
+        entry ends with the pages that use it, and a run of three or more
+        consecutive arabic pages is written as a range. The heading reads
+        ``Abbreviations'' unless an optional argument gives another, as in
+        \verb|\printabbrevs[List of abbreviations]|. The page lists come from
+        the previous run, so a first run shows none.
 \end{itemize}
 
 \section{Headed letters: bangorletter}
@@ -173,23 +179,29 @@ Start with \verb|\documentclass[phd,12pt,a4paper]{bangorthesis}|.
   \item \verb|headrule| and \verb|footrule| set the rule below the header and
         the rule above the footer. Each takes \verb|hairline| (the default),
         \verb|visible|, or \verb|none|. The two options work separately.
-  \item \verb|pageofm| prints the page number as ``Page N of M''.
-  \item \verb|appendixpages| numbers each appendix separately. The title page
-        carries no number, the front matter is numbered in roman numerals,
-        and the numbering restarts in arabic at the first numbered chapter.
-        Appendices continue the arabic sequence unless this option is set.
-        With it, the count restarts at each appendix and the footer reads
-        ``Appendix A - Page n''. Then M in ``Page N of M'' is the last page
+  \item \verb|pageofm| is on by default and prints the page number as
+        ``Page N of M''. \verb|pageofm=false| prints the number alone.
+  \item \verb|appendixpages| is on by default and numbers each appendix
+        separately. The title page carries no number, the front matter is
+        numbered in roman numerals, and the numbering restarts in arabic at
+        the first numbered chapter. The count restarts at each appendix and
+        the footer reads ``Appendix A - Page n of m'', where m is the number
+        of pages in that appendix. Then M in ``Page N of M'' is the last page
         of the main text, not of the document.
-  \item \verb|sharedfloats| puts figures, tables, listings, and algorithms
-        on one counter, so the sequence reads Figure 1, Table 2, Listing 3.
-        Listings and algorithms take part when their packages are loaded.
-  \item \verb|sectionfloats| numbers floats within their section, so the
-        first float in section 5.1 is 5.1.1. A float before the first
-        section of a chapter is numbered by the chapter alone (5.1). With
-        \verb|sectionfloats=zero| it is numbered by section zero (5.0.1).
-        The two options combine: together they give one sequence that
-        restarts at each section.
+        \verb|appendixpages=false| continues the arabic sequence through
+        the appendices.
+  \item \verb|sharedfloats| is on by default and puts figures, tables,
+        listings, and algorithms on one counter, so the sequence reads
+        Figure 1, Table 2, Listing 3. \verb|sharedfloats=false| gives each
+        type its own counter. Listings and algorithms take part when their
+        packages are loaded.
+  \item \verb|sectionfloats| is on by default and numbers floats within
+        their section, so the first float in section 5.1 is 5.1.1. A float
+        before the first section of a chapter is numbered by the chapter
+        alone (5.1). With \verb|sectionfloats=zero| it is numbered by
+        section zero (5.0.1), and with \verb|sectionfloats=none| floats are
+        numbered within their chapter. The two options combine: together
+        they give one sequence that restarts at each section.
   \item All other options pass to the \textsf{report} class.
 \end{itemize}
 

@@ -6,7 +6,7 @@
 % bangorcsthesis class by Cameron Gray, Bangor University. Released
 % under the LaTeX Project Public License, version 1.3c or later.
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{bangorthesis}[2026/09/20 v2.3.0 Bangor University thesis and dissertation class]
+\ProvidesClass{bangorthesis}[2026/09/20 v4.1.1 Bangor University thesis and dissertation class]
 
 \RequirePackage{kvoptions}
 \SetupKeyvalOptions{family=bts,prefix=bts@}
@@ -56,19 +56,20 @@
 % name on the left and the section name on the right of the header, with
 % the page number in the footer. headers=chapter shows the chapter name
 % and the page number in the header. Each rule is hairline, visible, or
-% none, and the two rules are set separately. pageofm prints the page
-% number as "Page N of M".
+% none, and the two rules are set separately. pageofm is on by default and
+% prints the page number as "Page N of M"; pageofm=false prints the
+% number alone.
 \DeclareStringOption[chapter-section]{headers}[chapter-section]
 \DeclareStringOption[hairline]{headrule}[hairline]
 \DeclareStringOption[hairline]{footrule}[hairline]
-\DeclareBoolOption[false]{pageofm}
+\DeclareBoolOption[true]{pageofm}
 
-% Page numbering. The title page carries no number, the front matter is numbered in roman numerals, and the numbering restarts in arabic at the first numbered chapter. Appendices continue the arabic sequence unless appendixpages is set, which restarts the count at each appendix and prints "Appendix A - Page n".
-\DeclareBoolOption[false]{appendixpages}
+% Page numbering. The title page carries no number, the front matter is numbered in roman numerals, and the numbering restarts in arabic at the first numbered chapter. The count restarts at each appendix and prints "Appendix A - Page n of m" with pageofm, and appendixpages=false continues the arabic sequence of the main text through the appendices instead.
+\DeclareBoolOption[true]{appendixpages}
 
-% Float numbering. sharedfloats puts every float type on one counter, so the sequence reads Figure 1, Table 2, Listing 3. sectionfloats numbers floats within their section, so the first float in section 5.1 is 5.1.1. Its value says what a float before the first section of a chapter is called: chapter numbers it by the chapter alone (5.1), and zero numbers it by section zero (5.0.1). The two options combine.
-\DeclareBoolOption[false]{sharedfloats}
-\DeclareStringOption[none]{sectionfloats}[chapter]
+% Float numbering, on by default. sharedfloats puts every float type on one counter, so the sequence reads Figure 1, Table 2, Listing 3, and sharedfloats=false gives each type its own counter. sectionfloats numbers floats within their section, so the first float in section 5.1 is 5.1.1. Its value says what a float before the first section of a chapter is called: chapter numbers it by the chapter alone (5.1), zero numbers it by section zero (5.0.1), and none turns section numbering off so floats are numbered within their chapter. The two options combine.
+\DeclareBoolOption[true]{sharedfloats}
+\DeclareStringOption[chapter]{sectionfloats}[chapter]
 
 % Everything else (12pt, a4paper, oneside, twoside, draft, final)
 % passes through to the report class.
@@ -257,20 +258,38 @@
   \ifbts@appendixnumbering\setcounter{page}{1}\fi}
 \pretocmd{\@chapter}{\bts@chapterhook}{}{}
 
-% The label that supplies M in "Page N of M". Without appendix numbering it sits on the last page of the document. With it, it sits on the last page before the appendices, because the appendix pages carry their own count.
-\apptocmd{\appendix}{%
-  \ifbts@appendixpages
-    \bts@appendixstyletrue
-    \label{bts@lastpage}%
-  \fi}{}{}
-\AtEndDocument{\ifbts@appendixstyle\else\label{bts@lastpage}\fi}
+% The labels that supply M in "Page N of M". Each is written to the auxiliary file after the last page it names has shipped, because a label placed in the text is lost when the document ends on a float page, where nothing follows it to carry it onto a page. Without appendix numbering there is one, on the last page of the document. With it, bts@lastpage names the last page before the appendices, and each appendix has its own, bts@appendix@A and so on, naming its last page in the appendix count. A chapter command closes the section before it, and the end of the document closes the last one. Each label is written once, so a starred chapter after the appendices does not write a second.
+\newcommand{\bts@writelast}[1]{%
+  \@ifundefined{bts@written@#1}{%
+    \global\@namedef{bts@written@#1}{}%
+    \clearpage
+    \addtocounter{page}{-1}%
+    \immediate\write\@auxout{\string\newlabel{#1}{{}{\@arabic\c@page}{}{}{}}}%
+    \addtocounter{page}{1}}{}}
+\newcommand{\bts@closesection}{%
+  \ifbts@appendixstyle
+    \ifbts@appendixnumbering
+      \bts@writelast{bts@appendix@\thechapter}%
+    \else
+      \bts@writelast{bts@lastpage}%
+    \fi
+  \fi}
+\pretocmd{\chapter}{\bts@closesection}{}{}
+\apptocmd{\appendix}{\ifbts@appendixpages\bts@appendixstyletrue\fi}{}{}
+\AtEndDocument{%
+  \ifbts@appendixnumbering
+    \bts@writelast{bts@appendix@\thechapter}%
+  \else
+    \bts@writelast{bts@lastpage}%
+  \fi}
 
-% The page number in the main matter, optionally as "Page N of M".
+% The page number in the main matter, optionally as "Page N of M". In an appendix the number and the total count within that appendix.
 \newcommand{\bts@pagenumber}{%
   \ifbts@appendixnumbering
-    Appendix~\thechapter{} - Page~\arabic{page}%
+  Appendix~\thechapter{} - Page~\arabic{page}%
+  \ifbts@pageofm~of~\pageref{bts@appendix@\thechapter}\fi
   \else
-    \ifbts@pageofm Page~\thepage~of~\pageref{bts@lastpage}\else\thepage\fi
+  \ifbts@pageofm Page~\thepage~of~\pageref{bts@lastpage}\else\thepage\fi
   \fi}
 
 % Names in the header may use this share of the text width each. Chapter and section names that repeat one another (contents, bibliography) show once.

@@ -6,7 +6,7 @@
 % \addabbrev{SHORT}{Full Name} registers an abbreviation.
 % \useabbrev{SHORT} prints the full form on first use, the short form after.
 % \Useabbrev{SHORT} does the same with a capitalised first word.
-% \printabbrevs emits an alphabetically sorted description list.
+% \printabbrevs[Title] prints an unnumbered chapter, entered in the contents, holding an alphabetically sorted list. Each entry ends with the pages on which the abbreviation is used, and runs of three or more consecutive arabic pages are written as a range.
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{bangorglossary}[2026/09/20 v1.1.2 Bangor University abbreviations]
 
@@ -29,11 +29,26 @@
   \bool_gset_false:c { g_bangor_abbrev_ #1 _used_bool }
 }
 
+% Every use writes its page to the .aux file, and the next run reads it back through \bangorabbrevpage, so the list can print the pages an abbreviation appears on. A page that already holds the abbreviation is not recorded again.
+\cs_new_protected:Npn \bangor_write_page:n #1
+{
+  \protected@write \@auxout { }
+  { \string \bangorabbrevpage { #1 } { \thepage } }
+}
+\cs_new_protected:Npn \bangor_record_page:nn #1 #2
+{
+  \seq_if_exist:cF { g_bangor_abbrev_ #1 _pages_seq }
+  { \seq_new:c { g_bangor_abbrev_ #1 _pages_seq } }
+  \seq_if_in:cnF { g_bangor_abbrev_ #1 _pages_seq } { #2 }
+  { \seq_gput_right:cn { g_bangor_abbrev_ #1 _pages_seq } { #2 } }
+}
+
 % \bangor_use_abbrev:n {short} — short form or full form on first use
-\cs_new:Npn \bangor_use_abbrev:n #1
+\cs_new_protected:Npn \bangor_use_abbrev:n #1
 {
   \prop_if_in:NnTF \g_bangor_abbrev_prop { #1 }
   {
+    \bangor_write_page:n { #1 }
     \bool_if:cTF { g_bangor_abbrev_ #1 _used_bool }
     { #1 }
     {
@@ -48,10 +63,11 @@
 }
 
 % \bangor_use_abbrev_cap:n {short} — same but capitalise the first word
-\cs_new:Npn \bangor_use_abbrev_cap:n #1
+\cs_new_protected:Npn \bangor_use_abbrev_cap:n #1
 {
   \prop_if_in:NnTF \g_bangor_abbrev_prop { #1 }
   {
+    \bangor_write_page:n { #1 }
     \bool_if:cTF { g_bangor_abbrev_ #1 _used_bool }
     { #1 }
     {
@@ -66,9 +82,82 @@
   }
 }
 
-% \bangor_print_abbrevs: — sorted description list
-\cs_new_protected:Npn \bangor_print_abbrevs:
+% Page list of one abbreviation. A run of three or more consecutive arabic pages is written as a range, and every other page stands alone. A page is linked when hyperref is loaded.
+\int_new:N \l_bangor_run_start_int
+\int_new:N \l_bangor_run_end_int
+\bool_new:N \l_bangor_run_open_bool
+\bool_new:N \l_bangor_run_first_bool
+
+\cs_new_protected:Npn \bangor_page_out:n #1
 {
+  \bool_if:NTF \l_bangor_run_first_bool
+  { \bool_set_false:N \l_bangor_run_first_bool }
+  { ,~ }
+  \cs_if_exist:NTF \hyperpage { \hyperpage { #1 } } { #1 }
+}
+
+\cs_new_protected:Npn \bangor_run_flush:
+{
+  \bool_if:NT \l_bangor_run_open_bool
+  {
+    \int_compare:nNnTF { \l_bangor_run_end_int - \l_bangor_run_start_int } > { 1 }
+      {
+        \bangor_page_out:n { \int_use:N \l_bangor_run_start_int }
+        --
+        \cs_if_exist:NTF \hyperpage
+        { \hyperpage { \int_use:N \l_bangor_run_end_int } }
+        { \int_use:N \l_bangor_run_end_int }
+      }
+      {
+        \int_step_inline:nnn { \l_bangor_run_start_int } { \l_bangor_run_end_int }
+        { \bangor_page_out:n { ##1 } }
+      }
+    \bool_set_false:N \l_bangor_run_open_bool
+  }
+}
+
+\cs_new_protected:Npn \bangor_page_step:n #1
+{
+  \regex_match:nnTF { \A \d+ \Z } { #1 }
+  {
+    \bool_if:NT \l_bangor_run_open_bool
+    {
+      \int_compare:nNnF { #1 } = { \l_bangor_run_end_int + 1 }
+        { \bangor_run_flush: }
+    }
+    \bool_if:NTF \l_bangor_run_open_bool
+    { \int_set:Nn \l_bangor_run_end_int { #1 } }
+    {
+      \int_set:Nn \l_bangor_run_start_int { #1 }
+      \int_set:Nn \l_bangor_run_end_int { #1 }
+      \bool_set_true:N \l_bangor_run_open_bool
+    }
+  }
+  {
+    \bangor_run_flush:
+    \bangor_page_out:n { #1 }
+  }
+}
+
+\cs_new_protected:Npn \bangor_print_pages:n #1
+{
+  \seq_if_exist:cT { g_bangor_abbrev_ #1 _pages_seq }
+  {
+    \nobreak \dotfill \nobreak \
+    \group_begin:
+    \bool_set_true:N \l_bangor_run_first_bool
+    \bool_set_false:N \l_bangor_run_open_bool
+    \seq_map_function:cN { g_bangor_abbrev_ #1 _pages_seq } \bangor_page_step:n
+    \bangor_run_flush:
+    \group_end:
+  }
+}
+
+% \bangor_print_abbrevs:n {title} — a starred chapter entered in the contents, then the sorted list
+\cs_new_protected:Npn \bangor_print_abbrevs:n #1
+{
+  \chapter* { #1 }
+  \addcontentsline { toc } { chapter } { #1 }
   \begin{description}
     \bangor_print_abbrevs_sorted:
   \end{description}
@@ -86,6 +175,7 @@
   \seq_map_inline:Nn \g_bangor_abbrev_order_seq
   {
     \item[##1] \prop_item:Nn \g_bangor_abbrev_prop { ##1 }
+    \bangor_print_pages:n { ##1 }
   }
 }
 
@@ -99,8 +189,12 @@
 \NewDocumentCommand { \Useabbrev } { m }
 { \bangor_use_abbrev_cap:n { #1 } }
 
-\NewDocumentCommand { \printabbrevs } { }
-{ \bangor_print_abbrevs: }
+\NewDocumentCommand { \printabbrevs } { O{Abbreviations} }
+{ \bangor_print_abbrevs:n { #1 } }
+
+% Read from the .aux file, so it must exist when the file is read.
+\NewDocumentCommand { \bangorabbrevpage } { m m }
+{ \bangor_record_page:nn { #1 } { #2 } }
 
 \ExplSyntaxOff
 

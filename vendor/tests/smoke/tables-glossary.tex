@@ -2,7 +2,7 @@
 %%% Smoke test for the opt-in bangortables and bangorglossary modules.
 %%% A long longtable must paginate with its header repeated, a landscape
 %%% tabularx table must fit, and the abbreviations must expand on first use
-%%% and print in an alphabetical list.
+%%% and print in an alphabetical list under a heading, with the pages that use each one.
 \documentclass[phd,12pt,a4paper]{bangorthesis}
 \usepackage{bangortables}
 \usepackage{bangorglossary}
@@ -16,12 +16,18 @@
 
 \begin{document}
 \maketitle
+\tableofcontents
+\printabbrevs
 
-\chapter{Abbreviations}
+\chapter{Usage}
 \Useabbrev{ML} expands on first use and is short afterwards: \useabbrev{ML}.
 \useabbrev{IR} expands in lower case mid-sentence.
-
-\printabbrevs
+\clearpage
+\useabbrev{ML}
+\clearpage
+\useabbrev{ML}
+\clearpage
+\useabbrev{ML}
 
 \chapter{Tables}
 \begin{longtable}{l p{6cm} r}
