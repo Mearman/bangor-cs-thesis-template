@@ -7,6 +7,7 @@
     [
       "@semantic-release/exec",
       {
+        "generateNotesCmd": "printf 'Open this exact version in Overleaf, or download it:\\n\\n[![Open in Overleaf](https://img.shields.io/badge/Open_in_Overleaf-44A141?style=for-the-badge&logo=overleaf&logoColor=white)](https://www.overleaf.com/docs?snip_uri=https://github.com/%s/archive/refs/tags/%s.zip)\\n[![Download ZIP](https://img.shields.io/badge/Download_ZIP-ED0000?style=for-the-badge&labelColor=231F20)](https://github.com/%s/archive/refs/tags/%s.zip)\\n' \"$GITHUB_REPOSITORY\" \"${nextRelease.gitTag}\" \"$GITHUB_REPOSITORY\" \"${nextRelease.gitTag}\"",
         "prepareCmd": "printf '\\\\templateversion{v%s}\\n' \"${nextRelease.version}\" > version.tex && latexmk -pdf -interaction=nonstopmode main.tex"
       }
     ],
