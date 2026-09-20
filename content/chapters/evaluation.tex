@@ -23,7 +23,7 @@ State what you measured, how you measured it, and what you found. \Cref{tab:samp
 \end{figure}
 
 \section{Float numbering}
-This template sets the \texttt{sharedfloats} and \texttt{sectionfloats} class options. Figures, tables, and listings share one counter, and the counter restarts in each section, so \cref{tab:numbering} is the first float of this section and its number says so. Floats that come before the first section of a chapter, such as \cref{tab:sample}, are numbered by the chapter alone.
+The class numbers floats by section by default. Figures, tables, and listings share one counter, and the counter restarts in each section, so \cref{tab:numbering} is the first float of this section and its number says so. Floats that come before the first section of a chapter, such as \cref{tab:sample}, are numbered by the chapter alone. Set \texttt{sharedfloats=false} or \texttt{sectionfloats=none} in the class options to turn either behaviour off.
 
 \begin{table}[htbp]
   \centering
