@@ -1,3 +1,81 @@
+# [2.1.0](https://github.com/Mearman/bangor/compare/v2.0.0...v2.1.0) (2026-09-20)
+
+
+### Features
+
+* configurable headers and footers with strict overflow checks ([6e4cf50](https://github.com/Mearman/bangor/commit/6e4cf50442ceeb453ea786f5deaca254c3e8defa))
+* **identity:** add shorttitle for the running footer ([2d59713](https://github.com/Mearman/bangor/commit/2d5971349f8296cf1ba130e22422df007852aee9))
+
+# [2.0.0](https://github.com/Mearman/bangor/compare/v1.3.0...v2.0.0) (2026-09-20)
+
+
+* refactor!: use lowercase command names and rename commands that clash with packages ([e65bb57](https://github.com/Mearman/bangor/commit/e65bb579ab1a8c4dd751407e0df99416580a63ce))
+
+
+### BREAKING CHANGES
+
+* several commands are renamed.
+\degreeScheme is now \degreescheme.
+\bibliographySetup is now \bibliographysetup.
+\wordcount is now \submissionwordcount, because stringstrings also defines \wordcount.
+\gls and \Gls are now \useabbrev and \Useabbrev, because glossaries defines \gls and \Gls.
+
+# [1.3.0](https://github.com/Mearman/bangor/compare/v1.2.2...v1.3.0) (2026-09-20)
+
+
+### Bug Fixes
+
+* use kernel str_compare instead of redefining it ([1f284d4](https://github.com/Mearman/bangor/commit/1f284d48242ee697a2e1c9db732f319376d7b625))
+
+
+### Features
+
+* zero-dependency abbreviations module, headheight fix, lstlisting cref ([9f31375](https://github.com/Mearman/bangor/commit/9f31375d3987667f4b832d8da2ea462349827356))
+
+## [1.2.2](https://github.com/Mearman/bangor/compare/v1.2.1...v1.2.2) (2026-09-20)
+
+
+### Bug Fixes
+
+* amsmath loads before cleveref so the glossary module doesn't break load order ([f507133](https://github.com/Mearman/bangor/commit/f5071334c2840a36e067d699973d11d23896fed2))
+* bangortables and bangorglossary are opt-in, not loaded by default ([2152482](https://github.com/Mearman/bangor/commit/2152482a9938001b7c58ab9b19f77a424b385de1))
+
+## [1.2.1](https://github.com/Mearman/bangor/compare/v1.2.0...v1.2.1) (2026-09-20)
+
+
+### Bug Fixes
+
+* bangortables loads longtable, tabularx, pdflscape independently ([9d21ad2](https://github.com/Mearman/bangor/commit/9d21ad2308c8d6c92aff5c9dec15226a70cfda42))
+
+# [1.2.0](https://github.com/Mearman/bangor/compare/v1.1.1...v1.2.0) (2026-09-20)
+
+
+### Features
+
+* table support via xltabular, glossary abbreviations, running headers replacing markdraft ([304f085](https://github.com/Mearman/bangor/commit/304f085df62d83e931ec94b4d48331d52f05ab70))
+
+## [1.1.1](https://github.com/Mearman/bangor/compare/v1.1.0...v1.1.1) (2026-09-20)
+
+
+### Bug Fixes
+
+* drop the capitalise option so cref and Cref differ as documented ([f59ca6b](https://github.com/Mearman/bangor/commit/f59ca6b587113918b71d63260e9a87ced1b9eba8))
+
+# [1.1.0](https://github.com/Mearman/bangor/compare/v1.0.4...v1.1.0) (2026-09-20)
+
+
+### Features
+
+* load cleveref after hyperref so templates reference content by label alone ([27081cc](https://github.com/Mearman/bangor/commit/27081cc3fc3ad102991738c3bc929c770f201d4f))
+
+## [1.0.4](https://github.com/Mearman/bangor/compare/v1.0.3...v1.0.4) (2026-09-20)
+
+
+### Bug Fixes
+
+* pdfinfo for metadata, correct output paths ([f7799ad](https://github.com/Mearman/bangor/commit/f7799ad2254bc74f6ea7f6db337b0e6b910d7339))
+* pdfinfo Subject for the metadata assertion, correct log paths ([b2f946b](https://github.com/Mearman/bangor/commit/b2f946b6c51d03c6832f54c045398dc434473fc2))
+
 ## [1.0.3](https://github.com/Mearman/bangor/compare/v1.0.2...v1.0.3) (2026-09-19)
 
 

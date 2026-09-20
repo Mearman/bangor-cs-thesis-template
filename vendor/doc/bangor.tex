@@ -33,7 +33,9 @@ layer. Do not make a cycle between modules.
         and the wordmark. It holds no document logic.
   \item \textsf{bangoridentity}, \textsf{bangorlayout}, and
         \textsf{bangordeclarations} are reusable document modules. You can use
-        each one with any base class.
+        each one with any base class. \textsf{bangortables} and
+        \textsf{bangorglossary} are optional modules of the same layer. Load
+        them only when your document needs them.
   \item \textsf{bangorletter} and the \textsf{bangorthesis} class are
         consumers. They use the lower layers and add their own document type.
 \end{enumerate}
@@ -62,12 +64,14 @@ text, because the university renames its schools and colleges.
 \begin{itemize}
   \item \verb|\school{School of Computer Science and Engineering}|
   \item \verb|\college{College of Science and Engineering}|
-  \item \verb|\degreeScheme{Doctor of Philosophy}|
+  \item \verb|\degreescheme{Doctor of Philosophy}|
   \item \verb|\supervisor{Dr A. Supervisor}| --- call this command once
         for each supervisor.
   \item \verb|\submissiondate{September 2026}|
-  \item \verb|\wordcount{9930}| --- for taught work that must state the
+  \item \verb|\submissionwordcount{9930}| --- for taught work that must state the
         word count.
+  \item \verb|\shorttitle{Short title}| sets the title that prints in the
+        footer. If you do not set it, the footer shows the full title.
 \end{itemize}
 
 The command \verb|\bangoridentityblock| renders the crest, the
@@ -111,6 +115,31 @@ own statement:
 You can use this package with any base class that provides
 \verb|\section*|, without the thesis class.
 
+\section{Tables: bangortables}
+Load the module with \verb|\usepackage{bangortables}|. It loads the
+packages \textsf{longtable}, \textsf{tabularx}, and \textsf{pdflscape}.
+
+\begin{itemize}
+  \item Use \verb|longtable| for a table that can be longer than one page.
+        The header repeats on each page if you put it before \verb|\endhead|.
+  \item Use \verb|tabularx| with the \verb|X| column type for a table that
+        must fit the text width.
+  \item Put a wide table in a \verb|landscape| environment.
+\end{itemize}
+
+\section{Abbreviations: bangorglossary}
+Load the module with \verb|\usepackage{bangorglossary}|. It loads no other
+package, so it adds almost no compile time.
+
+\begin{itemize}
+  \item \verb|\addabbrev{ML}{machine learning}| registers an abbreviation.
+  \item \verb|\useabbrev{ML}| prints the full form the first time and the
+        short form after that.
+  \item \verb|\Useabbrev{ML}| does the same with a capital letter on the
+        first word. Use it at the start of a sentence.
+  \item \verb|\printabbrevs| prints the abbreviations in alphabetical order.
+\end{itemize}
+
 \section{Headed letters: bangorletter}
 Use the standard \textsf{letter} class, then load
 \verb|\usepackage{bangorletter}|. Put \verb|\bangorletterhead| at the
@@ -135,15 +164,22 @@ Start with \verb|\documentclass[phd,12pt,a4paper]{bangorthesis}|.
         through to the layout module.
   \item \verb|print| adds a blank page before the title page, for duplex
         printing. \verb|digital| is the default and prints no blank page.
-  \item \verb|markdraft| prints DRAFT in the running header.
   \item \verb|welsh| prints the statutory declaration in Welsh and loads
         babel with Welsh.
+  \item \verb|headers=chapter-section| is the default. The header shows the
+        chapter name on the left and the section name on the right, and the
+        page number is in the footer. \verb|headers=chapter| shows the chapter
+        name and the page number in the header.
+  \item \verb|headrule| and \verb|footrule| set the rule below the header and
+        the rule above the footer. Each takes \verb|hairline| (the default),
+        \verb|visible|, or \verb|none|. The two options work separately.
+  \item \verb|pageofm| prints the page number as ``Page N of M''.
   \item All other options pass to the \textsf{report} class.
 \end{itemize}
 
 \subsection{Commands}
 Set the metadata from \textsf{bangoridentity} in the preamble, then
-call \verb|\bibliographySetup| once, add your resources with
+call \verb|\bibliographysetup| once, add your resources with
 \verb|\addbibresource|, and build the front matter:
 
 \begin{quote}
@@ -154,6 +190,24 @@ call \verb|\bibliographySetup| once, add your resources with
 \end{quote}
 
 The abstract is single spaced. The regulation caps it at 600 words.
+
+\subsection{Headers and footers}
+The footer shows the title. Set \verb|\shorttitle{Short title}| in the
+preamble to show a shorter title.
+
+The header shows the chapter name and, in the default layout, the section
+name. A name that is too wide for the header stops the build. The error
+message names the chapter or the section. Give a shorter name with the
+optional argument: \verb|\chapter[Short title]{Long title}|. The short title
+prints in the header. It also prints in the table of contents, because the
+LaTeX kernel uses the optional argument for both.
+
+A title that is too wide for the footer also stops the build. Set
+\verb|\shorttitle| to fix it. With \verb|strict=false| the build continues:
+the class cuts the text short and shows a warning.
+
+To change the layout in other ways, use the \textsf{fancyhdr} commands in
+your preamble.
 
 \section{Version stamping in generated PDFs}
 Every consumer places the version stamp in the PDF metadata, in the

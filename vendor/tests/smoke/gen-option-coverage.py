@@ -24,7 +24,7 @@ def main() -> None:
         "\\documentclass[12pt,a4paper]{bangorthesis}",
         "\\title{Option Coverage}",
         "\\author{H. Student}",
-        "\\degreeScheme{Doctor of Philosophy}",
+        "\\degreescheme{Doctor of Philosophy}",
         "\\begin{document}",
         "word",
     ]

@@ -2,47 +2,42 @@
 %%% Bangor University computer science thesis and dissertation
 %%% template. The natural successor to the department's bangorcsthesis
 %%% class: same purpose, light compile, Overleaf-safe.
-\documentclass[bsc,citations=ieee,12pt,a4paper]{bangorthesis}
+% Layout options besides the degree keyword: pageofm prints "Page N of M", headers=chapter puts the page number in the header instead of the footer, and headrule and footrule each take hairline (the default), visible or none.
+\documentclass[bsc,citations=ieee,pageofm,12pt,a4paper]{bangorthesis}
 
-\bibliographySetup
+\bibliographysetup
 \addbibresource{references.bib}
 
 % Document facts. School and college are free text: use the names your
 % school publishes today. The school was renamed during the 2026
 % restructure, which is exactly why the class never enumerates them.
 \title{Your Computer Science Project Title}
+\shorttitle{Short Project Title}
 \author{Your Name}
-\degreeScheme{Bachelor of Science in Computer Science}
+\degreescheme{Bachelor of Science in Computer Science}
 \school{School of Computer Science and Engineering}
 \college{College of Science and Engineering}
 \supervisor{Dr First Supervisor}
 \submissiondate{September 2026}
-\wordcount{9930}
+\submissionwordcount{9930}
 
-% Computer science conventions live in this preamble, not in the
-% package: code listings, algorithm floats, and verbatim setup.
-% Tables and glossary are opt-in modules: load them here only if
-% your document uses longtable, tabularx, landscape, or a glossary.
+% Tables and abbreviations are opt-in modules. Load bangortables only if your document uses longtable, tabularx or landscape tables, and bangorglossary only if you want a list of abbreviations.
 \usepackage{bangortables}
 \usepackage{bangorglossary}
+
+% Abbreviations. Register yours here: \useabbrev expands each one on first use, and \printabbrevs prints the list in the front matter.
 \addabbrev{ML}{machine learning}
 
+% Computer science conventions live in preamble-cs.tex, not in the package: code listings, algorithm floats, and verbatim setup.
 \input{preamble-cs}
 
-% Release builds stamp the template version here. Leave this line as
-% it is; the file appears only in tagged releases.
-% Section continuation markers: asection environment that inserts
-% "(Continued)" when a nested section closes and parent content
-% resumes. Comment this line out if you don't want them.
+% Section continuation markers: the asection environment inserts "(Continued)" when a nested section closes and parent content resumes. Remove this line if you do not want them.
 \input{continuation-markers}
 
+% Release builds stamp the template version here. Leave this line as it is; the file appears only in tagged releases.
 \InputIfFileExists{version.tex}{}{}
 
-% Cross-references use cleveref: \cref{label} mid-sentence produces a
-% lowercase type name ("see figure 1"), \Cref{label} at a sentence
-% opening produces uppercase ("Figure 1 shows"). No regulation mandates
-% a reference style, so the class does not impose one; use whichever
-% your subject convention prefers.
+% Cross-references use cleveref: \cref{label} mid-sentence produces a lowercase type name ("see figure 1"), \Cref{label} at a sentence opening produces uppercase ("Figure 1 shows"). No regulation mandates a reference style, so the class does not impose one; use whichever your subject convention prefers.
 
 \begin{document}
 
@@ -57,6 +52,7 @@ words and checks the cap.
 \end{abstract}
 
 \tables
+\printabbrevs
 
 \input{content/chapters/introduction}
 \input{content/chapters/background}

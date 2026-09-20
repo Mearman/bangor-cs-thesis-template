@@ -4,6 +4,7 @@ on:
   push:
     branches: [main]
   pull_request:
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -49,6 +50,19 @@ jobs:
         run: ./actionlint -color
       - name: Lint workflow YAML
         run: yamllint .github/workflows/
+      - name: README link check
+        run: |
+          status=0
+          grep -oE 'https://[^)\]]+' README.md | sort -u | while IFS= read -r url; do
+            case "$url" in
+              *img.shields.io*|*ctan.org*|*latex-project.org*) continue ;;
+            esac
+            if ! curl -sf -o /dev/null --max-time 15 "$url"; then
+              echo "broken link: $url"
+              status=1
+            fi
+          done
+          exit ${status:-0}
 
   test:
     runs-on: ubuntu-latest
@@ -73,16 +87,22 @@ jobs:
             latex-build-
       - uses: Mearman/actions/.github/actions/setup-texlive@setup-texlive-v1
         with:
-          extra: texlive-lang-european
+          extra: texlive-lang-european poppler-utils
       - name: Compile documentation
         run: |
           latexmk -pdf -interaction=nonstopmode doc/bangor.tex
-          if grep -E "^!" doc/bangor.log; then
-            echo "assertion failed: doc/bangor.log matches"
+          if grep -E "^!" bangor.log; then
+            echo "assertion failed: bangor.log matches"
             exit 1
           fi
-          if grep -E "Reference .* undefined|Citation .* undefined|multiply defined" doc/bangor.log; then
-            echo "assertion failed: doc/bangor.log matches"
+          stamp=$(pdfinfo bangor.pdf | grep Subject | grep -oE 'bangor [0-9/]+ v[0-9]+' | head -1)
+          if [ -z "$stamp" ]; then
+            echo "version stamp missing from the PDF metadata"
+            exit 1
+          fi
+          echo "PDF stamp: $stamp"
+          if grep -E "Reference .* undefined|Citation .* undefined|multiply defined" bangor.log; then
+            echo "assertion failed: bangor.log matches"
             exit 1
           fi
       - name: Compile positive smoke tests
@@ -120,7 +140,7 @@ jobs:
           [ "$found" -eq "$expected" ] || { echo "degree markers: $found of $expected"; status=1; }
           grep -q "DEGREECHECK:phd:thesis" degree-coverage.log || status=1
           grep -q "DEGREECHECK:msc:dissertation" degree-coverage.log || status=1
-          for f in opt-markdraft opt-welsh opt-bonum opt-override opt-templateversion; do
+          for f in opt-welsh opt-bonum opt-override opt-templateversion; do
             latexmk -pdf -interaction=nonstopmode "tests/smoke/$f.tex" || status=1
             if grep -E "^!" "$f.log"; then status=1; fi
           done
@@ -129,6 +149,87 @@ jobs:
             echo "template version missing from stamp"
             status=1
           fi
+          exit $status
+      - name: Compile table and abbreviation fixture
+        run: |
+          status=0
+          latexmk -pdf -interaction=nonstopmode tests/smoke/tables-glossary.tex || status=1
+          if grep -E "^!" tables-glossary.log; then status=1; fi
+          if grep -E "Unknown abbreviation|multiply defined" tables-glossary.log; then status=1; fi
+          text=$(pdftotext -layout tables-glossary.pdf -)
+          if ! printf '%s\n' "$text" | grep -q "Machine learning (ML)"; then
+            echo "first-use expansion missing from the abbreviations output"
+            status=1
+          fi
+          repeats=$(printf '%s\n' "$text" | grep -cE "Item +Description +Value" || true)
+          if [ "$repeats" -lt 2 ]; then
+            echo "the longtable header did not repeat on a continuation page"
+            status=1
+          fi
+          exit $status
+      - name: Compile layout fixtures and assert header and footer content
+        run: |
+          status=0
+          for f in layout-default layout-options header-short; do
+            latexmk -pdf -interaction=nonstopmode "tests/smoke/$f.tex" || status=1
+            if grep -E "^!" "$f.log"; then status=1; fi
+            if grep -E "Reference .* undefined|multiply defined" "$f.log"; then status=1; fi
+          done
+          text=$(pdftotext -layout layout-default.pdf -)
+          if ! printf '%s\n' "$text" | grep -qE "1\. Introduction +1\.2\. Second section"; then
+            echo "default header layout missing: chapter left and section right"
+            status=1
+          fi
+          if ! printf '%s\n' "$text" | grep -q "A Reasonably Sized Thesis Title"; then
+            echo "the footer does not fall back to the full title"
+            status=1
+          fi
+          last=$(pdfinfo layout-options.pdf | awk '/^Pages:/ {print $2}')
+          tail_text=$(pdftotext -f "$last" -l "$last" -layout layout-options.pdf -)
+          pageofm=$(printf '%s\n' "$tail_text" | grep -oE "Page [0-9]+ of [0-9]+" | head -1)
+          if ! printf '%s\n' "$pageofm" | awk '{ exit !($2 == $4) }'; then
+            echo "the last page should read Page N of N, found: ${pageofm:-nothing}"
+            status=1
+          fi
+          if ! printf '%s\n' "$tail_text" | grep -q "Short Title"; then
+            echo "the short title is missing from the footer"
+            status=1
+          fi
+          if ! pdftotext -layout header-short.pdf - | grep -qE "2\. Methods +2\.1\. Only section"; then
+            echo "the kernel short title did not reach the running header"
+            status=1
+          fi
+          exit $status
+      - name: Assert header and footer overflow fail in strict mode and truncate otherwise
+        run: |
+          status=0
+          for spec in "header-fail:too wide for the running header" "footer-fail:too wide for the footer"; do
+            f="${spec%%:*}"
+            msg="${spec#*:}"
+            if latexmk -pdf -interaction=nonstopmode "tests/smoke/$f.tex" >/dev/null 2>&1; then
+              echo "$f compiled in strict mode; the check is broken"
+              status=1
+            elif ! tr -d '\n' < "$f.log" | grep -q "$msg"; then
+              echo "$f failed without the expected message: $msg"
+              status=1
+            fi
+            latexmk -C "tests/smoke/$f.tex" >/dev/null 2>&1
+            sed 's/\[phd,/[phd,strict=false,/' "tests/smoke/$f.tex" > "tests/smoke/$f-warn.tex"
+            if ! latexmk -pdf -interaction=nonstopmode "tests/smoke/$f-warn.tex" >/dev/null 2>&1; then
+              echo "$f did not compile with strict=false"
+              status=1
+            fi
+            if ! tr -d '\n' < "$f-warn.log" | grep -q "Warning: .*$msg"; then
+              echo "$f-warn compiled without the expected warning: $msg"
+              status=1
+            fi
+            if ! pdftotext -layout "$f-warn.pdf" - | grep -q "\. \. \."; then
+              echo "$f-warn was not truncated with an ellipsis"
+              status=1
+            fi
+            latexmk -C "tests/smoke/$f-warn.tex" >/dev/null 2>&1
+            rm -f "tests/smoke/$f-warn.tex" "$f-warn".*
+          done
           exit $status
       - name: Fetch l3build for the regression checks
         run: |
@@ -173,7 +274,7 @@ jobs:
           body = "word " * 620
           doc = ("\\documentclass[phd,12pt,a4paper]{bangorthesis}\n"
                  "\\title{Long Abstract Test}\n\\author{E. Student}\n"
-                 "\\degreeScheme{Doctor of Philosophy}\n\\begin{document}\n"
+                 "\\degreescheme{Doctor of Philosophy}\n\\begin{document}\n"
                  "\\begin{abstract}\n" + body + "\n\\end{abstract}\n"
                  "\\end{document}\n")
           with open("tests/smoke/long-abstract.tex", "w") as fh:
@@ -205,6 +306,18 @@ jobs:
           mktexlsr "$HOME/texmf"
       - name: Build CTAN archive
         run: texlua l3build/l3build.lua ctan
+      - name: Validate archive contents
+        run: |
+          status=0
+          for f in bangor.sty bangoridentity.sty bangorlayout.sty \
+                   bangordeclarations.sty bangorletter.sty bangorthesis.cls \
+                   bangor-crest-colour.pdf README.md LICENSE; do
+            if ! unzip -l bangor-ctan.zip | grep -q "$f"; then
+              echo "missing from archive: $f"
+              status=1
+            fi
+          done
+          exit $status
       - uses: actions/upload-artifact@v4
         with:
           name: ctan-archive

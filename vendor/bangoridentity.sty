@@ -5,7 +5,7 @@
 % School and college are free text on purpose: the university renames
 % its schools and colleges, so the package never enumerates them.
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{bangoridentity}[2026/09/19 v1.0.3 Bangor University document identity]
+\ProvidesPackage{bangoridentity}[2026/09/20 v2.1.0 Bangor University document identity]
 
 \RequirePackage{bangor}
 \bangorstamppart{bangoridentity}{bangoridentity.sty}
@@ -13,7 +13,7 @@
 % Metadata storage. Defaults are empty; consumers render conditionally.
 \newcommand{\school}[1]{\gdef\bgi@school{#1}}
 \newcommand{\college}[1]{\gdef\bgi@college{#1}}
-\newcommand{\degreeScheme}[1]{\gdef\bgi@degree{#1}}
+\newcommand{\degreescheme}[1]{\gdef\bgi@degree{#1}}
 \newcommand{\submissiondate}[1]{\gdef\bgi@date{#1}}
 \def\bgi@school{}
 \def\bgi@college{}
@@ -22,8 +22,13 @@
 
 % Taught dissertations commonly must state their word count. When set,
 % consumers print it; research degrees leave it unset.
-\newcommand{\wordcount}[1]{\gdef\bgi@wordcount{#1}}
+\newcommand{\submissionwordcount}[1]{\gdef\bgi@wordcount{#1}}
 \def\bgi@wordcount{}
+
+% A short form of the title for the running footer. When it is unset,
+% consumers fall back to the full title.
+\newcommand{\shorttitle}[1]{\gdef\bgi@shorttitle{#1}}
+\def\bgi@shorttitle{}
 
 % Supervisors accumulate in declaration order, separated for typesetting.
 \def\bgi@supervisors{}

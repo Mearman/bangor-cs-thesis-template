@@ -2,12 +2,13 @@ name: Format
 
 # One-click source formatting for contributors without a local
 # TeX Live: runs latexindent with the committed settings over every
-# LaTeX source and lands the result as a single conventional commit.
-# The CI lint job then sees a formatted tree.
+# LaTeX source and lands the result as a single conventional commit,
+# then starts CI so the lint job sees the formatted tree.
 on: workflow_dispatch
 
 permissions:
   contents: write
+  actions: write
 
 jobs:
   format:
@@ -32,8 +33,11 @@ jobs:
             git add -- '*.sty' '*.cls' doc tests/smoke
             git commit -m "style: run latexindent over the sources"
             git push "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD:main
+            # A push made with the workflow token does not start other workflows, so CI is started explicitly.
+            gh workflow run ci.yml --ref main
           else
             echo "already formatted"
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

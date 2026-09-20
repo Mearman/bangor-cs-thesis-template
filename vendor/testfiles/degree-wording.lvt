@@ -2,7 +2,7 @@
 \documentclass[phd,12pt,a4paper]{bangorthesis}
 \title{Wording Test}
 \author{H. Student}
-\degreeScheme{Doctor of Philosophy}
+\degreescheme{Doctor of Philosophy}
 \begin{document}
 \START
 \makeatletter

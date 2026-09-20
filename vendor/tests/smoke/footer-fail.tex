@@ -1,0 +1,22 @@
+% !TeX program = pdflatex
+%%% Strict-mode negative test: a title too wide for the footer, with no short title set, must fail the build.
+\documentclass[phd,12pt,a4paper]{bangorthesis}
+\title{A Very Long Thesis Title That Cannot Possibly Fit In The Footer Of The Page}
+\author{T. Student}
+\degreescheme{Doctor of Philosophy}
+\newcommand{\filler}{Body text that fills the page so that the chapter runs across several pages and the running header shows on the continuation pages.}
+\ExplSyntaxOn
+\NewDocumentCommand{\fillpages}{m}{\prg_replicate:nn{#1}{\filler\par}}
+\ExplSyntaxOff
+
+\begin{document}
+\maketitle
+\chapter{Introduction}
+\section{First section}
+\fillpages{30}
+\section{Second section}
+\fillpages{30}
+\chapter{Methods}
+\section{Only section}
+\fillpages{20}
+\end{document}

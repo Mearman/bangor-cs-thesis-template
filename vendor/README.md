@@ -11,7 +11,7 @@ This package replaces the department's `bangorcsthesis` class, which times out o
 The family has three layers. A module must only use modules in a lower layer.
 
 1. `bangor` holds the brand facts: the colours, the crest, the wordmark, and the version stamp.
-2. `bangoridentity`, `bangorlayout`, and `bangordeclarations` are reusable document modules. Use each one with any base class.
+2. `bangoridentity`, `bangorlayout`, and `bangordeclarations` are reusable document modules. Use each one with any base class. `bangortables` and `bangorglossary` are optional modules of the same layer: load them only when the document needs them.
 3. `bangorletter` and the `bangorthesis` class are consumers. They use the lower layers and add their own document type.
 
 Full interface documentation is in `doc/bangor.pdf`.
@@ -33,9 +33,9 @@ Set the document facts in the preamble, then build the front matter:
 ```latex
 \school{School of Computer Science and Engineering}
 \college{College of Science and Engineering}
-\degreeScheme{Doctor of Philosophy}
+\degreescheme{Doctor of Philosophy}
 \supervisor{Dr A. Supervisor}
-\bibliographySetup
+\bibliographysetup
 \addbibresource{references.bib}
 
 \begin{document}
@@ -59,6 +59,12 @@ Use the green *Use this template* button, then import your copy into Overleaf. T
 The layout module checks the rules from Regulation 03, 2025 Version 01, section 6.3: the font family and size floors, the binding and side margins, the 1.5 line spacing, and the 600-word cap on the abstract. Strict mode is on by default. A violation fails the build. Set `strict=false` to turn each failure into a warning.
 
 The checks govern settings made through this package. They cannot see changes made around it.
+
+## Headers and footers
+
+The class sets running headers and footers. By default the header shows the chapter name on the left and the section name on the right, and the footer shows the title and the page number. Set `\shorttitle{Short title}` for a shorter footer title. Class options change the layout: `headers=chapter` puts the page number in the header, `pageofm` prints "Page N of M", and `headrule` and `footrule` each take `hairline` (the default), `visible`, or `none`.
+
+A name too wide for the header, or a title too wide for the footer, fails the build in strict mode. Use `\chapter[Short title]{Long title}` for a shorter running title, or `\shorttitle` for the footer. With `strict=false` the text is cut short and the build shows a warning.
 
 Citation style is a class option, not a school lookup: `citations=ieee` is the default, and any biblatex style name is valid. Ask your supervisor which style your school requires.
 

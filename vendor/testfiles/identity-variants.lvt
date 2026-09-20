@@ -15,7 +15,7 @@
 \supervisor{Dr B}
 \TYPE{supervisors:\bgi@supervisors}
 \TYPE{wordcount-empty:\ifx\bgi@wordcount\@empty TRUE\else FALSE\fi}
-\wordcount{12345}
+\submissionwordcount{12345}
 \TYPE{wordcount:\bgi@wordcount}
 \makeatother
 \END

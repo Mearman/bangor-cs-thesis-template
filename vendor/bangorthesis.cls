@@ -6,7 +6,7 @@
 % bangorcsthesis class by Cameron Gray, Bangor University. Released
 % under the LaTeX Project Public License, version 1.3c or later.
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{bangorthesis}[2026/09/20 v1.2.2 Bangor University thesis and dissertation class]
+\ProvidesClass{bangorthesis}[2026/09/20 v2.1.0 Bangor University thesis and dissertation class]
 
 \RequirePackage{kvoptions}
 \SetupKeyvalOptions{family=bts,prefix=bts@}
@@ -35,7 +35,7 @@
 \DeclareVoidOption{meng}{\def\bts@submission{dissertation}}
 \DeclareVoidOption{msci}{\def\bts@submission{dissertation}}
 
-% Citation style passed to biblatex through \bibliographySetup. Any
+% Citation style passed to biblatex through \bibliographysetup. Any
 % biblatex style name is valid; ieee is the default because the
 % founding use is computer science.
 \DeclareStringOption[ieee]{citations}[ieee]
@@ -51,6 +51,17 @@
 
 % Welsh submission: statutory declaration in Welsh plus babel.
 \DeclareBoolOption[false]{welsh}
+
+% Running headers and footers. headers=chapter-section shows the chapter
+% name on the left and the section name on the right of the header, with
+% the page number in the footer. headers=chapter shows the chapter name
+% and the page number in the header. Each rule is hairline, visible, or
+% none, and the two rules are set separately. pageofm prints the page
+% number as "Page N of M".
+\DeclareStringOption[chapter-section]{headers}[chapter-section]
+\DeclareStringOption[hairline]{headrule}[hairline]
+\DeclareStringOption[hairline]{footrule}[hairline]
+\DeclareBoolOption[false]{pageofm}
 
 % Everything else (12pt, a4paper, oneside, twoside, draft, final)
 % passes through to the report class.
@@ -108,7 +119,7 @@
 
 % Bibliography setup. Call once in the preamble, optionally with a
 % biblatex style name; the default comes from the citations option.
-\newcommand{\bibliographySetup}[1][\bts@citations]{%
+\newcommand{\bibliographysetup}[1][\bts@citations]{%
   \RequirePackage[backend=biber,style=#1]{biblatex}}
 
 % Title page. In print mode a blank page precedes it so that duplex
@@ -170,6 +181,7 @@
   \btsabstractcheck{\BODY}%
   \begin{singlespace}
     \chapter*{Abstract}
+    \markboth{Abstract}{}
     \addcontentsline{toc}{chapter}{Abstract}
     \BODY
     \par\end{singlespace}}
@@ -177,6 +189,7 @@
 \newenvironment{acknowledgements}{%
   \begin{singlespace}
     \chapter*{Acknowledgements}
+    \markboth{Acknowledgements}{}
     \addcontentsline{toc}{chapter}{Acknowledgements}
     }{%
     \par\end{singlespace}}
@@ -186,24 +199,103 @@
   \listoffigures
   \listoftables}
 
-% Running headers: chapter name on the left, page number on the
-% right, with a thin rule. Chapter-opening pages use the plain
-% style (page number centred at the bottom, no header), which the
-% report class already applies to \chapter pages.
+% Headers and footers. The option values are checked first so that a typo fails with a clear message instead of silently falling back to a default.
 \RequirePackage{fancyhdr}
+\RequirePackage{truncate}
+
+\def\bts@rule@hairline{1sp}
+\def\bts@rule@visible{0.4pt}
+\def\bts@rule@none{0pt}
+\newcommand{\bts@checkrule}[2]{%
+  \@ifundefined{bts@rule@#2}{%
+    \ClassError{bangorthesis}{Unknown #1 value `#2'}{The permitted values are hairline, visible, and none.}}{}}
+\bts@checkrule{headrule}{\bts@headrule}
+\bts@checkrule{footrule}{\bts@footrule}
+
+\newif\ifbts@chapteronly
+\def\bts@hd@chapter{chapter}
+\def\bts@hd@chaptersection{chapter-section}
+\ifx\bts@headers\bts@hd@chapter
+  \bts@chapteronlytrue
+\else
+  \ifx\bts@headers\bts@hd@chaptersection\else
+    \ClassError{bangorthesis}{Unknown headers value `\bts@headers'}{The permitted values are chapter-section and chapter.}%
+  \fi
+\fi
+
+% The page number, optionally as "Page N of M". The label that supplies M sits on the last page of the document.
+\newcommand{\bts@pagenumber}{\ifbts@pageofm Page~\thepage~of~\pageref{bts@lastpage}\else\thepage\fi}
+\AtEndDocument{\ifbts@pageofm\label{bts@lastpage}\fi}
+
+% Names in the header may use this share of the text width each. Chapter and section names that repeat one another (contents, bibliography) show once.
+\newcommand{\bts@maxheader}{0.42\textwidth}
+\newcommand{\bts@headleft}{\small\itshape\nouppercase{\truncate{\bts@maxheader}{\leftmark}}}
+\newcommand{\bts@headright}{%
+  \small\itshape\nouppercase{%
+    \edef\bts@leftcopy{\leftmark}\edef\bts@rightcopy{\rightmark}%
+    \ifx\bts@leftcopy\bts@rightcopy\else\truncate{\bts@maxheader}{\rightmark}\fi}}
+
+% fancyhdr needs enough vertical space for the running header text; the report class default is too small for 12pt italic chapter names.
 \pagestyle{fancy}
 \fancyhf{}
-\fancyhead[L]{\small\itshape\nouppercase{\leftmark}}
-\fancyhead[R]{\small\thepage}
-\renewcommand{\headrulewidth}{0.4pt}
-% fancyhdr needs enough vertical space for the running header text;
-% the report class default is too small for 12pt italic chapter names.
 \setlength{\headheight}{14pt}
+\renewcommand{\headrulewidth}{\csname bts@rule@\bts@headrule\endcsname}
+\renewcommand{\footrulewidth}{\csname bts@rule@\bts@footrule\endcsname}
+\fancyhead[L]{\bts@headleft}
+\fancyfoot[L]{\footnotesize\itshape\truncate{0.4\textwidth}{\bts@footertext}}
+\ifbts@chapteronly
+  \fancyhead[R]{\small\bts@pagenumber}
+\else
+  \fancyhead[R]{\bts@headright}
+  \fancyfoot[R]{\small\bts@pagenumber}
+\fi
+
+% Chapter openings have no header. The page number keeps the place it has on the other pages of the same layout.
 \fancypagestyle{plain}{%
   \fancyhf{}
-  \fancyfoot[C]{\thepage}
+  \ifbts@chapteronly
+    \fancyfoot[C]{\small\bts@pagenumber}%
+  \else
+    \fancyfoot[R]{\small\bts@pagenumber}%
+  \fi
   \renewcommand{\headrulewidth}{0pt}
-}
+  \renewcommand{\footrulewidth}{\csname bts@rule@\bts@footrule\endcsname}}
+
+% A name too wide for the header is a build error in strict mode and is truncated with a warning otherwise. The kernel short-title syntax, \chapter[Short]{Long}, passes the short title to these marks, so the check runs on the title that will be printed.
+\newcommand{\bts@checkwidth}[3]{%
+  \begingroup
+  \settowidth{\@tempdima}{\small\itshape #2}%
+  \ifdim\@tempdima>\bts@maxheader\relax
+    \bangorregulationviolation{#1 is too wide for the running header (\the\@tempdima, and the maximum is \the\dimexpr\bts@maxheader\relax). #3}%
+  \fi
+  \endgroup}
+\renewcommand{\chaptermark}[1]{%
+  \bts@checkwidth{Chapter \thechapter}{\thechapter.\ #1}{Use \string\chapter[Short title]\string{Long title\string} to set a shorter running title.}%
+  \markboth{\thechapter.\ #1}{}}
+\renewcommand{\sectionmark}[1]{%
+  \bts@checkwidth{Section \thesection}{\thesection.\ #1}{Use \string\section[Short title]\string{Long title\string} to set a shorter running title.}%
+  \markright{\thesection.\ #1}}
+
+% The footer shows the short title when one is set, and otherwise the full title with its line breaks turned into spaces. Either is checked against the footer width.
+\def\bts@skipbracket[#1]{\space}
+\newcommand{\bts@checkfooter}[2]{%
+  \begingroup
+  \settowidth{\@tempdima}{\footnotesize\itshape\bts@footertext}%
+  \ifdim\@tempdima>0.4\textwidth\relax
+    \bangorregulationviolation{#1 (\the\@tempdima, and the maximum is \the\dimexpr0.4\textwidth\relax). #2}%
+  \fi
+  \endgroup}
+\AtBeginDocument{%
+\ifx\bgi@shorttitle\@empty
+\begingroup
+\def\\{\@ifnextchar[{\bts@skipbracket}{\space}}%
+\protected@xdef\bts@footertext{\@title}%
+\endgroup
+\bts@checkfooter{The title is too wide for the footer}{Set \string\shorttitle\string{Short title\string} in the preamble.}%
+\else
+\let\bts@footertext\bgi@shorttitle
+\bts@checkfooter{The short title is too wide for the footer}{Use a shorter \string\shorttitle.}%
+\fi}
 
 % cleveref does not auto-detect the listings package's lstlisting
 % counter because listings loads after cleveref (it is a template-level
