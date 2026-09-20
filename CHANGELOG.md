@@ -1,3 +1,10 @@
+## [1.2.6](https://github.com/Mearman/bangor-cs-thesis-template/compare/v1.2.5...v1.2.6) (2026-09-20)
+
+
+### Bug Fixes
+
+* opt-in modules with amsmath load order, compile within Overleaf budget ([7885d0e](https://github.com/Mearman/bangor-cs-thesis-template/commit/7885d0e70abe78e58c4107e1afbdda19743d5e2a))
+
 ## [1.2.5](https://github.com/Mearman/bangor-cs-thesis-template/compare/v1.2.4...v1.2.5) (2026-09-20)
 
 
