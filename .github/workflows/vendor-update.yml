@@ -110,7 +110,7 @@ jobs:
             echo "assertion failed: main.log matches"
             exit 1
           fi
-          changed=$(git status --porcelain | grep -cv '^.. vendor/')
+          changed=$(git status --porcelain | grep -cv '^.. vendor/' || true)
           if [ "$changed" -gt 0 ]; then
             echo "diff escapes vendor/; opening a pull request instead"
             gh pr create --title "vendor update needs review" \
