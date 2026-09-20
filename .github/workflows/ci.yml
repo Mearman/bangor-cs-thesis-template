@@ -33,6 +33,28 @@ jobs:
         run: ./actionlint -color
       - name: Lint workflow YAML
         run: yamllint .github/workflows/
+      - name: Vendor stamp consistency
+        run: |
+          declared=$(cat vendor/VERSION)
+          actual=$(grep -m1 -oE 'v[0-9]+\.[0-9]+\.[0-9]+' vendor/bangor.sty)
+          if [ "$declared" != "$actual" ]; then
+            echo "vendor/VERSION says ${declared} but vendor/bangor.sty is ${actual}"
+            exit 1
+          fi
+          echo "vendor stamp consistent: ${declared}"
+      - name: README link check
+        run: |
+          status=0
+          grep -oE 'https://[^)\]]+' README.md | sort -u | while IFS= read -r url; do
+            case "$url" in
+              *img.shields.io*|*ctan.org*|*latex-project.org*) continue ;;
+            esac
+            if ! curl -sf -o /dev/null --max-time 15 "$url"; then
+              echo "broken link: $url"
+              status=1
+            fi
+          done
+          exit ${status:-0}
   compile:
     runs-on: ubuntu-latest
     steps:
