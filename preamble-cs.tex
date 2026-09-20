@@ -8,6 +8,12 @@
 
 % Code listings: a calm default style with the brand red reserved for
 % keywords. Adjust to taste; this file is yours.
+% cleveref needs the algorithm type declared because the algorithm
+% package loads after cleveref in the class, so cleveref cannot
+% auto-detect its counter.
+\crefname{algorithm}{Algorithm}{Algorithms}
+\Crefname{algorithm}{Algorithm}{Algorithms}
+
 \lstset{
   basicstyle=\ttfamily\small,
   keywordstyle=\color{bangorred},

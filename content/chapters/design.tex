@@ -1,7 +1,13 @@
 \chapter{Design}
-Present the design decisions and the reasons for them. An algorithm
-float shows the shape of a method; Listing~\ref{lst:sample} shows the
-shape of a code listing.
+Present the design decisions and the reasons for them. \Cref{eq:information-gain} formalises the measure the design optimises.
+
+\begin{equation}
+  \label{eq:information-gain}
+  \mathrm{IG}(S, a) = \mathrm{H}(S) - \sum_{v \in \mathrm{vals}(a)}
+  \frac{|S_v|}{|S|}\,\mathrm{H}(S_v)
+\end{equation}
+
+\Cref{alg:sample} shows the shape of an algorithm float. Write the steps with the state, loop, and return commands the algpseudocode package provides.
 
 \begin{algorithm}[htbp]
   \caption{A sample algorithm float.}
