@@ -1,3 +1,10 @@
+## [1.2.4](https://github.com/Mearman/bangor-cs-thesis-template/compare/v1.2.3...v1.2.4) (2026-09-20)
+
+
+### Bug Fixes
+
+* British spelling word pairs, vendor updated ([ec83b8f](https://github.com/Mearman/bangor-cs-thesis-template/commit/ec83b8f57f536c2852e0a75911ef68ea403b3400))
+
 ## [1.2.3](https://github.com/Mearman/bangor-cs-thesis-template/compare/v1.2.2...v1.2.3) (2026-09-20)
 
 
