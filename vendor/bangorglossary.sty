@@ -1,20 +1,117 @@
-%%% bangorglossary.sty — glossary and abbreviations for Bangor documents
-% Sets up the glossaries package in noidx mode (no external tool
-% needed, works under Overleaf's restricted shell-escape) with the
-% long-short acronym style. Provides \addabbrev for the common
-% one-line abbreviation case.
+%%% bangorglossary.sty — lightweight abbreviations for Bangor documents
+% A minimal list of abbreviations with first-use expansion, using only
+% the LaTeX3 kernel (no external packages). Adds near-zero compile
+% time compared to the full glossaries package's dependency chain.
+%
+% \addabbrev{SHORT}{Full Name} registers an abbreviation.
+% \gls{SHORT} prints the full form on first use, the short form after.
+% \Gls{SHORT} does the same with a capitalised first word.
+% \printabbrevs emits an alphabetically sorted description list.
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{bangorglossary}[2026/09/20 v1.0.4 Bangor University glossary and abbreviations]
+\ProvidesPackage{bangorglossary}[2026/09/20 v1.1.2 Bangor University abbreviations]
 
 \RequirePackage{bangor}
-\RequirePackage[nomain,acronym,toc]{glossaries}
-\makenoidxglossaries
-\setacronymstyle{long-short}
 
-% \addabbrev{SHORT}{Full Name} — the common one-line case. Creates
-% both the glossary entry and the acronym; \gls{SHORT} prints the
-% full form on first use and the short form thereafter.
-\newcommand{\addabbrev}[2]{%
-  \newacronym{#1}{#1}{#2}}
+\ExplSyntaxOn
+
+% Storage: a property list keyed by the short form, holding the long form.
+% A separate sequence tracks insertion order; sorting is done at print time.
+\prop_new:N \g_bangor_abbrev_prop
+\seq_new:N \g_bangor_abbrev_order_seq
+
+% \bangor_add_abbrev:nn {short} {long}
+\cs_new_protected:Npn \bangor_add_abbrev:nn #1 #2
+  {
+    \prop_gput:Nnn \g_bangor_abbrev_prop { #1 } { #2 }
+    \seq_gput_right:Nn \g_bangor_abbrev_order_seq { #1 }
+    % Define the used-flag for this abbreviation (unset = not yet used)
+    \bool_new:c { g_bangor_abbrev_ #1 _used_bool }
+    \bool_gset_false:c { g_bangor_abbrev_ #1 _used_bool }
+  }
+
+% \bangor_gls:n {short} — short form or full form on first use
+\cs_new:Npn \bangor_gls:n #1
+  {
+    \prop_if_in:NnTF \g_bangor_abbrev_prop { #1 }
+      {
+        \bool_if:cTF { g_bangor_abbrev_ #1 _used_bool }
+          { #1 }
+          {
+            \prop_item:Nn \g_bangor_abbrev_prop { #1 } ~ ( #1 )
+            \bool_gset_true:c { g_bangor_abbrev_ #1 _used_bool }
+          }
+      }
+      {
+        \PackageWarning{bangorglossary} { Unknown~abbreviation:~#1 }
+        #1
+      }
+  }
+
+% \bangor_gls_cap:n {short} — same but capitalise the first word
+\cs_new:Npn \bangor_gls_cap:n #1
+  {
+    \prop_if_in:NnTF \g_bangor_abbrev_prop { #1 }
+      {
+        \bool_if:cTF { g_bangor_abbrev_ #1 _used_bool }
+          { #1 }
+          {
+            % Capitalise: use \MakeUppercase on the first letter of the long form
+            \text_titlecase_first:n { \prop_item:Nn \g_bangor_abbrev_prop { #1 } } ~ ( #1 )
+            \bool_gset_true:c { g_bangor_abbrev_ #1 _used_bool }
+          }
+      }
+      {
+        \PackageWarning{bangorglossary} { Unknown~abbreviation:~#1 }
+        #1
+      }
+  }
+
+% \bangor_print_abbrevs: — sorted description list
+\cs_new_protected:Npn \bangor_print_abbrevs:
+  {
+    \begin{description}
+    \bangor_print_abbrevs_sorted:
+    \end{description}
+  }
+
+% Sort the order sequence alphabetically by short form, then emit items
+\cs_new_protected:Npn \bangor_print_abbrevs_sorted:
+  {
+    \seq_gsort:Nn \g_bangor_abbrev_order_seq
+      {
+        \str_compare:nNnTF { ##1 } < { ##2 }
+          { \sort_return_same: }
+          { \sort_return_swapped: }
+      }
+    \seq_map_inline:Nn \g_bangor_abbrev_order_seq
+      {
+        \item[##1] \prop_item:Nn \g_bangor_abbrev_prop { ##1 }
+      }
+  }
+
+% str_compare:nNnTF {a} < {b} — expandable string comparison
+\prg_new_conditional:Npnn \str_compare:nNn #1 #2 #3 { TF }
+  {
+    \if_int_compare:w \pdfstrcmp { #1 } #2 { #3 } > 0
+      \prg_return_true:
+    \else:
+      \prg_return_false:
+    \fi:
+  }
+
+% User-level commands
+\NewDocumentCommand { \addabbrev } { m m }
+  { \bangor_add_abbrev:nn { #1 } { #2 } }
+
+\NewDocumentCommand { \gls } { m }
+  { \bangor_gls:n { #1 } }
+
+\NewDocumentCommand { \Gls } { m }
+  { \bangor_gls_cap:n { #1 } }
+
+\NewDocumentCommand { \printabbrevs } { }
+  { \bangor_print_abbrevs: }
+
+\ExplSyntaxOff
 
 \endinput
