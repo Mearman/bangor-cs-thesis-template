@@ -6,7 +6,7 @@
 % bangorcsthesis class by Cameron Gray, Bangor University. Released
 % under the LaTeX Project Public License, version 1.3c or later.
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{bangorthesis}[2026/09/20 v2.1.1 Bangor University thesis and dissertation class]
+\ProvidesClass{bangorthesis}[2026/09/20 v2.2.0 Bangor University thesis and dissertation class]
 
 \RequirePackage{kvoptions}
 \SetupKeyvalOptions{family=bts,prefix=bts@}
@@ -63,6 +63,9 @@
 \DeclareStringOption[hairline]{footrule}[hairline]
 \DeclareBoolOption[false]{pageofm}
 
+% Page numbering. The title page carries no number, the front matter is numbered in roman numerals, and the numbering restarts in arabic at the first numbered chapter. Appendices continue the arabic sequence unless appendixpages is set, which restarts the count at each appendix and prints "Appendix A - Page n".
+\DeclareBoolOption[false]{appendixpages}
+
 % Everything else (12pt, a4paper, oneside, twoside, draft, final)
 % passes through to the report class.
 \DeclareDefaultOption{\PassOptionsToClass{\CurrentOption}{report}}
@@ -93,8 +96,10 @@
 \RequirePackage{bangordeclarations}
 \RequirePackage{microtype}
 \RequirePackage{environ}
+\RequirePackage{etoolbox}
 \RequirePackage{amsmath}
-\RequirePackage[hidelinks]{hyperref}
+% plainpages=false keeps the page anchors of the roman, arabic and per-appendix numberings distinct.
+\RequirePackage[hidelinks,plainpages=false]{hyperref}
 % cleveref must load after hyperref AND amsmath. nameinlink makes the reference
 % text itself a hyperlink. Capitalisation is left to the document:
 % \cref produces lowercase type names mid-sentence, \Cref produces
@@ -122,12 +127,13 @@
 \newcommand{\bibliographysetup}[1][\bts@citations]{%
   \RequirePackage[backend=biber,style=#1]{biblatex}}
 
-% Title page. In print mode a blank page precedes it so that duplex
-% printing leaves the title on a recto.
+% Title page. Its pages are numbered in letters, so that their page anchors differ from those of the front matter, but the empty page style prints no number. In print mode a blank page precedes it so that duplex printing leaves the title on a recto.
 \renewcommand{\maketitle}{%
   \ifbts@print
+    \pagenumbering{Alph}%
     \null\thispagestyle{empty}\newpage
   \fi
+  \pagenumbering{alph}%
   \begin{titlepage}
     \centering
     \bangoridentityblock[3.5cm]
@@ -149,7 +155,8 @@
     \fi
     \vfill
     {\ifx\bgi@date\@empty\@date\else\bgi@date\fi\par}
-  \end{titlepage}}
+  \end{titlepage}
+  \pagenumbering{roman}}
 
 % Front matter conveniences. The abstract is single spaced, which the
 % regulation permits, and its word count is checked against the
@@ -181,7 +188,6 @@
   \btsabstractcheck{\BODY}%
   \begin{singlespace}
     \chapter*{Abstract}
-    \markboth{Abstract}{}
     \addcontentsline{toc}{chapter}{Abstract}
     \BODY
     \par\end{singlespace}}
@@ -189,7 +195,6 @@
 \newenvironment{acknowledgements}{%
   \begin{singlespace}
     \chapter*{Acknowledgements}
-    \markboth{Acknowledgements}{}
     \addcontentsline{toc}{chapter}{Acknowledgements}
     }{%
     \par\end{singlespace}}
@@ -223,9 +228,46 @@
   \fi
 \fi
 
-% The page number, optionally as "Page N of M". The label that supplies M sits on the last page of the document.
-\newcommand{\bts@pagenumber}{\ifbts@pageofm Page~\thepage~of~\pageref{bts@lastpage}\else\thepage\fi}
-\AtEndDocument{\ifbts@pageofm\label{bts@lastpage}\fi}
+% The blank page that \cleardoublepage inserts before a chapter on a right-hand page is empty, so it prints no number and no running header.
+\renewcommand{\cleardoublepage}{%
+  \clearpage
+  \if@twoside
+    \ifodd\c@page\else
+      \hbox{}\thispagestyle{empty}\newpage
+      \if@twocolumn\hbox{}\newpage\fi
+    \fi
+  \fi}
+
+% Where the numbering stands. The document opens in the front matter. The first numbered chapter starts the main matter, and the first appendix chapter starts the appendices when appendixpages is set. Each switch runs inside \@chapter, after the page break that precedes the chapter, so the last page before the switch keeps the old numbering.
+\newif\ifbts@main
+\newif\ifbts@appendixstyle
+\newif\ifbts@appendixnumbering
+\newcommand{\bts@startmain}{%
+  \bts@maintrue
+  \pagenumbering{arabic}%
+  \gdef\thepage{\ifbts@appendixnumbering\thechapter-\fi\@arabic\c@page}%
+  \pagestyle{bts@main}}
+\newcommand{\bts@chapterhook}{%
+  \ifbts@main\else\bts@startmain\fi
+  \ifbts@appendixstyle\bts@appendixnumberingtrue\fi
+  \ifbts@appendixnumbering\setcounter{page}{1}\fi}
+\pretocmd{\@chapter}{\bts@chapterhook}{}{}
+
+% The label that supplies M in "Page N of M". Without appendix numbering it sits on the last page of the document. With it, it sits on the last page before the appendices, because the appendix pages carry their own count.
+\apptocmd{\appendix}{%
+  \ifbts@appendixpages
+    \bts@appendixstyletrue
+    \label{bts@lastpage}%
+  \fi}{}{}
+\AtEndDocument{\ifbts@appendixstyle\else\label{bts@lastpage}\fi}
+
+% The page number in the main matter, optionally as "Page N of M".
+\newcommand{\bts@pagenumber}{%
+  \ifbts@appendixnumbering
+    Appendix~\thechapter{} - Page~\arabic{page}%
+  \else
+    \ifbts@pageofm Page~\thepage~of~\pageref{bts@lastpage}\else\thepage\fi
+  \fi}
 
 % Names in the header may use this share of the text width each. Chapter and section names that repeat one another (contents, bibliography) show once.
 \newcommand{\bts@maxheader}{0.42\textwidth}
@@ -245,30 +287,37 @@
     \ifx\bts@leftcopy\bts@rightcopy\else\bts@fit{\rightmark}\fi}}
 
 % fancyhdr needs enough vertical space for the running header text; the report class default is too small for 12pt italic chapter names.
-\pagestyle{fancy}
-\fancyhf{}
 \setlength{\headheight}{14pt}
-\renewcommand{\headrulewidth}{\csname bts@rule@\bts@headrule\endcsname}
-\renewcommand{\footrulewidth}{\csname bts@rule@\bts@footrule\endcsname}
-\fancyhead[L]{\bts@headleft}
-\fancyfoot[L]{\footnotesize\itshape\truncate{0.4\textwidth}{\bts@footertext}}
-\ifbts@chapteronly
-  \fancyhead[R]{\small\bts@pagenumber}
-\else
-  \fancyhead[R]{\bts@headright}
-  \fancyfoot[R]{\small\bts@pagenumber}
-\fi
 
-% Chapter openings have no header. The page number keeps the place it has on the other pages of the same layout.
+% Each layout is a named style that sets every field it uses. A fancypagestyle applies its settings without grouping them, so a style that relied on fields left by another would inherit them.
+\fancypagestyle{bts@main}{%
+  \fancyhf{}
+  \renewcommand{\headrulewidth}{\csname bts@rule@\bts@headrule\endcsname}
+  \renewcommand{\footrulewidth}{\csname bts@rule@\bts@footrule\endcsname}
+  \fancyhead[L]{\bts@headleft}
+  \fancyfoot[L]{\footnotesize\itshape\truncate{0.4\textwidth}{\bts@footertext}}
+  \ifbts@chapteronly
+    \fancyhead[R]{\small\bts@pagenumber}
+  \else
+    \fancyhead[R]{\bts@headright}
+    \fancyfoot[R]{\small\bts@pagenumber}
+  \fi}
+
+% Chapter openings have no header. The page number keeps the place it has on the other pages of the same layout, and in the front matter it is the centred roman numeral.
 \fancypagestyle{plain}{%
   \fancyhf{}
-  \ifbts@chapteronly
-    \fancyfoot[C]{\small\bts@pagenumber}%
-  \else
-    \fancyfoot[R]{\small\bts@pagenumber}%
-  \fi
+  \fancyfoot[C]{\ifbts@main\ifbts@chapteronly\small\bts@pagenumber\fi\else\small\thepage\fi}
+  \fancyfoot[R]{\ifbts@main\ifbts@chapteronly\else\small\bts@pagenumber\fi\fi}
   \renewcommand{\headrulewidth}{0pt}
   \renewcommand{\footrulewidth}{\csname bts@rule@\bts@footrule\endcsname}}
+% The front matter has no running header, and its page number is a centred roman numeral. The document opens in this style, and \bts@startmain switches to the main style at the first numbered chapter.
+\fancypagestyle{bts@front}{%
+  \fancyhf{}
+  \fancyfoot[C]{\small\thepage}
+  \renewcommand{\headrulewidth}{0pt}
+  \renewcommand{\footrulewidth}{\csname bts@rule@\bts@footrule\endcsname}}
+\pagestyle{bts@front}
+\AtBeginDocument{\pagenumbering{roman}}
 
 % A name too wide for the header is a build error in strict mode and is truncated with a warning otherwise. The kernel short-title syntax, \chapter[Short]{Long}, passes the short title to these marks, so the check runs on the title that will be printed.
 \newcommand{\bts@checkwidth}[3]{%

@@ -1,3 +1,15 @@
+# [2.2.0](https://github.com/Mearman/bangor/compare/v2.1.1...v2.2.0) (2026-09-20)
+
+
+### Bug Fixes
+
+* push the formatting commit to the branch the workflow was run on ([1eeabad](https://github.com/Mearman/bangor/commit/1eeabad7dfe1a89cbdd3da505a1b348ed90d3a3d))
+
+
+### Features
+
+* number the title page, front matter, main text and appendices separately ([b338444](https://github.com/Mearman/bangor/commit/b33844496a4edb9647c29a4584d569667cd7a5fb))
+
 ## [2.1.1](https://github.com/Mearman/bangor/compare/v2.1.0...v2.1.1) (2026-09-20)
 
 

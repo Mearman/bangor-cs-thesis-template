@@ -32,9 +32,10 @@ jobs:
           if [ -n "$(git status --porcelain)" ]; then
             git add -- '*.sty' '*.cls' doc tests/smoke
             git commit -m "style: run latexindent over the sources"
-            git push "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD:main
+            remote="https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+            git push "$remote" "HEAD:${GITHUB_REF_NAME}"
             # A push made with the workflow token does not start other workflows, so CI is started explicitly.
-            gh workflow run ci.yml --ref main
+            gh workflow run ci.yml --ref "$GITHUB_REF_NAME"
           else
             echo "already formatted"
           fi

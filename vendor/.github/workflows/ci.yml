@@ -202,6 +202,62 @@ jobs:
             status=1
           fi
           exit $status
+      - name: Compile numbering fixtures and assert the page numbering scheme
+        run: |
+          status=0
+          for f in numbering-default numbering-appendix numbering-print; do
+            latexmk -pdf -interaction=nonstopmode "tests/smoke/$f.tex" || status=1
+            if grep -E "^!" "$f.log"; then status=1; fi
+            if grep -E "Reference .* undefined|multiply defined|with the same identifier" "$f.log"; then
+              status=1
+            fi
+          done
+          for f in numbering-default numbering-appendix; do
+            if pdftotext -f 1 -l 1 -layout "$f.pdf" - | grep -qE "^ *(i|1|Page 1)"; then
+              echo "$f: the title page carries a page number"
+              status=1
+            fi
+            if ! pdftotext -f 2 -l 2 -layout "$f.pdf" - | grep -qE "^ +i$"; then
+              echo "$f: the first front matter page is not numbered i"
+              status=1
+            fi
+            if ! pdftotext -layout "$f.pdf" - | grep -qE "^ +iii$"; then
+              echo "$f: the front matter does not continue in roman numerals"
+              status=1
+            fi
+            if ! pdftotext -layout "$f.pdf" - | grep -qE "Page 1 of [0-9]+"; then
+              echo "$f: the main matter does not restart at Page 1"
+              status=1
+            fi
+          done
+          default_text=$(pdftotext -layout numbering-default.pdf -)
+          last=$(printf '%s\n' "$default_text" | grep -oE "Page [0-9]+ of [0-9]+" | tail -1)
+          if ! printf '%s\n' "$last" | awk '{ exit !($2 == $4) }'; then
+            echo "numbering-default: the last page should read Page N of N, found: ${last:-nothing}"
+            status=1
+          fi
+          if printf '%s\n' "$default_text" | grep -q "Appendix [AB] - Page"; then
+            echo "numbering-default: appendix numbering is on without appendixpages"
+            status=1
+          fi
+          appendix_text=$(pdftotext -layout numbering-appendix.pdf -)
+          for expected in "Appendix A - Page 1" "Appendix A - Page 2" "Appendix B - Page 1" "A-1"; do
+            if ! printf '%s\n' "$appendix_text" | grep -q -- "$expected"; then
+              echo "numbering-appendix: missing $expected"
+              status=1
+            fi
+          done
+          last=$(printf '%s\n' "$appendix_text" | grep -oE "Page [0-9]+ of [0-9]+" | tail -1)
+          if ! printf '%s\n' "$last" | awk '{ exit !($2 == $4) }'; then
+            echo "numbering-appendix: the last main page should read Page N of N, found: ${last:-nothing}"
+            status=1
+          fi
+          counts=$(pdftotext -layout numbering-print.pdf - | grep -oE "Page [0-9]+ of [0-9]+")
+          if printf '%s\n' "$counts" | awk '$2 > $4 { bad = 1 } END { exit !bad }'; then
+            echo "numbering-print: a page reads beyond the end of the count, so a blank page carries a number"
+            status=1
+          fi
+          exit $status
       - name: Assert header and footer overflow fail in strict mode and truncate otherwise
         run: |
           status=0
