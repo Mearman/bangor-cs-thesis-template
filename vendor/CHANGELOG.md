@@ -1,3 +1,10 @@
+# [2.3.0](https://github.com/Mearman/bangor/compare/v2.2.0...v2.3.0) (2026-09-20)
+
+
+### Features
+
+* add sharedfloats and sectionfloats options for float numbering ([75361a0](https://github.com/Mearman/bangor/commit/75361a02fc0e5d930b61a7fa6ad434f57af60fa5))
+
 # [2.2.0](https://github.com/Mearman/bangor/compare/v2.1.1...v2.2.0) (2026-09-20)
 
 

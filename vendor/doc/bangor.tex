@@ -181,6 +181,15 @@ Start with \verb|\documentclass[phd,12pt,a4paper]{bangorthesis}|.
         With it, the count restarts at each appendix and the footer reads
         ``Appendix A - Page n''. Then M in ``Page N of M'' is the last page
         of the main text, not of the document.
+  \item \verb|sharedfloats| puts figures, tables, listings, and algorithms
+        on one counter, so the sequence reads Figure 1, Table 2, Listing 3.
+        Listings and algorithms take part when their packages are loaded.
+  \item \verb|sectionfloats| numbers floats within their section, so the
+        first float in section 5.1 is 5.1.1. A float before the first
+        section of a chapter is numbered by the chapter alone (5.1). With
+        \verb|sectionfloats=zero| it is numbered by section zero (5.0.1).
+        The two options combine: together they give one sequence that
+        restarts at each section.
   \item All other options pass to the \textsf{report} class.
 \end{itemize}
 
