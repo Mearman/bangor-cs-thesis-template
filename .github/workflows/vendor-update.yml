@@ -13,6 +13,7 @@ on:
     inputs:
       dry-run:
         description: Report without changing anything
+        type: boolean
         default: true
 
 permissions:
@@ -80,13 +81,13 @@ jobs:
             echo "action=none" >> "$GITHUB_OUTPUT"
           fi
       - name: Report only
-        if: github.event_name == 'workflow_dispatch' && steps.gate.outputs.skip != 'true'
+        if: github.event_name == 'workflow_dispatch' && inputs.dry-run && steps.gate.outputs.skip != 'true'
         run: |
           echo "dry run: action=${{ steps.decide.outputs.action }}"
           exit 0
       - name: Apply update
         if: >-
-          github.event_name == 'schedule' &&
+          (github.event_name == 'schedule' || !inputs.dry-run) &&
           steps.gate.outputs.skip != 'true' &&
           steps.decide.outputs.action != 'none'
         run: |
