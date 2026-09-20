@@ -1,3 +1,11 @@
+# [1.2.0](https://github.com/Mearman/bangor-cs-thesis-template/compare/v1.1.4...v1.2.0) (2026-09-20)
+
+
+### Features
+
+* cleveref references and every content type demonstrated ([beecb16](https://github.com/Mearman/bangor-cs-thesis-template/commit/beecb16180da0aa7f39adbf26c5c22670238a95c))
+* every content type with cleveref, vendor updated ([48939a1](https://github.com/Mearman/bangor-cs-thesis-template/commit/48939a105d74ea78d2c5fa149a1a04cd0b8b73ce))
+
 ## [1.1.4](https://github.com/Mearman/bangor-cs-thesis-template/compare/v1.1.3...v1.1.4) (2026-09-20)
 
 
