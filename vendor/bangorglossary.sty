@@ -1,0 +1,20 @@
+%%% bangorglossary.sty — glossary and abbreviations for Bangor documents
+% Sets up the glossaries package in noidx mode (no external tool
+% needed, works under Overleaf's restricted shell-escape) with the
+% long-short acronym style. Provides \addabbrev for the common
+% one-line abbreviation case.
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{bangorglossary}[2026/09/20 v1.0.4 Bangor University glossary and abbreviations]
+
+\RequirePackage{bangor}
+\RequirePackage[nomain,acronym,toc]{glossaries}
+\makenoidxglossaries
+\setacronymstyle{long-short}
+
+% \addabbrev{SHORT}{Full Name} — the common one-line case. Creates
+% both the glossary entry and the acronym; \gls{SHORT} prints the
+% full form on first use and the short form thereafter.
+\newcommand{\addabbrev}[2]{%
+  \newacronym{#1}{#1}{#2}}
+
+\endinput

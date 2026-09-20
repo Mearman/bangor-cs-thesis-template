@@ -1,0 +1,150 @@
+% Automatic Section Continuation Markers
+% ============================================================================
+%
+% PURPOSE:
+%   Automatically insert continuation markers (e.g., "(Continued)") when
+%   nested sections close and content resumes at a parent section level.
+%
+% REQUIREMENTS:
+%   - This file provides the `asection` environment so no external package is needed
+%   - LaTeX3 (expl3) is required for the peek logic that checks following content
+%
+% USAGE:
+%   1. Include this file in your preamble:
+%      \input{preamble/continuation-markers}
+%
+%   2. Use the supplied `asection` environment for nested sections:
+%      \begin{asection}{Parent Section}
+%      Parent content
+%
+%        \begin{asection}{Subsection}
+%        Subsection content
+%        \end{asection}
+%
+%        % Automatic "(Continued)" marker appears here (only if content follows)
+%
+%      More parent content
+%      \end{asection}
+%
+% CUSTOMISATION:
+%   Change marker text using \setcontinuationmarker:
+%     \setcontinuationmarker{(Resumed)}
+%
+%   Or redefine \continuationmarker directly:
+%     \renewcommand{\continuationmarker}{\subsection*{\textit{(Discussion Continues)}}}
+%
+% IMPLEMENTATION:
+%   Uses LaTeX3 expl3 peek functions to detect content:
+%   - asectiondepth: Current nesting level (0 = no active sections)
+%   - maxasectiondepth: Deepest level encountered (detects level transitions)
+%   - Peek-ahead after \end{asection} to check if another \begin{asection} follows
+%
+%   When asection closes and depth < maxdepth, peek ahead (ignoring spaces/newlines).
+%   Only insert marker if the next non-space token is NOT \begin or \end.
+%
+% VERSION: 2.0.3
+% DATE: 2025-11-13
+% AUTHOR: Implementation based on feature specification 006-latex-section-continuation
+% ============================================================================
+
+\ExplSyntaxOn
+
+% Counter Definitions
+% ----------------------------------------------------------------------------
+\newcounter{asectiondepth}               % Current nesting level (0 = no active sections)
+\newcounter{maxasectiondepth}            % Maximum depth encountered (for detecting level transitions)
+
+% Boolean flag to track if we need to check for continuation
+% Use global (g) variable so it persists across environment boundaries
+\bool_new:N \g_contmark_should_check_bool
+\bool_set_false:N \g_contmark_should_check_bool
+
+% Continuation Marker Commands
+% ----------------------------------------------------------------------------
+
+% \continuationmarker - Default continuation marker (unnumbered subsection)
+% Users can customise by redefining this command
+\cs_new_protected:Npn \continuationmarker { \subsection*{(Continued)} }
+
+% \setcontinuationmarker{text} - Convenience command for customising marker text
+\cs_new_protected:Npn \setcontinuationmarker #1 {
+  \cs_set_protected:Npn \continuationmarker { \subsection*{#1} }
+}
+
+% Content Detection Logic
+% ----------------------------------------------------------------------------
+
+% Check if marker should be inserted by peeking ahead
+% This is called when returning to a shallower nesting level
+\cs_new_protected:Npn \__contmark_check_and_insert:
+  {
+    \bool_if:NT \g_contmark_should_check_bool
+      {
+        \bool_gset_false:N \g_contmark_should_check_bool
+        \peek_meaning_ignore_spaces:NTF \begin
+          {
+            % Next command is \begin (likely another asection) - don't insert marker
+          }
+          {
+            \peek_meaning_ignore_spaces:NTF \end
+              {
+                % Parent section closing - don't insert marker
+              }
+              {
+                % Actual content follows - insert marker
+                \continuationmarker
+              }
+          }
+      }
+  }
+
+% Section dispatch logic
+% ----------------------------------------------------------------------------
+\cs_new_protected:Npn \__contmark_dispatch_section:nn #1#2
+  {
+    \int_case:nnF {#1}
+      {
+        {1}{\section{#2}}
+        {2}{\subsection{#2}}
+        {3}{\subsubsection{#2}}
+        {4}{\paragraph{#2}}
+        {5}{\subparagraph{#2}}
+        {6}{\subsubparagraph{#2}}
+      }
+      {\paragraph{#2}}
+  }
+
+% Nesting management
+% ----------------------------------------------------------------------------
+\cs_new_protected:Npn \__contmark_begin_section:n #1
+  {
+    \stepcounter{asectiondepth}
+    \int_compare:nNnT { \value{asectiondepth} } > { \value{maxasectiondepth} }
+      {
+        \setcounter{maxasectiondepth}{\value{asectiondepth}}
+      }
+    \__contmark_dispatch_section:nn { \value{asectiondepth} } {#1}
+  }
+
+\cs_new_protected:Npn \__contmark_end_section:
+  {
+    \addtocounter{asectiondepth}{-1}
+    \int_compare:nNnT { \value{asectiondepth} } < { \value{maxasectiondepth} }
+      {
+        \int_compare:nNnT { \value{asectiondepth} } > { 0 }
+          {
+            \bool_gset_true:N \g_contmark_should_check_bool
+            \setcounter{maxasectiondepth}{\value{asectiondepth}}
+          }
+      }
+    \__contmark_check_and_insert:
+  }
+
+\newenvironment{asection}[1]
+  {
+    \__contmark_begin_section:n {#1}
+  }
+  {
+    \__contmark_end_section:
+  }
+\ExplSyntaxOff

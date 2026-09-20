@@ -6,7 +6,7 @@
 % bangorcsthesis class by Cameron Gray, Bangor University. Released
 % under the LaTeX Project Public License, version 1.3c or later.
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{bangorthesis}[2026/09/20 v1.1.0 Bangor University thesis and dissertation class]
+\ProvidesClass{bangorthesis}[2026/09/20 v1.1.1 Bangor University thesis and dissertation class]
 
 \RequirePackage{kvoptions}
 \SetupKeyvalOptions{family=bts,prefix=bts@}
@@ -49,9 +49,6 @@
 \DeclareBoolOption[false]{print}
 \DeclareBoolOption[false]{digital}
 
-% Draft marking in the running header.
-\DeclareBoolOption[false]{markdraft}
-
 % Welsh submission: statutory declaration in Welsh plus babel.
 \DeclareBoolOption[false]{welsh}
 
@@ -85,6 +82,8 @@
 \RequirePackage{bangordeclarations}
 \RequirePackage{microtype}
 \RequirePackage{environ}
+\RequirePackage{bangortables}
+\RequirePackage{bangorglossary}
 \RequirePackage[hidelinks]{hyperref}
 % cleveref must load after hyperref. nameinlink makes the reference
 % text itself a hyperlink. Capitalisation is left to the document:
@@ -188,13 +187,20 @@
   \listoffigures
   \listoftables}
 
-% Optional draft marking in the running header.
-\ifbts@markdraft
-  \RequirePackage{fancyhdr}
-  \fancyhead[L]{DRAFT}
-  \fancyhead[R]{\thepage}
-  \fancyfoot{}
-  \pagestyle{fancy}
-\fi
+% Running headers: chapter name on the left, page number on the
+% right, with a thin rule. Chapter-opening pages use the plain
+% style (page number centred at the bottom, no header), which the
+% report class already applies to \chapter pages.
+\RequirePackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\itshape\nouppercase{\leftmark}}
+\fancyhead[R]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\fancypagestyle{plain}{%
+  \fancyhf{}
+  \fancyfoot[C]{\thepage}
+  \renewcommand{\headrulewidth}{0pt}
+}
 
 \endinput

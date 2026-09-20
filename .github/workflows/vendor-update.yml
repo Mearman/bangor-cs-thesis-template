@@ -94,7 +94,7 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git remote add bangor "https://github.com/${PACKAGE_REPO}.git"
           if [ "${{ steps.decide.outputs.action }}" = "bump" ]; then
-          git fetch bangor main
+          git fetch --no-tags bangor main
           rm -rf vendor
           mkdir vendor
           git archive bangor/main | tar -x -C vendor

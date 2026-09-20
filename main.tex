@@ -25,6 +25,11 @@
 
 % Release builds stamp the template version here. Leave this line as
 % it is; the file appears only in tagged releases.
+% Section continuation markers: asection environment that inserts
+% "(Continued)" when a nested section closes and parent content
+% resumes. Comment this line out if you don't want them.
+\input{continuation-markers}
+
 \InputIfFileExists{version.tex}{}{}
 
 % Cross-references use cleveref: \cref{label} mid-sentence produces a
