@@ -1,3 +1,10 @@
+## [1.2.1](https://github.com/Mearman/bangor-cs-thesis-template/compare/v1.2.0...v1.2.1) (2026-09-20)
+
+
+### Bug Fixes
+
+* escape the cref-colon in prose, all types compile green ([d4cedf4](https://github.com/Mearman/bangor-cs-thesis-template/commit/d4cedf47313403feac7854f7f32f4e1f7e786d95))
+
 # [1.2.0](https://github.com/Mearman/bangor-cs-thesis-template/compare/v1.1.4...v1.2.0) (2026-09-20)
 
 
