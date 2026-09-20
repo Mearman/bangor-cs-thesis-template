@@ -6,7 +6,7 @@
 % bangorcsthesis class by Cameron Gray, Bangor University. Released
 % under the LaTeX Project Public License, version 1.3c or later.
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{bangorthesis}[2026/09/19 v1.0.3 Bangor University thesis and dissertation class]
+\ProvidesClass{bangorthesis}[2026/09/20 v1.0.4 Bangor University thesis and dissertation class]
 
 \RequirePackage{kvoptions}
 \SetupKeyvalOptions{family=bts,prefix=bts@}
@@ -86,6 +86,11 @@
 \RequirePackage{microtype}
 \RequirePackage{environ}
 \RequirePackage[hidelinks]{hyperref}
+% cleveref must load after hyperref. The capitalise option produces
+% "Figure 1" and "Table 2" from \cref, matching the convention of
+% naming the type explicitly, so templates reference content with
+% \cref{label} alone.
+\RequirePackage[capitalise,nameinlink]{cleveref}
 \ifbts@welsh
   \RequirePackage[welsh]{babel}
 \fi
