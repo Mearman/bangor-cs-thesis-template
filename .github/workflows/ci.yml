@@ -61,7 +61,8 @@ jobs:
           check() {
             BR="$1"; AM="$2"
             if grep -ri "\b$AM\b" --include="*.tex" --include="*.md" . \
-                | grep -v vendor/ | grep -v .git/; then
+                | grep -v vendor/ | grep -v .git/ \
+                | grep -v '^[^%]*\\\\'; then
               echo "American spelling '$AM' found (expected: $BR)"
               status=1
             fi
