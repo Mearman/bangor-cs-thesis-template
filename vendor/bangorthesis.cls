@@ -6,7 +6,7 @@
 % bangorcsthesis class by Cameron Gray, Bangor University. Released
 % under the LaTeX Project Public License, version 1.3c or later.
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{bangorthesis}[2026/09/20 v1.1.1 Bangor University thesis and dissertation class]
+\ProvidesClass{bangorthesis}[2026/09/20 v1.2.1 Bangor University thesis and dissertation class]
 
 \RequirePackage{kvoptions}
 \SetupKeyvalOptions{family=bts,prefix=bts@}
@@ -82,10 +82,9 @@
 \RequirePackage{bangordeclarations}
 \RequirePackage{microtype}
 \RequirePackage{environ}
-\RequirePackage{bangortables}
-\RequirePackage{bangorglossary}
+\RequirePackage{amsmath}
 \RequirePackage[hidelinks]{hyperref}
-% cleveref must load after hyperref. nameinlink makes the reference
+% cleveref must load after hyperref AND amsmath. nameinlink makes the reference
 % text itself a hyperlink. Capitalisation is left to the document:
 % \cref produces lowercase type names mid-sentence, \Cref produces
 % uppercase at a sentence opening, and the capitalise package option

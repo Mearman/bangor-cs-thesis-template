@@ -21,6 +21,12 @@
 
 % Computer science conventions live in this preamble, not in the
 % package: code listings, algorithm floats, and verbatim setup.
+% Tables and glossary are opt-in modules: load them here only if
+% your document uses longtable, tabularx, landscape, or a glossary.
+\usepackage{bangortables}
+\usepackage{bangorglossary}
+\addabbrev{ML}{machine learning}
+
 \input{preamble-cs}
 
 % Release builds stamp the template version here. Leave this line as
