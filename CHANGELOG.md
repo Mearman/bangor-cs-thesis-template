@@ -1,3 +1,21 @@
+# [1.4.0](https://github.com/Mearman/bangor-cs-thesis-template/compare/v1.3.0...v1.4.0) (2026-09-20)
+
+
+### Bug Fixes
+
+* apply the vendor update when the manual run is not a dry run ([cdc3019](https://github.com/Mearman/bangor-cs-thesis-template/commit/cdc3019244c706aca009ab1bf430e7101ebab87b))
+
+
+### Features
+
+* vendor bangor v2.2.0 and number each appendix on its own ([e9b1fcb](https://github.com/Mearman/bangor-cs-thesis-template/commit/e9b1fcbb1dce1e8de3887258352fe2817a7e3953))
+
+
+Open this exact version in Overleaf, or download it:
+
+[![Open in Overleaf](https://img.shields.io/badge/Open_in_Overleaf-44A141?style=for-the-badge&logo=overleaf&logoColor=white)](https://www.overleaf.com/docs?snip_uri=https://github.com/Mearman/bangor-cs-thesis-template/archive/refs/tags/v1.4.0.zip)
+[![Download ZIP](https://img.shields.io/badge/Download_ZIP-ED0000?style=for-the-badge&labelColor=231F20)](https://github.com/Mearman/bangor-cs-thesis-template/archive/refs/tags/v1.4.0.zip)
+
 # [1.3.0](https://github.com/Mearman/bangor-cs-thesis-template/compare/v1.2.7...v1.3.0) (2026-09-20)
 
 
