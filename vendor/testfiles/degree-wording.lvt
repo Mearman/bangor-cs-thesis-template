@@ -1,0 +1,13 @@
+\input{regression-test.tex}
+\documentclass[phd,12pt,a4paper]{bangorthesis}
+\title{Wording Test}
+\author{H. Student}
+\degreeScheme{Doctor of Philosophy}
+\begin{document}
+\START
+\makeatletter
+\TYPE{submission:\bts@submission}
+\makeatother
+\OMIT
+\END
+\end{document}

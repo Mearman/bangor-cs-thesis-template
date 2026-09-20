@@ -6,7 +6,7 @@
 % bangorcsthesis class by Cameron Gray, Bangor University. Released
 % under the LaTeX Project Public License, version 1.3c or later.
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{bangorthesis}[2026/09/19 v1.0.0 Bangor University thesis and dissertation class]
+\ProvidesClass{bangorthesis}[2026/09/19 v1.0.3 Bangor University thesis and dissertation class]
 
 \RequirePackage{kvoptions}
 \SetupKeyvalOptions{family=bts,prefix=bts@}
@@ -45,7 +45,7 @@
 \DeclareBoolOption[true]{strict}
 
 % Print submission: leading blank page for duplex binding. Digital is
-% the default state and only documents that print is false.
+% the default state; the option exists to state it explicitly.
 \DeclareBoolOption[false]{print}
 \DeclareBoolOption[false]{digital}
 

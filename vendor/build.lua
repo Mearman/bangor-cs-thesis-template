@@ -11,3 +11,9 @@ docfiles = {"bangor.tex"}
 
 -- Development-only trees never enter the distribution archive.
 excludefiles = {"*/tests/*", "*/assets/*", "*/scripts/*", "*/.github/*"}
+
+-- l3build check: the regression tests in testfiles/ run against the
+-- packaged sources. Dates and versions in log output are normalised so
+-- runs diff cleanly across releases.
+checkengines = {"pdftex"}
+checkruns = 1

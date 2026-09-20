@@ -16,23 +16,12 @@ jobs:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
-      - name: Cache apt archives
-        uses: actions/cache@v4
-        with:
-          path: /var/cache/apt/archives
-          key: apt-${{ runner.os }}-texlive-v1
       - name: Cache npm
         uses: actions/cache@v4
         with:
           path: ~/.npm
           key: npm-semantic-release-v1
-      - name: Install TeX Live packaging tools
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y \
-            texlive-latex-base texlive-latex-recommended \
-            texlive-latex-extra texlive-fonts-recommended \
-            texlive-bibtex-extra texlive-extra-utils biber latexmk
+      - uses: Mearman/actions/.github/actions/setup-texlive@setup-texlive-v1
       - name: Fetch l3build from CTAN
         run: |
           curl -sL -o l3build.zip https://mirror.apps.cam.ac.uk/pub/tex-archive/macros/latex/contrib/l3build.zip
