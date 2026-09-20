@@ -1,3 +1,11 @@
+## [1.2.5](https://github.com/Mearman/bangor-cs-thesis-template/compare/v1.2.4...v1.2.5) (2026-09-20)
+
+
+### Bug Fixes
+
+* spelling check excludes LaTeX commands ([2c0ff8c](https://github.com/Mearman/bangor-cs-thesis-template/commit/2c0ff8cee5161d51e63cd7f7ade504bcd0182e4a))
+* spelling check excludes preamble config files, not backslash patterns ([cfa04e6](https://github.com/Mearman/bangor-cs-thesis-template/commit/cfa04e6e5d6294ae609733a816078cd4ac090535))
+
 ## [1.2.4](https://github.com/Mearman/bangor-cs-thesis-template/compare/v1.2.3...v1.2.4) (2026-09-20)
 
 
