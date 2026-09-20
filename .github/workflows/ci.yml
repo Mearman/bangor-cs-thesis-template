@@ -58,16 +58,28 @@ jobs:
       - name: British spelling check
         run: |
           status=0
-          for word in colour behaviour centre organise analyse licence \
-                      favourite honour neighbour labelling modelling \
-                      travelling cancelled fulfilled; do
-            US=$(echo "$word" | sed 's/our/or/;s/ise/ize/;s/ise/ize/;s/our/or/;s/ll/l/')
-            if grep -ri "\b$US\b" --include="*.tex" --include="*.md" . \
+          check() {
+            BR="$1"; AM="$2"
+            if grep -ri "\b$AM\b" --include="*.tex" --include="*.md" . \
                 | grep -v vendor/ | grep -v .git/; then
-              echo "American spelling '$US' found (expected: $word)"
+              echo "American spelling '$AM' found (expected: $BR)"
               status=1
             fi
-          done
+          }
+          check colour color
+          check behaviour behavior
+          check centre center
+          check organise organize
+          check analyse analyze
+          check licence license
+          check favourite favorite
+          check honour honor
+          check neighbour neighbor
+          check labelling labeling
+          check modelling modeling
+          check travelling traveling
+          check cancelled canceled
+          check fulfilled fullfiled
           exit $status
 
   compile:
