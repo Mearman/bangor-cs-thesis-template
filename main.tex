@@ -27,6 +27,12 @@
 % it is; the file appears only in tagged releases.
 \InputIfFileExists{version.tex}{}{}
 
+% Cross-references use cleveref: \cref{label} mid-sentence produces a
+% lowercase type name ("see figure 1"), \Cref{label} at a sentence
+% opening produces uppercase ("Figure 1 shows"). No regulation mandates
+% a reference style, so the class does not impose one; use whichever
+% your subject convention prefers.
+
 \begin{document}
 
 \maketitle
