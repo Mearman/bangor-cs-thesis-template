@@ -1,3 +1,10 @@
+## [2.1.1](https://github.com/Mearman/bangor/compare/v2.1.0...v2.1.1) (2026-09-20)
+
+
+### Bug Fixes
+
+* align the section name to the right edge of the running header ([63640eb](https://github.com/Mearman/bangor/commit/63640eb369b04ffe7c1ddf7a6612a05c1687dc7c))
+
 # [2.1.0](https://github.com/Mearman/bangor/compare/v2.0.0...v2.1.0) (2026-09-20)
 
 

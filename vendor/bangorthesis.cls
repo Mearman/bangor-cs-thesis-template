@@ -6,7 +6,7 @@
 % bangorcsthesis class by Cameron Gray, Bangor University. Released
 % under the LaTeX Project Public License, version 1.3c or later.
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{bangorthesis}[2026/09/20 v2.1.0 Bangor University thesis and dissertation class]
+\ProvidesClass{bangorthesis}[2026/09/20 v2.1.1 Bangor University thesis and dissertation class]
 
 \RequirePackage{kvoptions}
 \SetupKeyvalOptions{family=bts,prefix=bts@}
@@ -229,11 +229,20 @@
 
 % Names in the header may use this share of the text width each. Chapter and section names that repeat one another (contents, bibliography) show once.
 \newcommand{\bts@maxheader}{0.42\textwidth}
-\newcommand{\bts@headleft}{\small\itshape\nouppercase{\truncate{\bts@maxheader}{\leftmark}}}
+
+% \truncate always sets its text in a box of the full width it is given, aligned to the left, so it is used only for text that does not fit. Text that fits keeps its natural width and takes the alignment of its header field, which puts the section name flush right.
+\newcommand{\bts@fit}[1]{%
+  \settowidth{\@tempdima}{#1}%
+  \ifdim\@tempdima>\bts@maxheader\relax
+    \truncate{\bts@maxheader}{#1}%
+  \else
+    #1%
+  \fi}
+\newcommand{\bts@headleft}{\small\itshape\nouppercase{\bts@fit{\leftmark}}}
 \newcommand{\bts@headright}{%
   \small\itshape\nouppercase{%
     \edef\bts@leftcopy{\leftmark}\edef\bts@rightcopy{\rightmark}%
-    \ifx\bts@leftcopy\bts@rightcopy\else\truncate{\bts@maxheader}{\rightmark}\fi}}
+    \ifx\bts@leftcopy\bts@rightcopy\else\bts@fit{\rightmark}\fi}}
 
 % fancyhdr needs enough vertical space for the running header text; the report class default is too small for 12pt italic chapter names.
 \pagestyle{fancy}
