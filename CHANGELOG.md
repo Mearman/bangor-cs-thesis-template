@@ -1,3 +1,10 @@
+## [1.1.3](https://github.com/Mearman/bangor-cs-thesis-template/compare/v1.1.2...v1.1.3) (2026-09-20)
+
+
+### Bug Fixes
+
+* vendor sync via git archive, needing no subtree merge ancestry ([36ed6d7](https://github.com/Mearman/bangor-cs-thesis-template/commit/36ed6d76c78a8264147ddbbe2e14ee54fbb0527c))
+
 ## [1.1.2](https://github.com/Mearman/bangor-cs-thesis-template/compare/v1.1.1...v1.1.2) (2026-09-19)
 
 
