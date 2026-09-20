@@ -60,6 +60,10 @@ The layout module checks the rules from Regulation 03, 2025 Version 01, section 
 
 The checks govern settings made through this package. They cannot see changes made around it.
 
+## Page numbering
+
+The title page carries no number. The front matter (acknowledgements, abstract, contents and lists) is numbered in roman numerals, centred in the footer, and has no running header. The numbering restarts in arabic at the first numbered chapter, and the running header and footer start there. The switch is automatic, so there is no command to call. Appendices continue the arabic sequence by default. Set `appendixpages` to number each appendix on its own instead: the count restarts at each appendix, the footer reads "Appendix A - Page n", and the contents list the pages as `A-1`. With `pageofm`, M is the last page of the main text when `appendixpages` is set, and the last page of the document otherwise.
+
 ## Headers and footers
 
 The class sets running headers and footers. By default the header shows the chapter name on the left and the section name on the right, and the footer shows the title and the page number. Set `\shorttitle{Short title}` for a shorter footer title. Class options change the layout: `headers=chapter` puts the page number in the header, `pageofm` prints "Page N of M", and `headrule` and `footrule` each take `hairline` (the default), `visible`, or `none`.

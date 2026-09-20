@@ -174,6 +174,13 @@ Start with \verb|\documentclass[phd,12pt,a4paper]{bangorthesis}|.
         the rule above the footer. Each takes \verb|hairline| (the default),
         \verb|visible|, or \verb|none|. The two options work separately.
   \item \verb|pageofm| prints the page number as ``Page N of M''.
+  \item \verb|appendixpages| numbers each appendix separately. The title page
+        carries no number, the front matter is numbered in roman numerals,
+        and the numbering restarts in arabic at the first numbered chapter.
+        Appendices continue the arabic sequence unless this option is set.
+        With it, the count restarts at each appendix and the footer reads
+        ``Appendix A - Page n''. Then M in ``Page N of M'' is the last page
+        of the main text, not of the document.
   \item All other options pass to the \textsf{report} class.
 \end{itemize}
 

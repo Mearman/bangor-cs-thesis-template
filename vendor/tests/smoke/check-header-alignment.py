@@ -3,14 +3,14 @@
 
 Usage: check-header-alignment.py PDF LEFT_WORD RIGHT_WORD
 
-Finds the first page whose header line holds both words, then compares the header's left and right edges with those of everything else on the page (the body and the footer, which are set to the same text block). The words in the header share one baseline, so words on that line are the header and every other word is not. The edges must agree to within two points, which allows for the side bearings of the glyphs and the rounding of the extracted word boxes.
+Finds the first page whose header line holds both words, then compares the header's left and right edges with those of everything else on the page (the body and the footer, which are set to the same text block). The words in the header share one baseline, so words on that line are the header and every other word is not. The edges must agree to within four points, which allows for the punctuation that microtype lets protrude into the margins, the side bearings of the glyphs, and the rounding of the extracted word boxes. A header set in a box narrower than the text block is out by far more than that.
 """
 
 import re
 import subprocess
 import sys
 
-TOLERANCE_POINTS = 2.0
+TOLERANCE_POINTS = 4.0
 WORD = re.compile(
     r'<word xMin="([\d.]+)" yMin="([\d.]+)" xMax="([\d.]+)" yMax="([\d.]+)">([^<]*)</word>'
 )
