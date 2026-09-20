@@ -89,16 +89,6 @@
       }
   }
 
-% str_compare:nNnTF {a} < {b} — expandable string comparison
-\prg_new_conditional:Npnn \str_compare:nNn #1 #2 #3 { TF }
-  {
-    \if_int_compare:w \pdfstrcmp { #1 } #2 { #3 } > 0
-      \prg_return_true:
-    \else:
-      \prg_return_false:
-    \fi:
-  }
-
 % User-level commands
 \NewDocumentCommand { \addabbrev } { m m }
   { \bangor_add_abbrev:nn { #1 } { #2 } }
