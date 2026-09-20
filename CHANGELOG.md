@@ -1,3 +1,10 @@
+## [1.2.3](https://github.com/Mearman/bangor-cs-thesis-template/compare/v1.2.2...v1.2.3) (2026-09-20)
+
+
+### Bug Fixes
+
+* no-tags on the vendor fetch ([bb576a1](https://github.com/Mearman/bangor-cs-thesis-template/commit/bb576a18efbd2d6d5a839f763d7293529094ea69))
+
 ## [1.2.2](https://github.com/Mearman/bangor-cs-thesis-template/compare/v1.2.1...v1.2.2) (2026-09-20)
 
 
