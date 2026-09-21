@@ -120,8 +120,9 @@ jobs:
             git reset --hard
             exit 0
           fi
+          # A fix commit, not a chore, so that semantic-release cuts a template release and the release archive ships the bumped package.
           git commit --allow-empty \
-            -m "chore(vendor): land ${{ steps.decide.outputs.action }} ${{ steps.compare.outputs.latest }}" \
+            -m "fix(vendor): land ${{ steps.decide.outputs.action }} ${{ steps.compare.outputs.latest }}" \
             || true
           git push origin HEAD:main
         env:
