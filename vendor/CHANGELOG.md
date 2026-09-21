@@ -1,3 +1,9 @@
+## [5.3.2](https://github.com/Mearman/bangor/compare/v5.3.1...v5.3.2) (2026-09-21)
+
+### Bug Fixes
+
+* set the wrapped table's block unindented ([21fa903](https://github.com/Mearman/bangor/commit/21fa9033b599ab932a4ee6b3581d8e95628ed4b4))
+
 ## [5.3.1](https://github.com/Mearman/bangor/compare/v5.3.0...v5.3.1) (2026-09-21)
 
 ### Bug Fixes
