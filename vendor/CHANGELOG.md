@@ -1,3 +1,9 @@
+## [5.3.4](https://github.com/Mearman/bangor/compare/v5.3.3...v5.3.4) (2026-09-21)
+
+### Performance Improvements
+
+* load microtype for protrusion only ([3760bd3](https://github.com/Mearman/bangor/commit/3760bd3f3bfdeb5fe984d6a305d7fa6ca40cb15c))
+
 ## [5.3.3](https://github.com/Mearman/bangor/compare/v5.3.2...v5.3.3) (2026-09-21)
 
 ### Bug Fixes
