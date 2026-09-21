@@ -1,3 +1,15 @@
+## [1.6.8](https://github.com/Mearman/bangor-cs-thesis-template/compare/v1.6.7...v1.6.8) (2026-09-21)
+
+### Documentation
+
+* add a plain long table beside the wide one ([9a46f16](https://github.com/Mearman/bangor-cs-thesis-template/commit/9a46f16e334b2b42c5042e25971ea376c3cc974f))
+
+
+Open this exact version in Overleaf, or download it:
+
+[![Open in Overleaf](https://img.shields.io/badge/Open_in_Overleaf-44A141?style=for-the-badge&logo=overleaf&logoColor=white)](https://www.overleaf.com/docs?snip_uri=https://github.com/Mearman/bangor-cs-thesis-template/archive/refs/tags/v1.6.8.zip)
+[![Download ZIP](https://img.shields.io/badge/Download_ZIP-ED0000?style=for-the-badge&labelColor=231F20)](https://github.com/Mearman/bangor-cs-thesis-template/archive/refs/tags/v1.6.8.zip)
+
 ## [1.6.7](https://github.com/Mearman/bangor-cs-thesis-template/compare/v1.6.6...v1.6.7) (2026-09-21)
 
 ### Documentation
