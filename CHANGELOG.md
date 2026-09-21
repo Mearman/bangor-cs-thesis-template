@@ -1,3 +1,15 @@
+## [1.6.12](https://github.com/Mearman/bangor-cs-thesis-template/compare/v1.6.11...v1.6.12) (2026-09-21)
+
+### Documentation
+
+* demonstrate the wrapped columns form beside the paginating one ([8a15f4c](https://github.com/Mearman/bangor-cs-thesis-template/commit/8a15f4cda67f66232f95e96a990b137f26da85bb))
+
+
+Open this exact version in Overleaf, or download it:
+
+[![Open in Overleaf](https://img.shields.io/badge/Open_in_Overleaf-44A141?style=for-the-badge&logo=overleaf&logoColor=white)](https://www.overleaf.com/docs?snip_uri=https://github.com/Mearman/bangor-cs-thesis-template/archive/refs/tags/v1.6.12.zip)
+[![Download ZIP](https://img.shields.io/badge/Download_ZIP-ED0000?style=for-the-badge&labelColor=231F20)](https://github.com/Mearman/bangor-cs-thesis-template/archive/refs/tags/v1.6.12.zip)
+
 ## [1.6.11](https://github.com/Mearman/bangor-cs-thesis-template/compare/v1.6.10...v1.6.11) (2026-09-21)
 
 ### Miscellaneous Chores
