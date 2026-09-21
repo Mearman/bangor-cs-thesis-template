@@ -1,3 +1,9 @@
+## [5.3.3](https://github.com/Mearman/bangor/compare/v5.3.2...v5.3.3) (2026-09-21)
+
+### Bug Fixes
+
+* set the gap between wrapped table panes to a fixed 2em ([bfcf870](https://github.com/Mearman/bangor/commit/bfcf87098e2e272102dc781a0e7e3412b0e1bf75))
+
 ## [5.3.2](https://github.com/Mearman/bangor/compare/v5.3.1...v5.3.2) (2026-09-21)
 
 ### Bug Fixes

@@ -215,7 +215,8 @@
 
 % Panes: pane p carries rows (p-1)*per+1 .. p*per, per = ceil(rows/N),
 % each pane the available line width divided by the pane count and
-% separated from its neighbour by \hfill. The head opens every pane.
+% separated from its neighbour by a 2em gap, matching the width the
+% panes are sized to leave. The head opens every pane.
 % The caption and the panes sit inside one unbreakable minipage: a
 % wrapped table must fit one page by contract, so a page break between
 % the caption and the panes is not a break the form may take.
@@ -241,7 +242,7 @@
       \tl_put_right:No \l__bts_pane_tl { \seq_item:Nn \l__bts_rows_seq { ####1 } }
       \tl_put_right:Nn \l__bts_pane_tl { \\ }
     }
-    \int_compare:nNnT { ##1 } > { 1 } { \hfill }
+    \int_compare:nNnT { ##1 } > { 1 } { \hspace { 2em } }
     \begin { minipage } [t] { \dim_eval:n { ( \linewidth - 2em * ( \l_bts_cols_int - 1 ) ) / \l_bts_cols_int } }
     \begin { tabular } { #1 }
     \l__bts_head_tl
