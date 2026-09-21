@@ -26,6 +26,10 @@ The class checks the university format rules and fails the build when one is bro
 
 State how you used generative AI tools. Replace the bracketed guidance through the `\aistatement` command in `main.tex`, and check your school's current policy.
 
+### Other class options
+
+A few class options have no demonstration in this template because they change the document's whole shape. `print` adds a blank page before the title page and starts each chapter on a recto page, for duplex printing and binding. `welsh` prints the statutory declaration in Welsh and loads Welsh hyphenation through babel, for Welsh-medium submission. `frontmattertoc` enters the abstract, acknowledgements, lists of figures and tables, and list of abbreviations in the contents; by default they carry PDF bookmarks but no contents entries. The body font can be switched from the default Times-like face with `font=bonum` or `font=heros`. Set any of these on the `\documentclass` line.
+
 ## Keep the vendored modules current
 
 The file `vendor/VERSION` shows which package release your copy carries. A scheduled workflow keeps it current: it pulls the latest package release into `vendor/`, compiles the project against it, and lands the update directly when the result is green and the change stays inside `vendor/`. GitHub disables scheduled workflows after 60 days of repository inactivity. If you work only inside Overleaf, download the newest release of this template and copy the files in `vendor/` over your copies.
