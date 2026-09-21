@@ -60,9 +60,13 @@ jobs:
           status=0
           check() {
             BR="$1"; AM="$2"
-            if grep -ri "\b$AM\b" --include="*.tex" --include="*.md" . \
+            # Macro names are stripped before matching: \color is a command
+            # and cannot be spelt the British way, so only a bare word in
+            # prose counts.
+            if grep -rIi "\b$AM\b" --include="*.tex" --include="*.md" . \
                 | grep -v vendor/ | grep -v .git/ \
-                | grep -v preamble-; then
+                | sed -E "s/\\\\[A-Za-z]+//g" \
+                | grep -i "\b$AM\b"; then
               echo "American spelling '$AM' found (expected: $BR)"
               status=1
             fi
