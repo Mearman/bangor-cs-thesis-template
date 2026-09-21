@@ -40,50 +40,21 @@ The class numbers floats by section by default. Figures, tables, and listings sh
 \end{table}
 
 \section{Continuation pages}
-This section spans multiple pages so you can see how a chapter looks
-when it flows past its opening page. On the chapter's first page the
-page style is plain: no header, page number centred at the bottom. On
-every subsequent page the running header appears with the chapter name
-on the left and the page number on the right, separated from the text
-by a thin rule.
+This section spans multiple pages so you can see how a chapter looks when it flows past its opening page. On the chapter's first page there is no header, and the footer holds only the page number. On every later page the header shows the chapter name on the left and the section name on the right, and the footer shows the short title on the left and the page number on the right.
 
-Replace this prose with your own content; it exists so the compiled
-demonstration PDF shows continuation-page styling.
+Replace this prose with your own content; it exists so the compiled demonstration PDF shows continuation-page styling.
 
 \subsection{First subsection}
-The header text is set in italics at a smaller size than the body, so
-it does not compete with the running text. The thin rule beneath it is
-0.4 points wide, visible on screen and in print but unobtrusive. If
-your school's conventions require a different header layout, the class
-provides the fancyhdr infrastructure; override it in your preamble.
+The header text is set in italics at a smaller size than the body, so it does not compete with the running text. A rule can sit beneath the header: the \texttt{headrule} class option takes \texttt{hairline} (the default, too thin to see), \texttt{visible}, or \texttt{none}, and \texttt{footrule} does the same for the footer.
 
 \subsection{Second subsection}
-The page number sits in the header on continuation pages and in the
-footer on chapter-opening pages. This dual placement is standard in UK
-theses: the reader can find their place from either the top or bottom
-of the page. The number is in the same typeface as the body text at
-the same size, not the smaller italic used for the chapter name.
+By default the page number sits at the right of the footer and reads ``Page N of M''. Set \texttt{headers=chapter} to move it to the header, where it takes the place of the section name, and set \texttt{pageofm=false} to print the number alone.
 
 \subsection{Third subsection}
-Each new section starts with its heading in the body text and does not
-reset the running header; the header always shows the chapter name,
-not the section name. This is a deliberate simplification: section
-names change frequently within a chapter and the running header would
-need to update mid-page, which fancyhdr handles only at page
-boundaries and can produce inconsistent results when a section starts
-near the bottom of a page.
+A page shows the name of the first section that starts on it, or the section that continues from the previous page when none starts. A name too wide for the header stops the build, and \texttt{\textbackslash section[Short title]\{Long title\}} gives it a shorter running title.
 
 \subsection{Fourth subsection}
-The gap between the header and the body text is governed by the
-headsep length, which the class sets to the report class default. If
-you find the header too close or too far from your text, adjust
-headsep in your preamble with a setlength command. The headheight has
-already been set to 14 points to accommodate the italic chapter name
-at 12 point body size without a fancyhdr warning.
+The gap between the header and the body text is governed by the headsep length, which the class sets to the report class default. If you find the header too close or too far from your text, adjust headsep in your preamble with a setlength command. The headheight has already been set to 14 points to accommodate the italic header text at 12 point body size without a fancyhdr warning.
 
 \subsection{Fifth subsection}
-This is the final subsection of the demonstration content. If you can
-see the running header with the chapter name and page number above
-this text, the continuation-page styling is working correctly. The
-next chapter will open with the plain page style again, showing the
-transition between the two modes.
+This is the final subsection of the demonstration content. If you can see the running header with the chapter name and the section name above this text, the continuation-page styling is working correctly. The next chapter will open with the plain page style again, showing the transition between the two modes.
