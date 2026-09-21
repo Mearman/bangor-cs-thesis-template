@@ -1,3 +1,13 @@
+## [5.3.0](https://github.com/Mearman/bangor/compare/v5.2.0...v5.3.0) (2026-09-21)
+
+### Features
+
+* wrap narrow tables into side-by-side panes with columns=N ([438a420](https://github.com/Mearman/bangor/commit/438a4200d4b48f3592aff917fd5861ce78c1510c))
+
+### Styles
+
+* run latexindent over the sources ([c5fb4a6](https://github.com/Mearman/bangor/commit/c5fb4a6b07eed3e0bacba230ea2bca5a188bd104))
+
 ## [5.2.0](https://github.com/Mearman/bangor/compare/v5.1.0...v5.2.0) (2026-09-21)
 
 ### Features

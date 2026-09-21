@@ -180,6 +180,15 @@ jobs:
             status=1
           fi
           repeats=$(printf '%s\n' "$text" | grep -cE "Item +Description +Value" || true)
+          wrapped=$(pdftotext -layout tables-glossary.pdf - | grep -cE "Item +Kind +Value")
+          if [ "$wrapped" -ne 1 ]; then
+            echo "the wrapped table's panes did not sit side by side on one page"
+            status=1
+          fi
+          if ! pdftotext -layout tables-glossary.pdf - | grep -q "An inventory wrapped into two columns"; then
+            echo "the wrapped table's caption is missing"
+            status=1
+          fi
           # The negative fixture must fail with the package error. latexmk writes
           # its log beside the source on some versions and in the working directory on others, so both are checked.
           if latexmk -pdf -interaction=nonstopmode tests/smoke/longtabular-invalid.tex >/dev/null 2>&1; then

@@ -1,7 +1,8 @@
 % !TeX program = pdflatex
 %%% Smoke test for the opt-in bangortables and bangorglossary modules.
 %%% A tall longtabular must paginate with its header repeated, a wide
-%%% longtabular must rotate onto a landscape page, and the abbreviations
+%%% longtabular must rotate onto a landscape page, a columns longtabular
+%%% must wrap its rows into panes on one page, and the abbreviations
 %%% must expand on first use
 %%% and print in an alphabetical list under a heading, with the pages that use each one.
 \documentclass[phd,12pt,a4paper]{bangorthesis}
@@ -120,6 +121,40 @@
   \hline
   Data & Data & Data & Data & Description text here & More description \\
   \hline
+\end{longtabular}
+
+
+\begin{longtabular}[columns=2]{l l r}
+  \caption[Wrapped inventory]{An inventory wrapped into two columns on one page.}\label{tab:wrapped}\\
+  \panehead
+  \hline
+  Item & Kind & Value \\
+  \hline
+  \endpanehead
+  w01 & wrapped kind 1 & 1 \\
+  w02 & wrapped kind 2 & 2 \\
+  w03 & wrapped kind 3 & 3 \\
+  w04 & wrapped kind 4 & 4 \\
+  w05 & wrapped kind 5 & 5 \\
+  w06 & wrapped kind 6 & 6 \\
+  w07 & wrapped kind 7 & 7 \\
+  w08 & wrapped kind 8 & 8 \\
+  w09 & wrapped kind 9 & 9 \\
+  w10 & wrapped kind 10 & 10 \\
+  w11 & wrapped kind 11 & 11 \\
+  w12 & wrapped kind 12 & 12 \\
+  w13 & wrapped kind 13 & 13 \\
+  w14 & wrapped kind 14 & 14 \\
+  w15 & wrapped kind 15 & 15 \\
+  w16 & wrapped kind 16 & 16 \\
+  w17 & wrapped kind 17 & 17 \\
+  w18 & wrapped kind 18 & 18 \\
+  w19 & wrapped kind 19 & 19 \\
+  w20 & wrapped kind 20 & 20 \\
+  w21 & wrapped kind 21 & 21 \\
+  w22 & wrapped kind 22 & 22 \\
+  w23 & wrapped kind 23 & 23 \\
+  w24 & wrapped kind 24 & 24 \\
 \end{longtabular}
 
 \end{document}

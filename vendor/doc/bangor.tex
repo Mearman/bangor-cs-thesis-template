@@ -130,9 +130,20 @@ argument turns on rotation for wide tables:
   \verb|\begin{longtabular}[wide]{l X r}| \\ \verb|... rows and caption ...| \\ \verb|\end{longtabular}|
 \end{quote}
 
+The optional argument also takes \verb|columns=N|, which wraps a
+narrow table's rows into N side-by-side panes on one page so a long
+narrow table uses the page's width instead of running onto the next
+page: each pane repeats the head, the caption prints once above the
+panes, and the wrapped table must fit one page. In this form the head
+sits between \verb|\panehead| and \verb|\endpanehead| in the body,
+because the longtable block markers cannot be re-parsed outside a
+table; a missing marker is a package error. The options combine as
+\verb|[wide,columns=2]|.
+
 The underlying \verb|longtable|, \verb|tabularx| and \verb|landscape|
 environments remain available for special cases. The only permitted
-optional value is \verb|wide|; any other is a package error.
+optional items are \verb|wide| and \verb|columns=N|; any other is a
+package error.
 
 \section{Abbreviations: bangorglossary}
 Load the module with \verb|\usepackage{bangorglossary}|. It loads no other

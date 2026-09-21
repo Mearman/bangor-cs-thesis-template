@@ -15,7 +15,7 @@ The family has three layers. A module must only use modules in a lower layer.
 
 ## Tables
 
-`bangortables` provides `longtabular`, one environment for tables that run past a page, need X columns to fit the text width, or both. It paginates with the header repeating when the header rows sit before `\endhead`, and its optional `[wide]` form rotates the table onto a landscape page. Any other optional value is an error. The underlying `longtable`, `tabularx` and `landscape` remain available for special cases.
+`bangortables` provides `longtabular`, one environment for tables that run past a page, need X columns to fit the text width, or both. It paginates with the header repeating when the header rows sit before `\endhead`, and its optional `[wide]` form rotates the table onto a landscape page. `[columns=N]` instead wraps a narrow table's rows into N side-by-side panes on one page, with the head repeated in each pane and the caption printed once above; the wrapped table must fit one page, and in this form the head sits between `\panehead` and `\endpanehead` in the body. The options combine (`[wide,columns=2]`); any other optional value is an error. The underlying `longtable`, `tabularx` and `landscape` remain available for special cases.
 3. `bangorletter` and the `bangorthesis` class are consumers. They use the lower layers and add their own document type.
 
 Full interface documentation is in `doc/bangor.pdf`.
