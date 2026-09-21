@@ -1,10 +1,16 @@
 #!/bin/sh
-# Conventional commit format check, dependency-free. The full
-# commitlint rules run in CI; this hook catches the common case
-# without requiring any toolchain.
+# Conventional commit header check, dependency-free. It enforces the same
+# rules as the commitlint check in CI (a listed type, a subject, and at most
+# 100 characters) without requiring any toolchain.
 msg=$(head -1 "$1")
 
 pattern='^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\([^)]+\))?!?: .+'
+
+if [ "$(printf '%s' "$msg" | awk '{ print length($0) }')" -gt 100 ]; then
+  echo "commit message header is longer than 100 characters:"
+  echo "  $msg"
+  exit 1
+fi
 
 if ! printf '%s\n' "$msg" | grep -qE "$pattern"; then
   echo "commit message does not follow the conventional commit format:"
