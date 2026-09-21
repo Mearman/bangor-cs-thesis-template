@@ -1,5 +1,8 @@
 \chapter{Evaluation}
-State what you measured, how you measured it, and what you found. \Cref{tab:sample} shows the shape of a results table, and \cref{fig:crest} shows the university crest through the brand layer.
+State what you measured, how you measured it, and what you found.
+
+\section{Results}
+\Cref{tab:sample} shows the shape of a results table, and \cref{fig:crest} shows the university crest through the brand layer.
 
 \begin{table}[htbp]
   \centering
@@ -23,7 +26,7 @@ State what you measured, how you measured it, and what you found. \Cref{tab:samp
 \end{figure}
 
 \section{Float numbering}
-The class numbers floats by section by default. Figures, tables, and listings share one counter, and the counter restarts in each section, so \cref{tab:numbering} is the first float of this section and its number says so. Floats that come before the first section of a chapter, such as \cref{tab:sample}, are numbered by the chapter alone. Set \texttt{sharedfloats=false} or \texttt{sectionfloats=none} in the class options to turn either behaviour off.
+The class numbers floats by section by default. Figures, tables, and listings share one counter, and the counter restarts in each section, so \cref{tab:numbering} is the first float of this section and its number says so, while \cref{tab:sample} and \cref{fig:crest} belong to the previous section. A float that comes before the first section of a chapter is numbered by the chapter alone, and \texttt{sectionfloats=zero} numbers it by section zero instead. Set \texttt{sharedfloats=false} or \texttt{sectionfloats=none} in the class options to turn either behaviour off.
 
 \begin{table}[htbp]
   \centering
