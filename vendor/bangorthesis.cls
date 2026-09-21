@@ -6,7 +6,7 @@
 % bangorcsthesis class by Cameron Gray, Bangor University. Released
 % under the LaTeX Project Public License, version 1.3c or later.
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{bangorthesis}[2026/09/21 v5.0.0 Bangor University thesis and dissertation class]
+\ProvidesClass{bangorthesis}[2026/09/21 v5.0.2 Bangor University thesis and dissertation class]
 
 \RequirePackage{kvoptions}
 \SetupKeyvalOptions{family=bts,prefix=bts@}
@@ -106,6 +106,8 @@
 \RequirePackage{environ}
 \RequirePackage{etoolbox}
 \RequirePackage{amsmath}
+% float is loaded first because a package that loads it after hyperref, as algorithm does, leaves every table and figure with a duplicate PDF destination, and the class cannot control what a document loads later.
+\RequirePackage{float}
 % plainpages=false keeps the page anchors of the roman, arabic and per-appendix numberings distinct.
 \RequirePackage[hidelinks,plainpages=false]{hyperref}
 % cleveref must load after hyperref AND amsmath. nameinlink makes the reference
@@ -404,7 +406,7 @@
 \bts@checkfooter{The short title is too wide for the footer}{Use a shorter \string\shorttitle.}%
 \fi}
 
-% Float numbering. The switch runs at the very end of the begindocument hook because packages such as listings create their counters lazily and would fail on a counter that already exists. Counters whose package is not loaded are skipped, so the same list serves every document. A shared counter is another name for the figure register, and the number format of each shared type is defined as a call to \thefigure, because a copy of \thefigure taken before it is redefined would keep the old format.
+% Float numbering. The switch runs at the very end of the begindocument hook because packages such as listings create their counters lazily and would fail on a counter that already exists. Counters whose package is not loaded are skipped, so the same list serves every document. A shared counter is another name for the figure register, and the number format and the hyperref anchor name of each shared type are defined as calls to \thefigure and \theHfigure, because a copy taken before they are redefined would keep the old format, and an anchor name built from the type's own parent counters would repeat within a chapter as the shared count restarts in each section.
 \def\bts@sfv@none{}
 \def\bts@sfv@chapter{}
 \def\bts@sfv@zero{}
@@ -420,7 +422,8 @@
     \@for\bts@floatcounter:=table,lstlisting,algorithm\do{%
       \@ifundefined{c@\bts@floatcounter}{}{%
         \expandafter\let\csname c@\bts@floatcounter\expandafter\endcsname\csname c@figure\endcsname
-        \expandafter\gdef\csname the\bts@floatcounter\endcsname{\thefigure}}}%
+        \expandafter\gdef\csname the\bts@floatcounter\endcsname{\thefigure}%
+        \expandafter\gdef\csname theH\bts@floatcounter\endcsname{\theHfigure}}}%
     \bts@numberfloat{figure}%
   \else
     \@for\bts@floatcounter:=figure,table,lstlisting,algorithm\do{%

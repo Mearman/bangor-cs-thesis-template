@@ -1,7 +1,8 @@
 % !TeX program = pdflatex
-%%% Float numbering. The class options are substituted for the placeholder, which lets one document check the default and every combination of sharedfloats and sectionfloats.
+%%% Float numbering. The class options are substituted for the placeholder, which lets one document check the default and every combination of sharedfloats and sectionfloats. The algorithm package loads after the class, as a template does, and no table or figure may end up with a duplicate PDF destination.
 \documentclass[phd,@OPTIONS@,12pt,a4paper]{bangorthesis}
 \usepackage{listings}
+\usepackage{algorithm}
 \title{Float Numbering}
 \author{T. Student}
 \degreescheme{Doctor of Philosophy}
@@ -20,4 +21,9 @@ x
 \chapter{Two}
 \section{C}
 \begin{figure}[h]\caption{Figure in C}\end{figure}
+\chapter{Three}
+\section{E}
+\begin{table}[h]\caption{Table in E}\end{table}
+\section{F}
+\begin{table}[h]\caption{Table in F}\end{table}
 \end{document}

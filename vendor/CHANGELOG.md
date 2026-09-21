@@ -1,3 +1,18 @@
+## [5.0.2](https://github.com/Mearman/bangor/compare/v5.0.1...v5.0.2) (2026-09-21)
+
+
+### Bug Fixes
+
+* give tables and listings that share the figure counter the figure's anchor name ([9272839](https://github.com/Mearman/bangor/commit/9272839e9c64a348859bcdee694e7018ea660c03))
+* load float before hyperref so table and figure destinations stay unique ([b0f3192](https://github.com/Mearman/bangor/commit/b0f3192c4bafba9042530406bf6d6315ea29bcc7))
+
+## [5.0.1](https://github.com/Mearman/bangor/compare/v5.0.0...v5.0.1) (2026-09-21)
+
+
+### Bug Fixes
+
+* title the list of abbreviations like the other front matter lists ([15e50a4](https://github.com/Mearman/bangor/commit/15e50a4df00c2b4fb7fbee47344de3b3e8f63b59))
+
 # [5.0.0](https://github.com/Mearman/bangor/compare/v4.1.1...v5.0.0) (2026-09-21)
 
 

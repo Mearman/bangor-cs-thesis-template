@@ -87,7 +87,7 @@ jobs:
             latex-build-
       - uses: Mearman/actions/.github/actions/setup-texlive@setup-texlive-v1
         with:
-          extra: texlive-lang-european poppler-utils
+          extra: texlive-lang-european texlive-science poppler-utils
       - name: Compile documentation
         run: |
           latexmk -pdf -interaction=nonstopmode doc/bangor.tex
@@ -163,7 +163,7 @@ jobs:
             echo "the last page number is unresolved when the document ends on a float page"
             status=1
           fi
-          if ! printf '%s\n' "$text" | grep -qE "^[[:space:]]*Abbreviations[[:space:]]*$"; then
+          if ! printf '%s\n' "$text" | grep -qE "^[[:space:]]*List of Abbreviations[[:space:]]*$"; then
             echo "the list of abbreviations has no heading"
             status=1
           fi
@@ -345,7 +345,7 @@ jobs:
           default_text=$(pdftotext -layout frontmatter-default.pdf -)
           toc_text=$(pdftotext -layout frontmatter-toc.pdf -)
           empty_text=$(pdftotext -layout frontmatter-empty.pdf -)
-          for heading in Abstract Acknowledgements Abbreviations "List of Figures" "List of Tables"; do
+          for heading in Abstract Acknowledgements "List of Abbreviations" "List of Figures" "List of Tables"; do
             if ! printf '%s\n' "$default_text" | grep -qE "^[[:space:]]*${heading}[[:space:]]*$"; then
               echo "default: the ${heading} heading is missing"
               status=1

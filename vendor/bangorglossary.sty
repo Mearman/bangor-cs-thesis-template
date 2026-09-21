@@ -12,6 +12,9 @@
 
 \RequirePackage{bangor}
 
+% The default heading of \printabbrevs, named like \listfigurename and \listtablename so a document can change it in one place.
+\newcommand{\abbrevname}{List of Abbreviations}
+
 \ExplSyntaxOn
 
 % Storage: a property list keyed by the short form, holding the long form.
@@ -188,7 +191,7 @@
 \NewDocumentCommand { \Useabbrev } { m }
 { \bangor_use_abbrev_cap:n { #1 } }
 
-\NewDocumentCommand { \printabbrevs } { O{Abbreviations} }
+\NewDocumentCommand { \printabbrevs } { O{\abbrevname} }
 { \bangor_print_abbrevs:n { #1 } }
 
 % Read from the .aux file, so it must exist when the file is read.
