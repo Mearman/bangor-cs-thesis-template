@@ -1,3 +1,18 @@
+## [5.0.4](https://github.com/Mearman/bangor/compare/v5.0.3...v5.0.4) (2026-09-21)
+
+### Bug Fixes
+
+* give paragraphs with an unbreakable word emergency stretch ([6ac51be](https://github.com/Mearman/bangor/commit/6ac51be48ae33d48f42e20c251a7e20f3b71b82b))
+* reference the total page count without a link ([9c5e393](https://github.com/Mearman/bangor/commit/9c5e393c4374e48e6ec0ce7f0a31e00f22216701))
+* set fonts in T1 so a typewriter backslash has a font shape ([69285c5](https://github.com/Mearman/bangor/commit/69285c54ef9fd612e202460542bcd32fefce7ab9))
+
+## [5.0.3](https://github.com/Mearman/bangor/compare/v5.0.2...v5.0.3) (2026-09-21)
+
+### Continuous Integration
+
+* apply the header length limit in the commit-msg hook ([48f1d61](https://github.com/Mearman/bangor/commit/48f1d61f81462ed7b473821859978cbabd6c0935))
+* release every conventional commit type and list each in the notes ([9cc93da](https://github.com/Mearman/bangor/commit/9cc93daf7289c0dd576e5e2eafda84c0634ba914))
+
 ## [5.0.2](https://github.com/Mearman/bangor/compare/v5.0.1...v5.0.2) (2026-09-21)
 
 

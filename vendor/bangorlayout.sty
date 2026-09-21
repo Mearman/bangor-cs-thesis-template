@@ -8,7 +8,7 @@
 % The validator governs settings made through this package. It cannot
 % see arbitrary preamble changes made around it.
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{bangorlayout}[2026/09/21 v5.0.2 Bangor University regulation layout]
+\ProvidesPackage{bangorlayout}[2026/09/21 v5.0.4 Bangor University regulation layout]
 \bangorstamppart{bangorlayout}{bangorlayout.sty}
 
 \RequirePackage{kvoptions}
@@ -47,6 +47,10 @@
 % default as the fallback.
 \newif\ifbgl@serif
 \newif\ifbgl@heros
+% T1 is loaded before any font package so that the fonts are set up in it. The legacy OT1 encoding has no typewriter backslash, so \texttt{\textbackslash} in a document warned about a missing font shape, and T1 also sets accented Welsh letters as single glyphs.
+\RequirePackage[T1]{fontenc}
+% A word that cannot be broken, such as a typewriter option name, can leave a justified line too wide to fit. Emergency stretch lets TeX loosen the spacing of a paragraph that would otherwise overfill a line, so that only such lines are affected and no text needs rewording.
+\setlength{\emergencystretch}{3em}
 \bgl@seriftrue
 \bgl@herosfalse
 \def\bgl@choicetermes{termes}

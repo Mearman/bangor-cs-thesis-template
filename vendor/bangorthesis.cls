@@ -6,7 +6,7 @@
 % bangorcsthesis class by Cameron Gray, Bangor University. Released
 % under the LaTeX Project Public License, version 1.3c or later.
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{bangorthesis}[2026/09/21 v5.0.2 Bangor University thesis and dissertation class]
+\ProvidesClass{bangorthesis}[2026/09/21 v5.0.4 Bangor University thesis and dissertation class]
 
 \RequirePackage{kvoptions}
 \SetupKeyvalOptions{family=bts,prefix=bts@}
@@ -315,9 +315,9 @@
 \newcommand{\bts@pagenumber}{%
   \ifbts@appendixnumbering
   Appendix~\thechapter{} - Page~\arabic{page}%
-  \ifbts@pageofm~of~\pageref{bts@appendix@\thechapter}\fi
+  \ifbts@pageofm~of~\pageref*{bts@appendix@\thechapter}\fi
   \else
-  \ifbts@pageofm Page~\thepage~of~\pageref{bts@lastpage}\else\thepage\fi
+  \ifbts@pageofm Page~\thepage~of~\pageref*{bts@lastpage}\else\thepage\fi
   \fi}
 
 % Names in the header may use this share of the text width each. Chapter and section names that repeat one another (contents, bibliography) show once.
