@@ -1,3 +1,15 @@
+## [1.6.15](https://github.com/Mearman/bangor-cs-thesis-template/compare/v1.6.14...v1.6.15) (2026-09-21)
+
+### Continuous Integration
+
+* time a genuinely cold compile against the Overleaf budget ([fd10a2a](https://github.com/Mearman/bangor-cs-thesis-template/commit/fd10a2a9c81630cb4646bb32df7cbb09f583580e))
+
+
+Open this exact version in Overleaf, or download it:
+
+[![Open in Overleaf](https://img.shields.io/badge/Open_in_Overleaf-44A141?style=for-the-badge&logo=overleaf&logoColor=white)](https://www.overleaf.com/docs?snip_uri=https://github.com/Mearman/bangor-cs-thesis-template/archive/refs/tags/v1.6.15.zip)
+[![Download ZIP](https://img.shields.io/badge/Download_ZIP-ED0000?style=for-the-badge&labelColor=231F20)](https://github.com/Mearman/bangor-cs-thesis-template/archive/refs/tags/v1.6.15.zip)
+
 ## [1.6.14](https://github.com/Mearman/bangor-cs-thesis-template/compare/v1.6.13...v1.6.14) (2026-09-21)
 
 ### Miscellaneous Chores
