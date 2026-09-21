@@ -1,7 +1,8 @@
 % !TeX program = pdflatex
 %%% Smoke test for the opt-in bangortables and bangorglossary modules.
-%%% A long longtable must paginate with its header repeated, a landscape
-%%% tabularx table must fit, and the abbreviations must expand on first use
+%%% A tall longtabular must paginate with its header repeated, a wide
+%%% longtabular must rotate onto a landscape page, and the abbreviations
+%%% must expand on first use
 %%% and print in an alphabetical list under a heading, with the pages that use each one.
 \documentclass[phd,12pt,a4paper]{bangorthesis}
 \usepackage{bangortables}
@@ -30,7 +31,7 @@
 \useabbrev{ML}
 
 \chapter{Tables}
-\begin{longtable}{l p{6cm} r}
+\begin{longtabular}{l X r}
   \caption{A paginating table.}\label{tab:paginate} \\
   \hline
   Item   & Description           & Value            \\
@@ -110,20 +111,15 @@
   Row 68 & Description of row 68 & 68               \\
   Row 69 & Description of row 69 & 69               \\
   Row 70 & Description of row 70 & 70               \\
-\end{longtable}
+\end{longtabular}
 
-\begin{landscape}
-  \begin{table}[p]
-    \centering
-    \caption{A wide table in landscape.}\label{tab:wide}
-    \begin{tabularx}{\linewidth}{l l l l X X}
-      \hline
-      A    & B    & C    & D    & Long E                & Long F           \\
-      \hline
-      Data & Data & Data & Data & Description text here & More description \\
-      \hline
-    \end{tabularx}
-  \end{table}
-\end{landscape}
+\begin{longtabular}[wide]{l l l l X X}
+  \caption{A wide table in landscape.}\label{tab:wide} \\
+  \hline
+  A    & B    & C    & D    & Long E                & Long F           \\
+  \hline
+  Data & Data & Data & Data & Description text here & More description \\
+  \hline
+\end{longtabular}
 
 \end{document}

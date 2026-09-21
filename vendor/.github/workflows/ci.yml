@@ -180,6 +180,17 @@ jobs:
             status=1
           fi
           repeats=$(printf '%s\n' "$text" | grep -cE "Item +Description +Value" || true)
+          # The negative fixture must fail with the package error. latexmk writes
+          # its log beside the source on some versions and in the working directory on others, so both are checked.
+          if latexmk -pdf -interaction=nonstopmode tests/smoke/longtabular-invalid.tex >/dev/null 2>&1; then
+            echo "an unknown longtabular option compiled"
+            status=1
+          fi
+          if ! grep -q "Unknown longtabular option" \
+              longtabular-invalid.log tests/smoke/longtabular-invalid.log 2>/dev/null; then
+            echo "an unknown longtabular option gave no message"
+            status=1
+          fi
           if [ "$repeats" -lt 2 ]; then
             echo "the longtable header did not repeat on a continuation page"
             status=1

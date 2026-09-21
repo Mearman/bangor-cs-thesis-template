@@ -116,16 +116,23 @@ You can use this package with any base class that provides
 \verb|\section*|, without the thesis class.
 
 \section{Tables: bangortables}
-Load the module with \verb|\usepackage{bangortables}|. It loads the
-packages \textsf{longtable}, \textsf{tabularx}, and \textsf{pdflscape}.
+Load the module with \verb|\usepackage{bangortables}|. It provides the
+\verb|longtabular| environment and loads the packages behind it:
+\textsf{longtable}, \textsf{tabularx}, and \textsf{pdflscape}.
 
-\begin{itemize}
-  \item Use \verb|longtable| for a table that can be longer than one page.
-        The header repeats on each page if you put it before \verb|\endhead|.
-  \item Use \verb|tabularx| with the \verb|X| column type for a table that
-        must fit the text width.
-  \item Put a wide table in a \verb|landscape| environment.
-\end{itemize}
+\verb|longtabular| is one environment for a table that may run past a
+page, need \verb|X| columns to fit the text width, or both: it paginates
+at row boundaries with the header repeating when placed before
+\verb|\endhead|, and sizes \verb|X| columns to the width. Its optional
+argument turns on rotation for wide tables:
+
+\begin{quote}
+  \verb|\begin{longtabular}[wide]{l X r}| \\ \verb|... rows and caption ...| \\ \verb|\end{longtabular}|
+\end{quote}
+
+The underlying \verb|longtable|, \verb|tabularx| and \verb|landscape|
+environments remain available for special cases. The only permitted
+optional value is \verb|wide|; any other is a package error.
 
 \section{Abbreviations: bangorglossary}
 Load the module with \verb|\usepackage{bangorglossary}|. It loads no other

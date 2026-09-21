@@ -12,6 +12,10 @@ The family has three layers. A module must only use modules in a lower layer.
 
 1. `bangor` holds the brand facts: the colours, the crest, the wordmark, and the version stamp.
 2. `bangoridentity`, `bangorlayout`, and `bangordeclarations` are reusable document modules. Use each one with any base class. `bangortables` and `bangorglossary` are optional modules of the same layer: load them only when the document needs them.
+
+## Tables
+
+`bangortables` provides `longtabular`, one environment for tables that run past a page, need X columns to fit the text width, or both. It paginates with the header repeating when the header rows sit before `\endhead`, and its optional `[wide]` form rotates the table onto a landscape page. Any other optional value is an error. The underlying `longtable`, `tabularx` and `landscape` remain available for special cases.
 3. `bangorletter` and the `bangorthesis` class are consumers. They use the lower layers and add their own document type.
 
 Full interface documentation is in `doc/bangor.pdf`.

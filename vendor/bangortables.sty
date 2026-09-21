@@ -1,15 +1,36 @@
 %%% bangortables.sty — table pagination and width support for Bangor documents
-% Loads longtable (pagination at row boundaries), tabularx (width
-% targeting via X-columns), and pdflscape (landscape pages) — three
-% proven, independent tools. Use longtable for tables that may
-% exceed one page, tabularx for tables that need X-columns, and
-% the landscape environment for wide tables that need rotation.
+% One environment for tables that run past a page, need X columns to fit
+% the width, or both: longtabular paginates at row boundaries with the
+% header repeating on each continuation page, sizes X columns to the
+% text width, and its [wide] form rotates the table onto a landscape
+% page first. The underlying longtable, tabularx and landscape
+% environments remain available for special cases.
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{bangortables}[2026/09/20 v1.0.4 Bangor University table support]
+\ProvidesPackage{bangortables}[2026/09/21 v1.1.0 Bangor University table support]
 
 \RequirePackage{bangor}
-\RequirePackage{longtable}
-\RequirePackage{tabularx}
+\RequirePackage{environ}
+\RequirePackage{xltabular}
 \RequirePackage{pdflscape}
+
+% xltabular scans its source for the literal \end{xltabular}, so it cannot
+% simply be wrapped: the body is collected first with environ's \NewEnviron
+% and replayed inside, where the literal end token is present for the scan.
+\newif\ifbtswide
+\NewEnviron{longtabular}[2][]{%
+  \def\bts@lt@arg{#1}%
+  \ifx\bts@lt@arg\@empty\else
+    \def\bts@lt@wide{wide}%
+    \ifx\bts@lt@arg\bts@lt@wide
+      \btswidetrue
+    \else
+      \PackageError{bangortables}{Unknown longtabular option `#1'}{The only permitted value is wide.}%
+    \fi
+  \fi
+  \ifbtswide\begin{landscape}\fi
+    \begin{xltabular}{\linewidth}{#2}%
+      \BODY
+    \end{xltabular}%
+    \ifbtswide\end{landscape}\fi}
 
 \endinput

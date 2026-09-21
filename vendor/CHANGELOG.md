@@ -1,3 +1,13 @@
+## [5.2.0](https://github.com/Mearman/bangor/compare/v5.1.0...v5.2.0) (2026-09-21)
+
+### Features
+
+* add longtabular, one environment for tall and wide tables ([736bb46](https://github.com/Mearman/bangor/commit/736bb46ab7d35e5fddb68c1ab01f2af93cd18458))
+
+### Styles
+
+* run latexindent over the sources ([8e790c4](https://github.com/Mearman/bangor/commit/8e790c4b0a2311253cdd3ba7ade5a286bea6abd6))
+
 ## [5.1.0](https://github.com/Mearman/bangor/compare/v5.0.4...v5.1.0) (2026-09-21)
 
 ### Features
