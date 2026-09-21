@@ -22,8 +22,76 @@
   \label{fig:crest}
 \end{figure}
 
-\section{Long and wide tables together}
-Results tables often run past a page at the same time as being too wide for the text width. \Cref{tab:wide-long} shows both at once: the longtabular environment with its optional wide argument rotates the table onto landscape pages and paginates across them, and the header set before \texttt{\textbackslash endhead} repeats on every page.
+\section{Long and wide tables}
+A results table can simply be long: \Cref{tab:long-only} has ordinary fixed columns and more rows than fit on a page, so longtabular paginates it at row boundaries with the header set before \texttt{\textbackslash endhead} repeating on each continuation page. Nothing about it concerns width; it keeps its natural, narrower-than-the-text shape.
+
+\begin{longtabular}{l l r}
+\caption{A run log that simply runs past one page.}\label{tab:long-only}\\
+\hline
+Run & Configuration & Score \\
+\hline
+\endfirsthead
+\hline
+Run & Configuration & Score \\
+\hline
+\endhead
+\hline
+\endfoot
+\hline
+\endlastfoot
+01 & baseline-serial (repeat 1) & 0.67 \\
+02 & parallel-8 (repeat 1) & 0.74 \\
+03 & vectorised (repeat 1) & 0.81 \\
+04 & cached (repeat 1) & 0.88 \\
+05 & batched (repeat 1) & 0.95 \\
+06 & streaming (repeat 1) & 0.62 \\
+07 & sampled (repeat 1) & 0.69 \\
+08 & adaptive (repeat 1) & 0.76 \\
+09 & pruned (repeat 1) & 0.83 \\
+10 & fused (repeat 1) & 0.90 \\
+11 & baseline-serial (repeat 2) & 0.97 \\
+12 & parallel-8 (repeat 2) & 0.64 \\
+13 & vectorised (repeat 2) & 0.71 \\
+14 & cached (repeat 2) & 0.78 \\
+15 & batched (repeat 2) & 0.85 \\
+16 & streaming (repeat 2) & 0.92 \\
+17 & sampled (repeat 2) & 0.99 \\
+18 & adaptive (repeat 2) & 0.66 \\
+19 & pruned (repeat 2) & 0.73 \\
+20 & fused (repeat 2) & 0.80 \\
+21 & baseline-serial (repeat 3) & 0.87 \\
+22 & parallel-8 (repeat 3) & 0.94 \\
+23 & vectorised (repeat 3) & 0.61 \\
+24 & cached (repeat 3) & 0.68 \\
+25 & batched (repeat 3) & 0.75 \\
+26 & streaming (repeat 3) & 0.82 \\
+27 & sampled (repeat 3) & 0.89 \\
+28 & adaptive (repeat 3) & 0.96 \\
+29 & pruned (repeat 3) & 0.63 \\
+30 & fused (repeat 3) & 0.70 \\
+31 & baseline-serial (repeat 4) & 0.77 \\
+32 & parallel-8 (repeat 4) & 0.84 \\
+33 & vectorised (repeat 4) & 0.91 \\
+34 & cached (repeat 4) & 0.98 \\
+35 & batched (repeat 4) & 0.65 \\
+36 & streaming (repeat 4) & 0.72 \\
+37 & sampled (repeat 4) & 0.79 \\
+38 & adaptive (repeat 4) & 0.86 \\
+39 & pruned (repeat 4) & 0.93 \\
+40 & fused (repeat 4) & 0.60 \\
+41 & baseline-serial (repeat 5) & 0.67 \\
+42 & parallel-8 (repeat 5) & 0.74 \\
+43 & vectorised (repeat 5) & 0.81 \\
+44 & cached (repeat 5) & 0.88 \\
+45 & batched (repeat 5) & 0.95 \\
+46 & streaming (repeat 5) & 0.62 \\
+47 & sampled (repeat 5) & 0.69 \\
+48 & adaptive (repeat 5) & 0.76 \\
+49 & pruned (repeat 5) & 0.83 \\
+50 & fused (repeat 5) & 0.90 \\
+\end{longtabular}
+
+Results tables can also run past a page at the same time as being too wide for the text width. \Cref{tab:wide-long} shows both at once: the longtabular environment with its optional wide argument rotates the table onto landscape pages and paginates across them, and the header repeats on every page.
 
 \begin{longtabular}[wide]{l X X r}
 \caption{A wide results table that also runs past one page.}\label{tab:wide-long}\\
