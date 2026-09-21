@@ -21,3 +21,52 @@
   \caption{The university crest, included through the brand layer.}
   \label{fig:crest}
 \end{figure}
+
+\section{Long and wide tables together}
+Results tables often run past a page at the same time as being too wide for the text width. \Cref{tab:wide-long} shows both at once: the longtabular environment with its optional wide argument rotates the table onto landscape pages and paginates across them, and the header set before \texttt{\textbackslash endhead} repeats on every page.
+
+\begin{longtabular}[wide]{l X X r}
+\caption{A wide results table that also runs past one page.}\label{tab:wide-long}\\
+\hline
+Method & Configuration & Notes & Score \\
+\hline
+\endfirsthead
+\hline
+Method & Configuration & Notes & Score \\
+\hline
+\endhead
+\hline
+\endfoot
+\hline
+\endlastfoot
+Baseline & Serial execution with default parameters & The reference configuration every variant is compared against & 0.85 \\
+Parallel & Eight workers, shared queue & Near-linear scaling while the queue is the bottleneck & 0.88 \\
+Vectorised & Batched operations over contiguous memory & Bandwidth-bound; wins on large inputs only & 0.90 \\
+Cached & Results memoised per configuration & Effective when configurations repeat across runs & 0.93 \\
+Batched & Grouped submissions with deferred flush & Trades latency for throughput; see the notes column & 0.91 \\
+Streaming & Incremental evaluation as data arrives & Unbounded memory growth without a window bound & 0.87 \\
+Sampled & Uniform sampling of the input space & Confidence intervals widen as the budget shrinks & 0.84 \\
+Adaptive & Sampling biased by intermediate scores & Recovers most of the unsampled accuracy & 0.89 \\
+Pruned & Low-scoring branches cut early & Safe only with a conservative threshold & 0.90 \\
+Fused & Adjacent passes merged into one & Removes an intermediate materialisation entirely & 0.92 \\
+Reordered & Traversal sorted by locality & Cache misses halved on the same work & 0.91 \\
+Split & Independent halves processed separately & Merged with a final combine step & 0.86 \\
+Pipelined & Stages overlapped across batches & Smooths bursts; steady state unchanged & 0.89 \\
+Nested & Inner loops rewritten recursively & Depth capped to bound the stack & 0.88 \\
+Flat & Recursion rewritten as iteration & Removes call overhead on hot paths & 0.90 \\
+Lazy & Work deferred until first use & Wastes nothing when consumers skip & 0.87 \\
+Eager & All work done at submission & Predictable timing, peak memory earlier & 0.88 \\
+Hybrid & Lazy for cold paths, eager for hot & Combines the two preceding rows' trade-offs & 0.90 \\
+Simulated & Evaluation replaced by a fitted model & Cheap to run; every claim needs a validation caveat & 0.83 \\
+Emulated & Execution on a model of the target hardware & Portable but quantisation-sensitive & 0.86 \\
+Distributed & Work sharded across machines & Coordination cost dominates below a threshold size & 0.89 \\
+Replicated & Identical workers racing on one shard & Reduces tail latency at the cost of duplicate work & 0.91 \\
+Speculative & Later stages started on predicted inputs & Wasted effort when predictions miss & 0.90 \\
+Compressed & Working set held in reduced precision & Numerically safe here; not universally & 0.88 \\
+Quantised & Integer arithmetic throughout & Device-friendly; accuracy loss within tolerance & 0.87 \\
+Spilled & Working set pages out to disk & Correct but two orders of magnitude slower & 0.71 \\
+Rewritten & Inner loop moved to a compiled kernel & One-off porting cost amortises over runs & 0.94 \\
+Tuned & Parameters fitted to the workload & Gains vanish when the workload drifts & 0.92 \\
+Ablated & Each component removed in turn & Establishes which rows' contributions are real & 0.84 \\
+Ensembled & The strongest variants combined & Diminishing returns beyond a handful & 0.95 \\
+\end{longtabular}
