@@ -95,11 +95,19 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git remote add bangor "https://github.com/${PACKAGE_REPO}.git"
           if [ "${{ steps.decide.outputs.action }}" = "bump" ]; then
-          git fetch --no-tags bangor main
+          # Archive the release tag itself, never main: fetching main once
+          # raced a release still landing and stamped the new version over
+          # the previous release's content.
+          git fetch --no-tags bangor "refs/tags/${{ steps.compare.outputs.latest }}"
           rm -rf vendor
           mkdir vendor
-          git archive bangor/main | tar -x -C vendor
+          git archive FETCH_HEAD | tar -x -C vendor
             echo "${{ steps.compare.outputs.latest }}" > vendor/VERSION
+            stamped=$(grep -m1 -oE 'v[0-9]+\.[0-9]+\.[0-9]+' vendor/bangor.sty || true)
+            if [ "$stamped" != "${{ steps.compare.outputs.latest }}" ]; then
+              echo "archived package is ${stamped:-unversioned} but the stamp says ${{ steps.compare.outputs.latest }}"
+              exit 1
+            fi
             git add vendor
           else
             git rm -r vendor
