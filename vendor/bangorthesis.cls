@@ -6,7 +6,7 @@
 % bangorcsthesis class by Cameron Gray, Bangor University. Released
 % under the LaTeX Project Public License, version 1.3c or later.
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{bangorthesis}[2026/09/21 v5.3.4 Bangor University thesis and dissertation class]
+\ProvidesClass{bangorthesis}[2026/09/21 v5.3.5 Bangor University thesis and dissertation class]
 
 \RequirePackage{kvoptions}
 \SetupKeyvalOptions{family=bts,prefix=bts@}
@@ -102,12 +102,15 @@
 \RequirePackage{bangoridentity}
 \RequirePackage{bangorlayout}
 \RequirePackage{bangordeclarations}
-% Protrusion only: font expansion instantiates a stretched copy of
-% every font size the document uses, which the title page alone pays
-% around half a second of compile time for on constrained runners such
-% as Overleaf's free tier. Protrusion carries the typographic benefit
-% the class wants; expansion can be re-enabled in a document preamble
-% with \microtypesetup{expansion=true} where the compile budget allows.
+% Protrusion only. The typographic benefit the class wants is
+% protrusion; expansion instantiates extra stretched copies of every
+% font size the document uses, which is real compile work whose cost
+% scales with the font count and the runner, so it follows the
+% estate's rule for extras: off by default, on per document with
+% \microtypesetup{expansion=true} in the preamble. Interleaved
+% measurement on a quiet machine showed no reliable difference either
+% way at this document size; the setting is a conservatism choice, not
+% a measured saving.
 \RequirePackage[expansion=false]{microtype}
 \RequirePackage{environ}
 \RequirePackage{etoolbox}

@@ -1,3 +1,9 @@
+## [5.3.5](https://github.com/Mearman/bangor/compare/v5.3.4...v5.3.5) (2026-09-21)
+
+### Documentation
+
+* state the honest rationale for protrusion-only microtype ([b331b4d](https://github.com/Mearman/bangor/commit/b331b4d5cf2d249594c0b81d52b1b01c6e02c7fb))
+
 ## [5.3.4](https://github.com/Mearman/bangor/compare/v5.3.3...v5.3.4) (2026-09-21)
 
 ### Performance Improvements
