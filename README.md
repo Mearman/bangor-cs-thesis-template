@@ -16,6 +16,8 @@ If you use git on your own machine, clone your copy instead and run `latexmk -pd
 
 Set your facts in `main.tex`: title, author, degree scheme, school, supervisor, date, and word count. The degree option is `bsc` in the worked example; switch it for `meng`, `msc`, or `phd` as you need. Research options set the title page to say *thesis*; taught options set it to say *dissertation*.
 
+Write your chapters under `content/chapters/`, one numbered folder per chapter. The `index.tex` in each folder holds the `\chapter` line and the text before the first section, and then inputs one file per section, numbered in order, each starting with its `\section`. `main.tex` inputs each chapter's `index`, so adding a chapter is a new folder and one line there, and adding a section is a new file and one line in that chapter's `index.tex`. Appendices follow the same layout under `content/appendices/`. Keep your sources in `references.bib`.
+
 The citation style is IEEE, the department convention. Change it with the `citations` option if your supervisor asks for another style.
 
 Code listings, algorithm floats, and the verbatim setup live in `preamble-cs.tex`. That file is yours to adjust: these are school conventions, not university rules.

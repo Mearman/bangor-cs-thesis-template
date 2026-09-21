@@ -1,0 +1,16 @@
+\section{Float numbering}
+The class numbers floats by section by default. Figures, tables, and listings share one counter, and the counter restarts in each section, so \cref{tab:numbering} is the first float of this section and its number says so, while \cref{tab:sample} and \cref{fig:crest} belong to the previous section. A float that comes before the first section of a chapter is numbered by the chapter alone, and \texttt{sectionfloats=zero} numbers it by section zero instead. Set \texttt{sharedfloats=false} or \texttt{sectionfloats=none} in the class options to turn either behaviour off.
+
+\begin{table}[htbp]
+  \centering
+  \caption{Numbers under the float options.}
+  \label{tab:numbering}
+  \begin{tabular}{ll}
+    \hline
+    Option & Effect \\
+    \hline
+    \texttt{sharedfloats} & one sequence for every float type \\
+    \texttt{sectionfloats} & the sequence restarts in each section \\
+    \hline
+  \end{tabular}
+\end{table}

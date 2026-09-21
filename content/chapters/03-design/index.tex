@@ -1,0 +1,10 @@
+\chapter{Design}
+Present the design decisions and the reasons for them. \Cref{eq:information-gain} formalises the measure the design optimises.
+
+\begin{equation}
+  \label{eq:information-gain}
+  \mathrm{IG}(S, a) = \mathrm{H}(S) - \sum_{v \in \mathrm{vals}(a)}
+  \frac{|S_v|}{|S|}\,\mathrm{H}(S_v)
+\end{equation}
+
+\input{content/chapters/03-design/01-algorithms}
