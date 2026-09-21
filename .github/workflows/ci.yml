@@ -119,8 +119,16 @@ jobs:
           fi
       - name: Assert compile fits the Overleaf free-tier timeout
         run: |
+          # A forced recompile reuses the auxiliary files the earlier steps
+          # left behind, so it pays only a fraction of a first compile and
+          # cannot catch a regression that pushes a cold compile past the
+          # budget. Clear the build state first so the timer measures what
+          # a reader opening the project on Overleaf actually pays. Cold
+          # measured around 3s on CI runners; the bound leaves room for
+          # runner variance without accepting a doubled cost.
+          latexmk -C >/dev/null 2>&1
           start=$(date +%s)
-          latexmk -pdf -g -interaction=nonstopmode main.tex >/dev/null 2>&1
+          latexmk -pdf -interaction=nonstopmode main.tex >/dev/null 2>&1
           elapsed=$(($(date +%s) - start))
-          echo "cold recompile took ${elapsed}s"
-          [ "$elapsed" -lt 15 ]
+          echo "cold compile took ${elapsed}s"
+          [ "$elapsed" -lt 10 ]
