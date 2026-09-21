@@ -1,3 +1,15 @@
+## [1.6.2](https://github.com/Mearman/bangor-cs-thesis-template/compare/v1.6.1...v1.6.2) (2026-09-21)
+
+### Continuous Integration
+
+* stop the spelling check flagging LaTeX macro names ([f268143](https://github.com/Mearman/bangor-cs-thesis-template/commit/f2681431d64a398e9d20bd206a5c85d3b88af331))
+
+
+Open this exact version in Overleaf, or download it:
+
+[![Open in Overleaf](https://img.shields.io/badge/Open_in_Overleaf-44A141?style=for-the-badge&logo=overleaf&logoColor=white)](https://www.overleaf.com/docs?snip_uri=https://github.com/Mearman/bangor-cs-thesis-template/archive/refs/tags/v1.6.2.zip)
+[![Download ZIP](https://img.shields.io/badge/Download_ZIP-ED0000?style=for-the-badge&labelColor=231F20)](https://github.com/Mearman/bangor-cs-thesis-template/archive/refs/tags/v1.6.2.zip)
+
 ## [1.6.1](https://github.com/Mearman/bangor-cs-thesis-template/compare/v1.6.0...v1.6.1) (2026-09-21)
 
 ### Continuous Integration
