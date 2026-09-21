@@ -216,9 +216,13 @@
 % Panes: pane p carries rows (p-1)*per+1 .. p*per, per = ceil(rows/N),
 % each pane the available line width divided by the pane count and
 % separated from its neighbour by \hfill. The head opens every pane.
+% The caption and the panes sit inside one unbreakable minipage: a
+% wrapped table must fit one page by contract, so a page break between
+% the caption and the panes is not a break the form may take.
 \cs_new_protected:Npn \__bts_panes:n #1
 {
   \__bts_split_rows:
+  \begin { minipage } { \linewidth }
   \__bts_emit_caption:
   \int_set:Nn \l__bts_rows_int { \seq_count:N \l__bts_rows_seq }
   \int_set:Nn \l__bts_per_int
@@ -242,6 +246,7 @@
     \end { tabular }
     \end { minipage }
   }
+  \end { minipage }
   \par
 }
 \ExplSyntaxOff

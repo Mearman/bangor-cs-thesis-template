@@ -1,3 +1,9 @@
+## [5.3.1](https://github.com/Mearman/bangor/compare/v5.3.0...v5.3.1) (2026-09-21)
+
+### Bug Fixes
+
+* keep a wrapped table's caption and panes on one page ([cbb5d8f](https://github.com/Mearman/bangor/commit/cbb5d8fd422c044b796f6dc9f04b11bbac605f4f))
+
 ## [5.3.0](https://github.com/Mearman/bangor/compare/v5.2.0...v5.3.0) (2026-09-21)
 
 ### Features
