@@ -91,6 +91,67 @@ Run & Configuration & Score \\
 50 & fused (repeat 5) & 0.90 \\
 \end{longtabular}
 
+The same fifty rows can instead use the page's width: \Cref{tab:wrapped-log} is the identical table with the \texttt{columns=2} option, so the rows wrap into two side-by-side panes on one page, the head repeating in each. In this form the head sits between \texttt{\textbackslash panehead} and \texttt{\textbackslash endpanehead} in the body. Reaching for the option is a judgement about the table: wrapping suits a narrow table whose rows are short, while pagination suits rows long enough that halving the width would cramp them.
+
+\begin{longtabular}[columns=2]{l l r}
+\caption[Wrapped run log]{The same run log wrapped into two columns on one page.}\label{tab:wrapped-log}\\
+\panehead
+\hline
+Run & Configuration & Score \\
+\hline
+\endpanehead
+01 & baseline-serial & 0.67 \\
+02 & parallel-8 & 0.74 \\
+03 & vectorised & 0.81 \\
+04 & cached & 0.88 \\
+05 & batched & 0.95 \\
+06 & streaming & 0.62 \\
+07 & sampled & 0.69 \\
+08 & adaptive & 0.76 \\
+09 & pruned & 0.83 \\
+10 & fused & 0.90 \\
+11 & baseline-serial & 0.97 \\
+12 & parallel-8 & 0.64 \\
+13 & vectorised & 0.71 \\
+14 & cached & 0.78 \\
+15 & batched & 0.85 \\
+16 & streaming & 0.92 \\
+17 & sampled & 0.99 \\
+18 & adaptive & 0.66 \\
+19 & pruned & 0.73 \\
+20 & fused & 0.80 \\
+21 & baseline-serial & 0.87 \\
+22 & parallel-8 & 0.94 \\
+23 & vectorised & 0.61 \\
+24 & cached & 0.68 \\
+25 & batched & 0.75 \\
+26 & streaming & 0.82 \\
+27 & sampled & 0.89 \\
+28 & adaptive & 0.96 \\
+29 & pruned & 0.63 \\
+30 & fused & 0.70 \\
+31 & baseline-serial & 0.77 \\
+32 & parallel-8 & 0.84 \\
+33 & vectorised & 0.91 \\
+34 & cached & 0.98 \\
+35 & batched & 0.65 \\
+36 & streaming & 0.72 \\
+37 & sampled & 0.79 \\
+38 & adaptive & 0.86 \\
+39 & pruned & 0.93 \\
+40 & fused & 0.60 \\
+41 & baseline-serial & 0.67 \\
+42 & parallel-8 & 0.74 \\
+43 & vectorised & 0.81 \\
+44 & cached & 0.88 \\
+45 & batched & 0.95 \\
+46 & streaming & 0.62 \\
+47 & sampled & 0.69 \\
+48 & adaptive & 0.76 \\
+49 & pruned & 0.83 \\
+50 & fused & 0.90 \\
+\end{longtabular}
+
 Results tables can also run past a page at the same time as being too wide for the text width. \Cref{tab:wide-long} shows both at once: the longtabular environment with its optional wide argument rotates the table onto landscape pages and paginates across them, and the header repeats on every page.
 
 \begin{longtabular}[wide]{l X X r}
