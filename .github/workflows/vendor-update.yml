@@ -30,7 +30,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          persist-credentials: false
+          ssh-key: ${{ secrets.RELEASE_DEPLOY_KEY }}
       - name: Compare versions
         id: compare
         run: |
@@ -123,7 +123,7 @@ jobs:
           git commit --allow-empty \
             -m "chore(vendor): land ${{ steps.decide.outputs.action }} ${{ steps.compare.outputs.latest }}" \
             || true
-          git push "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD:main
+          git push origin HEAD:main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
