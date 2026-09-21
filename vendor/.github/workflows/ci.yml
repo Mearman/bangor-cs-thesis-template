@@ -320,6 +320,27 @@ jobs:
           check default strict \
             "Figure 1.1: Intro figure" "Figure 1.1.1: Figure in A" "Table 1.1.2: Table in A" \
             "Listing 1.1.3: Listing in A" "Table 1.2.1: Table in B" "Figure 2.1.1: Figure in C"
+          for expected in "Figure with a description" "The description is set beneath the title" "Short entry"; do
+            if ! pdftotext -layout floats-default.pdf - | grep -qF -- "$expected"; then
+              echo "floats-default: captiondesc demo missing $expected"
+              status=1
+            fi
+          done
+          sed "s/@OPTIONS@/strict/" tests/smoke/caption-length.tex > caption-length-strict.tex
+          if latexmk -pdf -interaction=nonstopmode caption-length-strict.tex >/dev/null 2>&1; then
+            echo "an over-long list entry compiled in strict mode"
+            status=1
+          fi
+          if ! grep -q "maximum is 80" caption-length-strict.log; then
+            echo "an over-long list entry gave no message"
+            status=1
+          fi
+          sed "s/@OPTIONS@/strict=false/" tests/smoke/caption-length.tex > caption-length-warn.tex
+          latexmk -pdf -interaction=nonstopmode caption-length-warn.tex || status=1
+          if ! grep -q "maximum is 80" caption-length-warn.log; then
+            echo "strict=false suppressed the list-entry message"
+            status=1
+          fi
           sed "s/@OPTIONS@/sectionfloats=nonsense/" tests/smoke/floats.tex > floats-invalid.tex
           if latexmk -pdf -interaction=nonstopmode floats-invalid.tex >/dev/null 2>&1; then
             echo "an unknown sectionfloats value compiled"

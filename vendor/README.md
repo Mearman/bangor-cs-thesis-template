@@ -68,6 +68,10 @@ The contents lists the numbered chapters, the bibliography and the appendices. T
 
 The title page carries no number. The front matter (acknowledgements, abstract, contents and lists) is numbered in roman numerals, centred in the footer, and has no running header. The numbering restarts in arabic at the first numbered chapter, and the running header and footer start there. The switch is automatic, so there is no command to call. Each appendix is numbered on its own: the count restarts at each appendix, the footer reads "Appendix A - Page n of m" where m is the number of pages in that appendix, and the contents list the pages as `A-1`. Set `appendixpages=false` to continue the arabic sequence of the main text through the appendices instead. The footer reads "Page N of M", where M is the last page of the main text while appendices are numbered on their own, and the last page of the document with `appendixpages=false`. Set `pageofm=false` to print the number alone.
 
+## Captions
+
+`\captiondesc[short]{title}{description}` is the caption form that also carries a description: the title prints as the caption, the description prints beneath it in smaller type, and the short form is the list-of-floats entry, defaulting to the title exactly as with `\caption`. Plain `\caption` is unchanged and the two can be mixed freely. A list entry longer than 80 characters fails the build in strict mode and warns with `strict=false`; give the caption a short form.
+
 ## Float numbering
 
 Floats are numbered within their section, on one counter for every float type, so the first float in section 5.1 is 5.1.1 and the sequence reads Figure 5.1.1, Table 5.1.2, Listing 5.1.3. Two options control this, and both are on by default. `sharedfloats=false` gives each float type its own counter. `sectionfloats=none` numbers floats within their chapter instead of their section. A float that comes before the first section of a chapter is numbered by the chapter alone (5.1). Set `sectionfloats=zero` to number it by section zero (5.0.1) instead. Listings and algorithms take part when their packages are loaded.

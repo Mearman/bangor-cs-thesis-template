@@ -137,6 +137,11 @@ package, so it adds almost no compile time.
         short form after that.
   \item \verb|\Useabbrev{ML}| does the same with a capital letter on the
         first word. Use it at the start of a sentence.
+  \item \verb|\captiondesc[short]{title}{description}| is the caption form
+        with a description paragraph beneath the title. The optional argument
+        is the list-of-floats entry and defaults to the title. A list entry
+        over 80 characters is a regulation violation: a build error in strict
+        mode, a warning otherwise.
   \item \verb|\printabbrevs| prints an unnumbered heading, entered in the
         contents only with \verb|frontmattertoc|, above a list of the
         abbreviations in alphabetical order. Each

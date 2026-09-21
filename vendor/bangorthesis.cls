@@ -6,7 +6,7 @@
 % bangorcsthesis class by Cameron Gray, Bangor University. Released
 % under the LaTeX Project Public License, version 1.3c or later.
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{bangorthesis}[2026/09/21 v5.0.4 Bangor University thesis and dissertation class]
+\ProvidesClass{bangorthesis}[2026/09/21 v5.1.0 Bangor University thesis and dissertation class]
 
 \RequirePackage{kvoptions}
 \SetupKeyvalOptions{family=bts,prefix=bts@}
@@ -430,6 +430,72 @@
       \@ifundefined{c@\bts@floatcounter}{}{\expandafter\bts@numberfloat\expandafter{\bts@floatcounter}}}%
   \fi}
 \AddToHook{begindocument/end}{\bts@shareorfloat}
+
+% Captions with descriptions. The caption package provides the machinery; these settings pin ordinary captions to the report class look, so loading it changes nothing the reader can see.
+\RequirePackage{caption}
+\captionsetup{font=normal, labelfont=normal, labelsep=colon, skip=10pt}
+% The description style: smaller than the body, never centred even when it fits one line (singlelinecheck=false), with a small gap under the caption above.
+\DeclareCaptionStyle{bangordescription}{font=small, skip=0.35\baselineskip, justification=justified, singlelinecheck=false}
+% \captiondesc[short]{title}{description} is the caption form that also carries a description paragraph beneath the title. The optional argument is the list-of-floats entry and defaults to the title, as with \caption. The description never enters any list and steps no counter. The group keeps the description style off the float's own caption.
+\NewDocumentCommand { \captiondesc } { o +m +m }
+{%
+  \IfValueTF { #1 }
+  { \caption [ #1 ] { #2 } }
+  { \caption { #2 } }%
+  \begingroup
+  \captionsetup { style=bangordescription }%
+  \caption* { #3 }%
+  \endgroup}
+
+% A list-of-floats entry that runs on is hard to scan, so the class caps its length. The threshold is 80 characters, the same figure the author's thesis settled on; no regulation sets one. The measurement fires inside \addcontentsline, so the log names the caption's source line, and it sees every float list the document produces (figures, tables, listings, algorithms). The extraction strips the wrapping packages add around the entry text before counting.
+\ExplSyntaxOn
+\int_const:Nn \c_bts_caption_maxlen_int { 80 }
+\int_new:N \l_bts_caption_len_int
+\tl_new:N \l_bts_caption_ext_tl
+\tl_new:N \l_bts_caption_raw_tl
+\tl_new:N \l_bts_caption_str_tl
+\cs_new_protected:Npn \__bts_check_caption_len:nnn #1 #2 #3
+{
+  \tl_set:Nx \l_bts_caption_ext_tl {#1}
+  \str_case:Vn \l_bts_caption_ext_tl
+  {
+    { lof } { \__bts_measure_caption:Vn \l_bts_caption_ext_tl {#3} }
+      { lot } { \__bts_measure_caption:Vn \l_bts_caption_ext_tl {#3} }
+      { lol } { \__bts_measure_caption:Vn \l_bts_caption_ext_tl {#3} }
+      { loa } { \__bts_measure_caption:Vn \l_bts_caption_ext_tl {#3} }
+  }
+}
+\cs_generate_variant:Nn \__bts_measure_caption:nn { Vn }
+\cs_new_protected:Npn \__bts_measure_caption:nn #1 #2
+{
+  \tl_set:Nx \l_bts_caption_raw_tl { \tl_to_str:n {#2} }
+  \tl_set_eq:NN \l_bts_caption_str_tl \l_bts_caption_raw_tl
+  \regex_replace_once:nnN
+  { \A .* \ignorespaces \x{20} } { } \l_bts_caption_str_tl
+  \regex_replace_once:nnN
+  { \x{20}* (\relax \x{20}*)? \x{7D}? \x{20}* \Z } { } \l_bts_caption_str_tl
+  \regex_replace_once:nnN
+  { \A .* \numberline \x{20} \x{7B} [^\x{7D}]* \x{7D} \x{20}? }
+  { } \l_bts_caption_str_tl
+  \int_set:Nn \l_bts_caption_len_int { \str_count:N \l_bts_caption_str_tl }
+  \int_compare:nNnT { \l_bts_caption_len_int } > { \c_bts_caption_maxlen_int }
+    { \__bts_report_long_entry: }
+}
+\cs_new_protected:Npn \__bts_report_long_entry:
+{
+  \exp_args:Nx \bangorregulationviolation
+  { The~list-of-floats~entry~is~\int_use:N \l_bts_caption_len_int \c_space_tl characters,~and~the~maximum~is~80.~Give~the~caption~a~short~form:~
+    \string\caption[short]\{title\}~or~
+    \string\captiondesc[short]\{title\}\{description\}. }
+}
+\AddToHook { begindocument/end }
+{
+  \let\bts@origlen@addcontentsline\addcontentsline
+  \renewcommand{\addcontentsline}[3]{%
+    \__bts_check_caption_len:nnn {#1} {#2} {#3}%
+    \bts@origlen@addcontentsline {#1} {#2} {#3}}
+}
+\ExplSyntaxOff
 
 % cleveref does not auto-detect the listings package's lstlisting
 % counter because listings loads after cleveref (it is a template-level

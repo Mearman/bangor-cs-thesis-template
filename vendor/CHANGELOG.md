@@ -1,3 +1,14 @@
+## [5.1.0](https://github.com/Mearman/bangor/compare/v5.0.4...v5.1.0) (2026-09-21)
+
+### Features
+
+* add captiondesc, the caption form that carries a description ([795287c](https://github.com/Mearman/bangor/commit/795287c94d4498965acb38ce127bbc58d5f23768))
+* fail on list-of-floats entries past eighty characters ([44dda88](https://github.com/Mearman/bangor/commit/44dda887751249fdac06fa99e7ab576ad87f1e74))
+
+### Styles
+
+* run latexindent over the sources ([29191db](https://github.com/Mearman/bangor/commit/29191db29c521e7cbb76847bd85e9b3fbbd3b442))
+
 ## [5.0.4](https://github.com/Mearman/bangor/compare/v5.0.3...v5.0.4) (2026-09-21)
 
 ### Bug Fixes
