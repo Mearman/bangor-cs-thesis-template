@@ -6,7 +6,7 @@
 % bangorcsthesis class by Cameron Gray, Bangor University. Released
 % under the LaTeX Project Public License, version 1.3c or later.
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{bangorthesis}[2026/09/20 v4.1.1 Bangor University thesis and dissertation class]
+\ProvidesClass{bangorthesis}[2026/09/21 v5.0.0 Bangor University thesis and dissertation class]
 
 \RequirePackage{kvoptions}
 \SetupKeyvalOptions{family=bts,prefix=bts@}
@@ -70,6 +70,9 @@
 % Float numbering, on by default. sharedfloats puts every float type on one counter, so the sequence reads Figure 1, Table 2, Listing 3, and sharedfloats=false gives each type its own counter. sectionfloats numbers floats within their section, so the first float in section 5.1 is 5.1.1. Its value says what a float before the first section of a chapter is called: chapter numbers it by the chapter alone (5.1), zero numbers it by section zero (5.0.1), and none turns section numbering off so floats are numbered within their chapter. The two options combine.
 \DeclareBoolOption[true]{sharedfloats}
 \DeclareStringOption[chapter]{sectionfloats}[chapter]
+
+% Contents entries. The contents lists the numbered chapters, the bibliography and the appendices. The unnumbered front matter (the abstract, the acknowledgements, the list of abbreviations and the lists of figures and tables) is not entered in it unless frontmattertoc is set, which enters all of them.
+\DeclareBoolOption[false]{frontmattertoc}
 
 % Everything else (12pt, a4paper, oneside, twoside, draft, final)
 % passes through to the report class.
@@ -189,25 +192,48 @@
   \bangorregulationviolation{The abstract is approximately
     #1\space words. The regulation caps the abstract at 600 words.
     Count the abstract precisely before you submit.}}
+% An unnumbered chapter heading for the front matter. With frontmattertoc it is entered in the contents, after a phantom section so that the link lands on the heading. Without it the heading still gets a PDF bookmark, so the navigation pane lists it.
+\newcounter{bts@front}
+\newcommand{\bangorfrontheading}[1]{%
+  \chapter*{#1}%
+  \ifbts@frontmattertoc
+    \phantomsection
+    \addcontentsline{toc}{chapter}{#1}%
+  \else
+    \stepcounter{bts@front}%
+    \pdfbookmark[0]{#1}{bts@front\arabic{bts@front}}%
+  \fi}
+
 \RenewEnviron{abstract}{%
   \btsabstractcheck{\BODY}%
   \begin{singlespace}
-    \chapter*{Abstract}
-    \addcontentsline{toc}{chapter}{Abstract}
+    \bangorfrontheading{Abstract}
     \BODY
     \par\end{singlespace}}
 
 \newenvironment{acknowledgements}{%
   \begin{singlespace}
-    \chapter*{Acknowledgements}
-    \addcontentsline{toc}{chapter}{Acknowledgements}
+    \bangorfrontheading{Acknowledgements}
     }{%
     \par\end{singlespace}}
 
+% The lists of figures and tables print only when the document has figures or tables. Each caption written to the list file marks the document in the auxiliary file, so the marker exists from the second run. The lists are headed like the rest of the front matter.
+\newcommand{\bts@hasfloats}[1]{\global\@namedef{bts@has@#1}{}}
+\@namedef{bts@marks@lof}{}
+\@namedef{bts@marks@lot}{}
+\let\bts@orig@addcontentsline\addcontentsline
+\renewcommand{\addcontentsline}[3]{%
+  \@ifundefined{bts@marks@#1}{}{%
+    \@ifundefined{bts@seen@#1}{%
+      \global\@namedef{bts@seen@#1}{}%
+      \immediate\write\@auxout{\string\bts@hasfloats{#1}}}{}}%
+  \bts@orig@addcontentsline{#1}{#2}{#3}}
+\renewcommand{\listoffigures}{\bangorfrontheading{\listfigurename}\@starttoc{lof}}
+\renewcommand{\listoftables}{\bangorfrontheading{\listtablename}\@starttoc{lot}}
 \newcommand{\tables}{%
   \tableofcontents
-  \listoffigures
-  \listoftables}
+  \@ifundefined{bts@has@lof}{}{\listoffigures}%
+  \@ifundefined{bts@has@lot}{}{\listoftables}}
 
 % Headers and footers. The option values are checked first so that a typo fails with a clear message instead of silently falling back to a default.
 \RequirePackage{fancyhdr}

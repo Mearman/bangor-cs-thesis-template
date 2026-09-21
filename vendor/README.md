@@ -60,6 +60,10 @@ The layout module checks the rules from Regulation 03, 2025 Version 01, section 
 
 The checks govern settings made through this package. They cannot see changes made around it.
 
+## Front matter and the contents
+
+The contents lists the numbered chapters, the bibliography and the appendices. The unnumbered front matter (the abstract, the acknowledgements, the list of abbreviations and the lists of figures and tables) is not entered in it by default, but each heading still gets a PDF bookmark. Set `frontmattertoc` to enter all of them, with their roman-numeral pages. `\tables` prints the contents, then a list of figures and a list of tables only when the document has figures or tables, so a document without figures has no empty list page. The list appears from the second run, once the first run has recorded that floats exist. Other lists, such as a list of listings from a package, are the document's own to add. `\bangorfrontheading{Title}` prints a heading of the same kind for a front matter page of your own.
+
 ## Page numbering
 
 The title page carries no number. The front matter (acknowledgements, abstract, contents and lists) is numbered in roman numerals, centred in the footer, and has no running header. The numbering restarts in arabic at the first numbered chapter, and the running header and footer start there. The switch is automatic, so there is no command to call. Each appendix is numbered on its own: the count restarts at each appendix, the footer reads "Appendix A - Page n of m" where m is the number of pages in that appendix, and the contents list the pages as `A-1`. Set `appendixpages=false` to continue the arabic sequence of the main text through the appendices instead. The footer reads "Page N of M", where M is the last page of the main text while appendices are numbered on their own, and the last page of the document with `appendixpages=false`. Set `pageofm=false` to print the number alone.

@@ -6,7 +6,7 @@
 % \addabbrev{SHORT}{Full Name} registers an abbreviation.
 % \useabbrev{SHORT} prints the full form on first use, the short form after.
 % \Useabbrev{SHORT} does the same with a capitalised first word.
-% \printabbrevs[Title] prints an unnumbered chapter, entered in the contents, holding an alphabetically sorted list. Each entry ends with the pages on which the abbreviation is used, and runs of three or more consecutive arabic pages are written as a range.
+% \printabbrevs[Title] prints an unnumbered front matter heading and an alphabetically sorted list. The heading is entered in the contents only when the class option frontmattertoc is set. Each entry ends with the pages on which the abbreviation is used, and runs of three or more consecutive arabic pages are written as a range.
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{bangorglossary}[2026/09/20 v1.1.2 Bangor University abbreviations]
 
@@ -153,11 +153,10 @@
   }
 }
 
-% \bangor_print_abbrevs:n {title} — a starred chapter entered in the contents, then the sorted list
+% \bangor_print_abbrevs:n {title} — a front matter heading, which bangorthesis defines and enters in the contents only with frontmattertoc, then the sorted list
 \cs_new_protected:Npn \bangor_print_abbrevs:n #1
 {
-  \chapter* { #1 }
-  \addcontentsline { toc } { chapter } { #1 }
+  \bangorfrontheading { #1 }
   \begin{description}
     \bangor_print_abbrevs_sorted:
   \end{description}

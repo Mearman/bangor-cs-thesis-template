@@ -167,10 +167,6 @@ jobs:
             echo "the list of abbreviations has no heading"
             status=1
           fi
-          if ! printf '%s\n' "$text" | grep -qE "^ *Abbreviations +[ivx]+$"; then
-            echo "the list of abbreviations is not in the contents with its page"
-            status=1
-          fi
           if ! printf '%s\n' "$text" | grep -qE "^ *ML +machine learning.*1.*4$"; then
             echo "machine learning does not list the range of pages that use it"
             status=1
@@ -328,6 +324,47 @@ jobs:
           fi
           if ! grep -q "Unknown sectionfloats value" floats-invalid.log; then
             echo "an unknown sectionfloats value gave no message"
+            status=1
+          fi
+          exit $status
+      - name: Compile front matter fixtures and assert the contents entries
+        run: |
+          status=0
+          build() {
+            sed "s/@OPTIONS@/$2/" tests/smoke/frontmatter.tex > "frontmatter-$1.tex"
+            latexmk -pdf -interaction=nonstopmode "frontmatter-$1.tex" || status=1
+            if grep -E "^!|Reference .* undefined|with the same identifier" "frontmatter-$1.log"; then
+              status=1
+            fi
+          }
+          build default strict
+          build toc frontmattertoc
+          cp tests/smoke/frontmatter-empty.tex frontmatter-empty.tex
+          latexmk -pdf -interaction=nonstopmode frontmatter-empty.tex || status=1
+          if grep -E "^!|Reference .* undefined" frontmatter-empty.log; then status=1; fi
+          default_text=$(pdftotext -layout frontmatter-default.pdf -)
+          toc_text=$(pdftotext -layout frontmatter-toc.pdf -)
+          empty_text=$(pdftotext -layout frontmatter-empty.pdf -)
+          for heading in Abstract Acknowledgements Abbreviations "List of Figures" "List of Tables"; do
+            if ! printf '%s\n' "$default_text" | grep -qE "^[[:space:]]*${heading}[[:space:]]*$"; then
+              echo "default: the ${heading} heading is missing"
+              status=1
+            fi
+            if printf '%s\n' "$default_text" | grep -qE "^ *${heading} +[ivx]+$"; then
+              echo "default: ${heading} is entered in the contents without frontmattertoc"
+              status=1
+            fi
+            if ! printf '%s\n' "$toc_text" | grep -qE "^ *${heading} +[ivx]+$"; then
+              echo "frontmattertoc: ${heading} is not entered in the contents with its page"
+              status=1
+            fi
+          done
+          if ! printf '%s\n' "$default_text" | grep -qE "^ *1 +One +1$"; then
+            echo "default: the numbered chapter is missing from the contents"
+            status=1
+          fi
+          if printf '%s\n' "$empty_text" | grep -qE "List of (Figures|Tables)"; then
+            echo "a list prints although the document has no floats of that type"
             status=1
           fi
           exit $status

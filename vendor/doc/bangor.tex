@@ -137,8 +137,9 @@ package, so it adds almost no compile time.
         short form after that.
   \item \verb|\Useabbrev{ML}| does the same with a capital letter on the
         first word. Use it at the start of a sentence.
-  \item \verb|\printabbrevs| prints an unnumbered chapter, entered in the
-        contents, that lists the abbreviations in alphabetical order. Each
+  \item \verb|\printabbrevs| prints an unnumbered heading, entered in the
+        contents only with \verb|frontmattertoc|, above a list of the
+        abbreviations in alphabetical order. Each
         entry ends with the pages that use it, and a run of three or more
         consecutive arabic pages is written as a range. The heading reads
         ``Abbreviations'' unless an optional argument gives another, as in
@@ -202,6 +203,11 @@ Start with \verb|\documentclass[phd,12pt,a4paper]{bangorthesis}|.
         section zero (5.0.1), and with \verb|sectionfloats=none| floats are
         numbered within their chapter. The two options combine: together
         they give one sequence that restarts at each section.
+  \item \verb|frontmattertoc| enters the unnumbered front matter in the
+        contents: the abstract, the acknowledgements, the list of
+        abbreviations, and the lists of figures and tables. Without it the
+        contents lists the numbered chapters, the bibliography, and the
+        appendices, and each front matter heading still gets a PDF bookmark.
   \item All other options pass to the \textsf{report} class.
 \end{itemize}
 

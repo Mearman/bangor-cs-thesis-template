@@ -1,3 +1,16 @@
+# [5.0.0](https://github.com/Mearman/bangor/compare/v4.1.1...v5.0.0) (2026-09-21)
+
+
+* feat!: enter the unnumbered front matter in the contents only with frontmattertoc ([1098d0e](https://github.com/Mearman/bangor/commit/1098d0ed095253c3668d3ba59bc3497ea6c8a809))
+
+
+### BREAKING CHANGES
+
+* the abstract and the acknowledgements no longer appear
+in the contents, and a document without figures or tables no longer
+prints an empty list page. Set frontmattertoc in the class options to
+enter the front matter in the contents as before.
+
 ## [4.1.1](https://github.com/Mearman/bangor/compare/v4.1.0...v4.1.1) (2026-09-20)
 
 
