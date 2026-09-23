@@ -12,6 +12,13 @@ A LaTeX template for computer science projects at Bangor University, and the nat
 
 If you use git on your own machine, clone your copy instead and run `latexmk -pdf main.tex`.
 
+## Use it on your own TeX system
+
+No git and no install step needed. Press the *Download ZIP* badge above, extract the archive, and run `latexmk -pdf main.tex` from the extracted folder. The `.latexmkrc` file beside `main.tex` points the compiler at `vendor/`, which is where the class and its modules live, so the project compiles as extracted.
+
+`bangorthesis.cls` on its own is not enough to copy: the class is deliberately split into modules (brand, identity, layout, declarations, tables, abbreviations), all in `vendor/`. The files that must stay together when you copy the project into your own setup are `main.tex`, `references.bib`, `preamble-cs.tex`, `continuation-markers.tex`, `.latexmkrc`, the whole `content/` folder, and the whole `vendor/` folder. If your editor runs `pdflatex` directly rather than through `latexmk`, set the `TEXINPUTS` environment variable to include `vendor//:` first, or point the editor at `latexmk`.
+
+
 ## Write your project
 
 Set your facts in `main.tex`: title, author, degree scheme, school, supervisor, date, and word count. The degree option is `bsc` in the worked example; switch it for `meng`, `msc`, or `phd` as you need. Research options set the title page to say *thesis*; taught options set it to say *dissertation*.
