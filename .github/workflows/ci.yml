@@ -36,9 +36,9 @@ jobs:
       - name: Vendor stamp consistency
         run: |
           declared=$(cat vendor/VERSION)
-          actual=$(grep -m1 -oE 'v[0-9]+\.[0-9]+\.[0-9]+' vendor/bangor.sty)
+          actual=$(grep -m1 -oE 'v[0-9]+\.[0-9]+\.[0-9]+' vendor/bangor.cls)
           if [ "$declared" != "$actual" ]; then
-            echo "vendor/VERSION says ${declared} but vendor/bangor.sty is ${actual}"
+            echo "vendor/VERSION says ${declared} but vendor/bangor.cls is ${actual}"
             exit 1
           fi
           echo "vendor stamp consistent: ${declared}"

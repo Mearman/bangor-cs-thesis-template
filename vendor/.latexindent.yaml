@@ -1,4 +1,0 @@
-# latexindent settings shared by the git hooks, CI, and local runs.
-# Kept to the single setting that every latexindent version honours
-# identically: two-space indentation inside environments.
-defaultIndent: '  '

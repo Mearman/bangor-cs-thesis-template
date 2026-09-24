@@ -3,7 +3,7 @@
 %%% template. The natural successor to the department's bangorcsthesis
 %%% class: same purpose, light compile, Overleaf-safe.
 % Layout options besides the degree keyword. These are on by default and each takes false to turn it off, except sectionfloats, which takes none: pageofm prints "Page N of M", appendixpages numbers each appendix separately as "Appendix A - Page n of m", sharedfloats puts figures, tables and listings on one counter, and sectionfloats numbers floats within their section (sectionfloats=zero numbers a float before the first section of a chapter as 5.0.1 instead of 5.1). headers=chapter puts the page number in the header instead of the footer, and headrule and footrule each take hairline (the default), visible or none.
-\documentclass[bsc,citations=ieee,12pt,a4paper]{bangorthesis}
+\documentclass[bsc,citations=ieee,tables,glossary,12pt,a4paper]{bangor}
 
 \bibliographysetup
 \addbibresource{references.bib}
@@ -21,9 +21,7 @@
 \submissiondate{September 2026}
 \submissionwordcount{9930}
 
-% Tables and abbreviations are opt-in modules. This document loads bangortables for the longtabular environment (one environment for tables that paginate, need X columns, or need rotation) and bangorglossary for the list of abbreviations. Remove either if your document does not use it.
-\usepackage{bangortables}
-\usepackage{bangorglossary}
+% The tables and glossary class options on the \documentclass line switch on the longtabular environment (one environment for tables that paginate, need X columns, or need rotation) and the list of abbreviations. Remove an option if your document does not use it.
 
 % Abbreviations. Register yours here: \useabbrev expands each one on first use, and \printabbrevs prints the list in the front matter.
 \addabbrev{ML}{machine learning}
