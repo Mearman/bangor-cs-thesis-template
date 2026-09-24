@@ -1,6 +1,6 @@
 name: Vendor update
 
-# Keeps the vendored package modules current while vendoring is in use. The version comparison runs first with
+# Keeps the vendored class current while vendoring is in use. The version comparison runs first with
 # no dependencies, so the common no-op pass costs seconds; TeX Live is installed only when there is something to
 # build. Workflows travel with a template copy, so a repository created from this template runs the same
 # automation for itself. When the installed TeX Live provides the package at or above the vendored version, the
@@ -62,9 +62,9 @@ jobs:
         id: decide
         run: |
           current="${{ steps.compare.outputs.current }}"
-          if kpsewhich bangor.sty >/dev/null 2>&1; then
+          if kpsewhich bangor.cls >/dev/null 2>&1; then
             installed=$(grep -m1 -o 'v[0-9][0-9.]*' \
-              "$(kpsewhich bangor.sty)" || true)
+              "$(kpsewhich bangor.cls)" || true)
             current_num=$(printf '%s' "$current" | sed 's/^v//')
             installed_num=$(printf '%s' "$installed" | sed 's/^v//')
             newer=$(printf '%s\n%s\n' "$current_num" "$installed_num" \
@@ -101,9 +101,9 @@ jobs:
           git fetch --no-tags bangor "refs/tags/${{ steps.compare.outputs.latest }}"
           rm -rf vendor
           mkdir vendor
-          git archive FETCH_HEAD | tar -x -C vendor
+          git archive FETCH_HEAD -- bangor.cls bangor-crest-colour.pdf LICENSE README.md | tar -x -C vendor
             echo "${{ steps.compare.outputs.latest }}" > vendor/VERSION
-            stamped=$(grep -m1 -oE 'v[0-9]+\.[0-9]+\.[0-9]+' vendor/bangor.sty || true)
+            stamped=$(grep -m1 -oE 'v[0-9]+\.[0-9]+\.[0-9]+' vendor/bangor.cls || true)
             if [ "$stamped" != "${{ steps.compare.outputs.latest }}" ]; then
               echo "archived package is ${stamped:-unversioned} but the stamp says ${{ steps.compare.outputs.latest }}"
               exit 1

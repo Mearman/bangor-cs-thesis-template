@@ -2,34 +2,35 @@
 [![Open in Overleaf](https://img.shields.io/badge/Open_in_Overleaf-44A141?style=for-the-badge&logo=overleaf&logoColor=white)](https://www.overleaf.com/docs?snip_uri=https://github.com/Mearman/bangor/archive/refs/heads/main.zip)
 [![Download ZIP](https://img.shields.io/badge/Download_ZIP-ED0000?style=for-the-badge&labelColor=231F20&logo=data:image/svg%2Bxml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNiAxNiIgd2lkdGg9IjE2IiBoZWlnaHQ9IjE2Ij48cmVjdCB4PSI3LjMiIHk9IjEiIHdpZHRoPSIxLjQiIGhlaWdodD0iNS41IiBmaWxsPSJ3aGl0ZSIvPjxwYXRoIGQ9Ik04IDEwLjUgNC43IDYuOGg2LjZaIiBmaWxsPSJ3aGl0ZSIvPjxwYXRoIGQ9Ik0yIDExLjV2MS44YTEuMiAxLjIgMCAwIDAgMS4yIDEuMmg5LjZhMS4yIDEuMiAwIDAgMCAxLjItMS4ydi0xLjhoLTEuNXYxLjVIMy41di0xLjVaIiBmaWxsPSJ3aGl0ZSIvPjwvc3ZnPg==)](https://github.com/Mearman/bangor/archive/refs/heads/main.zip)
 
-LaTeX modules for Bangor University documents: the brand, the document identity, the regulation layout, the statutory declarations, a headed letter style, and a thesis and dissertation class. This README uses controlled English. It is written in British English.
+A single LaTeX class for Bangor University documents: `bangor.cls`. It typesets theses and dissertations to the regulation layout, and headed letters, from one self-contained file. This README uses controlled English. It is written in British English.
 
-This package replaces the department's `bangorcsthesis` class, which times out on Overleaf. The cause was a heavy design: a large inline drawing of the crest, a fixed citation style, and a large package stack. This package keeps the compile light. The crest ships as a pre-rendered PDF. The citation style is an option. The package stack is small.
+This class replaces the department's `bangorcsthesis` class, which times out on Overleaf. The cause was a heavy design: a large inline drawing of the crest, a fixed citation style, and a large package stack. This class keeps the compile light. The crest ships as a pre-rendered PDF. The citation style is an option. The package stack is small.
 
-## The layers
+## What is in the class
 
-The family has three layers. A module must only use modules in a lower layer.
-
-1. `bangor` holds the brand facts: the colours, the crest, the wordmark, and the version stamp.
-2. `bangoridentity`, `bangorlayout`, and `bangordeclarations` are reusable document modules. Use each one with any base class. `bangortables` and `bangorglossary` are optional modules of the same layer: load them only when the document needs them.
-
-## Tables
-
-`bangortables` provides `longtabular`, one environment for tables that run past a page, need X columns to fit the text width, or both. It paginates with the header repeating when the header rows sit before `\endhead`, and its optional `[wide]` form rotates the table onto a landscape page. `[columns=N]` instead wraps a narrow table's rows into N side-by-side panes on one page, with the head repeated in each pane and the caption printed once above; the wrapped table must fit one page, and in this form the head sits between `\panehead` and `\endpanehead` in the body. The options combine (`[wide,columns=2]`); any other optional value is an error. The underlying `longtable`, `tabularx` and `landscape` remain available for special cases.
-3. `bangorletter` and the `bangorthesis` class are consumers. They use the lower layers and add their own document type.
+One file holds everything: the brand facts (the colours, the crest, the wordmark, the version stamp), the document identity, the regulation layout with strict validation, the statutory declarations, the thesis body, and the headed letter style. Two features are optional class options, so a document pays for them only when it asks: `tables` adds the `longtabular` environment, and `glossary` adds the abbreviation list. The only other file is the crest, `bangor-crest-colour.pdf`, which sits beside the class.
 
 Full interface documentation is in `doc/bangor.pdf`.
 
 ## Install
 
-TeX Live and MiKTeX users can install the package from CTAN once it is published. Until then, copy the `.sty` files, the `.cls` file, and `bangor-crest-colour.pdf` into your project directory.
+Copy two files into your project folder: `bangor.cls` and `bangor-crest-colour.pdf`. Every release publishes both:
+
+```sh
+curl -LO https://github.com/Mearman/bangor/releases/latest/download/bangor.cls
+curl -LO https://github.com/Mearman/bangor/releases/latest/download/bangor-crest-colour.pdf
+```
+
+TeX Live and MiKTeX users can install the class from CTAN once it is published.
+
+If the crest file is missing, the build does not stop. The first use of the crest prints a frame that holds the wordmark, and the log shows one warning that names the download address.
 
 ## Use
 
 Start a thesis or dissertation like this:
 
 ```latex
-\documentclass[phd,12pt,a4paper]{bangorthesis}
+\documentclass[phd,12pt,a4paper]{bangor}
 ```
 
 Set the document facts in the preamble, then build the front matter:
@@ -50,19 +51,59 @@ Set the document facts in the preamble, then build the front matter:
 \tables
 ```
 
+Add `tables` and `glossary` to the option list when the document needs the `longtabular` environment or the abbreviation list:
+
+```latex
+\documentclass[phd,tables,glossary,12pt,a4paper]{bangor}
+```
+
+Start a headed letter with the `letter` option. The class loads the standard `letter` class for you:
+
+```latex
+\documentclass[letter,a4paper,11pt]{bangor}
+\school{School of Computer Science and Engineering}
+\begin{document}
+\begin{letter}{The Recipient}
+  \bangorletterhead
+  \opening{Dear Recipient,}
+  ...
+\end{letter}
+\end{document}
+```
+
+A letter takes no thesis option. Mixing them, for example `[letter,phd]`, is an error that names the option.
+
 The GitHub template repositories give you a working document in one step:
 
-- `bangor-thesis-template` — the general thesis and dissertation template.
-- `bangor-cs-thesis-template` — the computer science variant, with code listings and algorithm floats.
-- `bangor-letter-template` — the headed letter template.
+- `bangor-thesis-template`: the general thesis and dissertation template.
+- `bangor-cs-thesis-template`: the computer science variant, with code listings and algorithm floats.
+- `bangor-letter-template`: the headed letter template.
 
-Use the green *Use this template* button, then import your copy into Overleaf. The templates carry a vendored copy of this package in `vendor/`, so they compile with no install step.
+Use the green *Use this template* button, then import your copy into Overleaf. The templates carry a copy of `bangor.cls` and the crest in `vendor/`, so they compile with no install step.
+
+## Upgrading from version 5
+
+Version 6 replaces the module family with one class. This is a breaking change.
+
+| Version 5 | Version 6 |
+| --- | --- |
+| `\documentclass{bangorthesis}` | `\documentclass{bangor}` |
+| `\usepackage{bangortables}` | class option `tables` |
+| `\usepackage{bangorglossary}` | class option `glossary` |
+| `\documentclass{letter}` and `\usepackage{bangorletter}` | `\documentclass[letter]{bangor}` |
+| `\usepackage{bangor}`, `bangoridentity`, `bangorlayout`, `bangordeclarations` | not needed, the class provides them |
+
+The public commands keep their names. Delete the old `.aux` file once after you upgrade, because the abbreviation page lists in it were written by the old modules. A document that must keep using a separate module can stay on version 5.
+
+## Tables
+
+The class option `tables` provides `longtabular`, one environment for tables that run past a page, need X columns to fit the text width, or both. It paginates with the header repeating when the header rows sit before `\endhead`, and its optional `[wide]` form rotates the table onto a landscape page. `[columns=N]` instead wraps a narrow table's rows into N side-by-side panes on one page, with the head repeated in each pane and the caption printed once above; the wrapped table must fit one page, and in this form the head sits between `\panehead` and `\endpanehead` in the body. The options combine (`[wide,columns=2]`); any other optional value is an error. The underlying `longtable`, `tabularx` and `landscape` remain available for special cases.
 
 ## Regulation checks
 
-The layout module checks the rules from Regulation 03, 2025 Version 01, section 6.3: the font family and size floors, the binding and side margins, the 1.5 line spacing, and the 600-word cap on the abstract. Strict mode is on by default. A violation fails the build. Set `strict=false` to turn each failure into a warning.
+The class checks the rules from Regulation 03, 2025 Version 01, section 6.3: the font family and size floors, the binding and side margins, the 1.5 line spacing, and the 600-word cap on the abstract. Strict mode is on by default. A violation fails the build. Set `strict=false` to turn each failure into a warning.
 
-The checks govern settings made through this package. They cannot see changes made around it.
+The checks govern settings made through this class. They cannot see changes made around it.
 
 ## Front matter and the contents
 
@@ -90,7 +131,7 @@ Citation style is a class option, not a school lookup: `citations=ieee` is the d
 
 ## Contribute
 
-Make changes in this repository. Never edit the vendored copies inside the template repositories: they are snapshots of this repository, and a fix made there is lost at the next update. Each template repository pulls its `vendor/` directory from a tagged release here.
+Make changes in this repository. Never edit the vendored copies inside the template repositories: they are snapshots of this repository, and a fix made there is lost at the next update. Each template repository pulls `bangor.cls` and the crest into its `vendor/` directory from a tagged release here.
 
 Commit messages follow the conventional commit format. The git hooks and CI check it. Set up the hooks once per clone:
 
@@ -109,21 +150,21 @@ Released under the LaTeX Project Public License, version 1.3c or later. See `LIC
 Done:
 
 - Brand layer: palette, crest, wordmark, version stamp.
-- Identity, layout with strict regulation checks, and statutory declarations modules.
-- Headed letter style and the thesis and dissertation class.
+- Identity, layout with strict regulation checks, and statutory declarations.
+- Headed letter style and the thesis and dissertation class, in one class.
 - Regulation-derived settings: font choice, print or digital, Welsh declaration, word count statement.
 - Smoke tests, CI, git hooks, and automatic releases with changelogs.
 
 Next:
 
 - Official crest masters from the university brand library, plus the monochrome and horizontal variants.
-- CTAN upload of the first stable release.
+- CTAN upload of `bangor.cls`, once the university confirms the terms for redistributing the crest.
 - Brand typeface option for engines that support system fonts.
 - CI word-count enforcement for the thesis word limits by degree.
 
 Later:
 
-- Further consumer modules and templates as demand appears.
+- Further templates as demand appears.
 - Full Welsh localisation of the interface strings.
 
 At the CTAN switchover:
