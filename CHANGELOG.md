@@ -1,3 +1,15 @@
+## [2.0.1](https://github.com/Mearman/bangor-cs-thesis-template/compare/v2.0.0...v2.0.1) (2026-10-29)
+
+### Documentation
+
+* add the standard badge row to the README ([2bd34fb](https://github.com/Mearman/bangor-cs-thesis-template/commit/2bd34fb7e7a780a66209423e59a06bf68efb0632))
+
+
+Open this exact version in Overleaf, or download it:
+
+[![Open in Overleaf](https://img.shields.io/badge/Open_in_Overleaf-44A141?style=for-the-badge&logo=overleaf&logoColor=white)](https://www.overleaf.com/docs?snip_uri=https://github.com/Mearman/bangor-cs-thesis-template/archive/refs/tags/v2.0.1.zip)
+[![Download ZIP](https://img.shields.io/badge/Download_ZIP-ED0000?style=for-the-badge&labelColor=231F20)](https://github.com/Mearman/bangor-cs-thesis-template/archive/refs/tags/v2.0.1.zip)
+
 ## [2.0.0](https://github.com/Mearman/bangor-cs-thesis-template/compare/v1.6.17...v2.0.0) (2026-09-24)
 
 ### ⚠ BREAKING CHANGES
