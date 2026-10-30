@@ -11,7 +11,7 @@
 % University. Released under the LaTeX Project Public License, version
 % 1.3c or later (see LICENSE).
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{bangor}[2026/09/24 v6.0.0 Bangor University thesis, dissertation and letter class]
+\ProvidesClass{bangor}[2026/10/29 v6.0.1 Bangor University thesis, dissertation and letter class]
 
 %%% 1. Options and mode selection
 
